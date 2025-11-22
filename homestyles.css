@@ -1,0 +1,91 @@
+
+/* GENERAL TEXT AND SETTINGS*/
+@media (min-width: 900px) {
+  body {
+    margin-left: 2rem;
+    margin-right: 3rem;
+  }
+}
+p {
+  font-size: 18px !important;
+}
+a {
+  color: black !important;
+  text-decoration: none;
+}
+a:hover {
+  color: #555555 !important;
+  text-decoration: underline;
+}
+::selection {
+  background-color: #9B0014;
+  color: #ffffff;
+}
+::-moz-selection {
+  background-color: #9B0014;
+  color: #ffffff;
+}
+.sidebar .active,
+.sidebar a.active,
+.sidebar .nav-link.active {
+  color: #9B0014 !important;
+}
+
+/* CALLOUTS */
+.callout {
+  border-color: #aaa !important;
+  border-left: 4px solid #9B0014 !important;
+  border-left-color: #9B0014 !important;
+  background-color: #fff;
+  border-radius: 8px;
+  border-width: 2px !important;
+  border-left-width: 6px !important;
+  padding: 1rem 1.25rem; 
+  margin: 1em 0;
+  font-size: 0.95rem;
+  line-height: 1.4; 
+}
+.callout .callout-header {
+  background-color: #fff !important;
+  color: #9B0014;
+  font-weight: 600;
+  font-size: 17px !important;
+  display: flex;
+  align-items: center;  
+  gap: 0.4em;
+  padding: 0.25rem 0; 
+}
+.callout:hover {
+  background-color: #fff;
+  transition: background-color 0.2s ease-in-out;
+}
+.callout-icon::before {
+  color: #9B0014 !important;
+}
+.callout:focus-within,
+.callout:active {
+  outline: none;
+  border-left-color: #9B0014 !important;
+}
+
+
+/* CUSTOM STYLE TYPES */
+.abstract {
+    font-style: italic;
+    font-size: 0.85em;
+    color: #333333;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 40px;     
+    margin-right: 40px; 
+    text-align: justify;
+}
+.comment {
+    font-style: italic;
+    font-size: 0.85em;
+    color: #9B0014;
+    text-align: justify;
+}
+.sidebar-item-container {
+    margin-top: 20px;
+}
