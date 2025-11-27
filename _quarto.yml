@@ -7,6 +7,10 @@ project:
 website:
   title: "home"
   navbar:
+    left: 
+      - href: https://enricotoffalini.github.io
+        text: "enricotoffalini.github.io"
+        target: _blank
     right:
       - href: https://psicostat.dpss.psy.unipd.it/
         text: "<img src='/images/faviconpsicostat2.png' style='height: 22px; margin-top: -4px;'>"
