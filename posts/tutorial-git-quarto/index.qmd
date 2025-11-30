@@ -1,5 +1,5 @@
 ---
-title: "Creare Pagine Online: Tutorial base su Git, Github, Github pages, Quarto (per utenti Windows)"
+title: "Creare Pagine Online: Tutorial base su Git, GitHub, GitHub pages, Quarto (per utenti Windows)"
 author: "Enrico Toffalini"
 image: images/01-01-git.png
 date: "2025-11-30"
