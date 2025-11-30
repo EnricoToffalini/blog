@@ -22,7 +22,7 @@ Il tutorial è rivolto soprattutto a utenti **Windows**. Chi utilizza **Linux** 
 ### Obiettivi del tutorial
 
 - Installare e configurare **Git** su Windows.  
-- Creare un account **GitHub** (useremo l’utente fittizio *Tizio Qualsiasi* con email *qualsiasitizio81@gmail.com*).  
+- Creare un account **GitHub**.  
 - Creare un semplice report **Quarto** con RStudio.  
 - Effettuare **commit** e **push** verso una repository GitHub.  
 - Pubblicare un sito tramite **GitHub Pages**.
@@ -30,7 +30,7 @@ Il tutorial è rivolto soprattutto a utenti **Windows**. Chi utilizza **Linux** 
 
 ## Installazione di Git su Windows
 
-Andare sul sito <a href="https://git-scm.com/" target="_blank">https://git-scm.com/</a>.  
+Andare sul sito <a href="https://git-scm.com/" target="_blank">https://git-scm.com/</a>  
 
 Cliccare su *Download for Windows* (o per il proprio sistema operativo), scaricare la versione più recente e salvare il file `.exe`.
 
@@ -39,7 +39,7 @@ Avviare l’installer e proseguire con tutte le opzioni **di default** fino al t
 
 ## Creazione di un account GitHub
 
-Andare sul sito <a href="https://github.com/" target="_blank">https://github.com/</a>.  
+Andare sul sito <a href="https://github.com/" target="_blank">https://github.com/</a>  
 
 Cliccare su <a href="https://github.com/signup" target="_blank">**Sign up**</a> (in alto a destra) per registrarsi e compilare:
 
