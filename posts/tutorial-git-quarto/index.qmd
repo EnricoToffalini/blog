@@ -119,7 +119,7 @@ La cartella locale `my-great-report` **non** è sincronizzata automaticamente co
 
 ### Installazione di Quarto
 
-Questo passaggio non è necessario se avete già un sistema per creare pagine HTML, ma lo presentiamo come opzione consigliata. In realtà, non è obbligatorio creare file HTML: dipende da cosa volete fare con Git e GitHub. Mostriamo comunque l’installazione di Quarto perché è particolarmente utile per diffondere pagine web in ottica Open Science e Terza Missione. Naturalmente, potreste usare GitHub anche solo per condividere dati, script o codice.
+Questo passaggio non è necessario se avete già un sistema per creare pagine HTML, ma lo presentiamo come opzione consigliata. In realtà, non è nemmeno obbligatorio creare file HTML: dipende da cosa volete fare con Git e GitHub. Mostriamo comunque l’installazione di Quarto perché è particolarmente utile per diffondere pagine web in ottica Open Science e Terza Missione. Naturalmente, potreste usare GitHub anche solo per condividere dati, script o codice.
 
 Assumiamo che vogliate creare e pubblicare pagine web e che siate familiari con l’ecosistema R. Supponiamo inoltre che abbiate già installato R e RStudio (o un altro IDE). Procediamo quindi con l’installazione del sistema di publishing <a href="https://quarto.org/" target="_blank">Quarto</a>. Come detto sopra, anche `rmarkdown` va benissimo per creare pagine HTML, ma Quarto è molto più potente, soprattutto per siti web, blog, libri, presentazioni e documenti complessi.
 
