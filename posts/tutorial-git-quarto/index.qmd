@@ -1,15 +1,20 @@
 ---
-title: "Creare Pagine Online: Tutorial base su Git, Quarto, Github, Github pages"
+title: "Creare Pagine Online: Tutorial base su Git, Github, Github pages, Quarto (per utenti Windows)"
 author: "Enrico Toffalini"
-date: "2025-11-28"
+date: "2025-11-30"
 format: html
 ---
 
-Saper creare e pubblicare pagine web online, in particolare pagine tecniche con report prodotti in R o Python, ma anche **siti web** più generali, **libri online**, **blog** o singole pagine, è una competenza fondamentale per giovani ricercatori e ricercatrici. Queste abilità permettono di condividere il proprio lavoro in ottica collaborativa, garantire riproducibilità e trasparenza secondo i principi dell’***Open Science***, e contribuire alla ***Terza Missione***, nel senso di valorizzazione dei prodotti scientifici, diffusione della conoscenza e divulgazione verso utenti non-accademici (collaboratori in aziende, case editrici, professionisti, clinici, ecc.). 
+Saper creare e pubblicare pagine web online, in particolare pagine tecniche con report prodotti in R o Python, ma anche **siti web** più generali, **libri online**, **blog** o singole pagine, è una competenza fondamentale per giovani ricercatori e ricercatrici. Queste abilità permettono di condividere il proprio lavoro in ottica collaborativa, garantire riproducibilità e trasparenza secondo i principi dell’***Open Science***, e contribuire alla <a href="https://enricotoffalini.github.io/blog/posts/terza-missione-open-science/" target="_blank">***Terza Missione***</a>, nel senso di valorizzazione dei prodotti scientifici, diffusione della conoscenza e divulgazione verso utenti non-accademici (collaboratori in aziende, case editrici, professionisti, clinici, ecc.). 
 
-Questa pagina web e questo blog sono stati creati con il sistema di publishing **Quarto** (anche *rmarkdown* va benissimo se si lavora principalmente con R), ma si tratta solo di una delle opzioni disponibili. Pagine HTML, PDF o altri tipi di documenti possono essere prodotti in molti modi diversi.  
+Questa stessa pagina web e questo blog sono stati creati con il sistema di publishing **Quarto** (anche *rmarkdown* va benissimo se si lavora principalmente con R), ma si tratta solo di una delle opzioni disponibili. Pagine HTML, PDF o altri tipi di documenti possono essere prodotti in molti modi diversi e diffusi online tramite **GitHub Pages**. Per capire cosa è possibile realizzare, ecco alcuni esempi concreti di prodotti sviluppati con Quarto (o strumenti simili) e pubblicati su GitHub Pages: 
 
-Il presente tutorial dà per scontato che abbiate già un’idea di come creare i documenti che desiderate (con [r]markdown, Quarto o altro) e vi guida nei passaggi successivi in modo semplice, passo per passo e con screenshot, fino alla pubblicazione online tramite **GitHub Pages**. GitHub è uno strumento estremamente potente per tutti gli obiettivi citati sopra.  
+- siti personali con taglio accademico (es. <a href="drganghe.github.io" target="_blank">drganghe.github.io</a>);
+- libri online (es. <a href="https://lakens.github.io/statistical_inferences/" target="_blank">https://lakens.github.io/statistical_inferences/</a>, con tanto di <a href="https://lakens.github.io/statistical_inferences/Improving-Your-Statistical-Inferences.pdf" target="_blank">versione pdf impaginata</a>);
+- blog (es. <a href="https://www.jessesadler.com/" target="_blank">https://www.jessesadler.com/</a>); 
+- corsi e materiali didattici (es. <a href="https://enricotoffalini.github.io/Basics-R/" target="_blank">Basics of R for Data Science</a>; <a href="https://github.com/arca-dpss" target="_blank">Corsi ARCA</a>; <a href="https://psicostat.github.io/psicostat-teaching/" target="_blank">Psicostat teaching</a>);
+
+Il presente tutorial dà per scontato che abbiate già più o meno un’idea di come creare i documenti che desiderate e vi guida nei passaggi successivi in modo semplice, passo per passo e con screenshot, fino alla pubblicazione online tramite **GitHub Pages**. GitHub è uno strumento estremamente potente per tutti gli obiettivi citati sopra.  
 
 Il tutorial è rivolto soprattutto a utenti **Windows**. Chi utilizza **Linux** o **macOS** può adattare facilmente i passaggi, chiedere aiuto all’AI oppure consultare altri tutorial specifici.
 
@@ -21,6 +26,7 @@ Il tutorial è rivolto soprattutto a utenti **Windows**. Chi utilizza **Linux** 
 - Effettuare **commit** e **push** verso una repository GitHub.  
 - Pubblicare un sito tramite **GitHub Pages**.
 
+
 ## Installazione di Git su Windows
 
 Andare sul sito <a href="https://git-scm.com/" target="_blank">https://git-scm.com/</a>.  
@@ -29,11 +35,12 @@ Cliccare su *Download for Windows* (o per il proprio sistema operativo), scarica
 
 Avviare l’installer e proseguire con tutte le opzioni **di default** fino al termine dell’installazione.
 
+
 ## Creazione di un account GitHub
 
 Andare sul sito <a href="https://github.com/" target="_blank">https://github.com/</a>.  
 
-Cliccare su **Sign up** (in alto a destra) per registrarsi e compilare:
+Cliccare su <a href="https://github.com/signup" target="_blank">**Sign up**</a> (in alto a destra) per registrarsi e compilare:
 
 - Email (noi useremo `qualsiasitizio81@gmail.com`)  
 - Username (noi useremo `qualsiasitizio81`)  
@@ -47,7 +54,7 @@ Confermare l’email tramite il codice ricevuto, se richiesto.
 
 Ora configuriamo Git sul computer e lo colleghiamo al vostro account GitHub. Per prima cosa apriamo il terminale. Possiamo farlo andando sul Desktop o in una cartella qualsiasi, cliccando con il tasto destro e scegliendo l’opzione per aprire il terminale, oppure cercando **Windows PowerShell** tra le applicazioni (potrebbe essere necessario avere i permessi di amministratore). Dovremmo vedere una schermata simile alla seguente:
 
-<figure><img src="images/02-02-poweshell.png" alt="Windows PowerShell" style="width: 100%; height: auto;"><figcaption>Windows PowerShell / Terminale</figcaption></figure>
+<figure><img src="images/02-02-poweshell.png" alt="Windows PowerShell" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Windows PowerShell / Terminale</figcaption></figure>
 
 Ora impostiamo i parametri principali di Git, ovvero il nome utente, l’email associata e il nome predefinito del branch iniziale:
 
@@ -55,26 +62,26 @@ Ora impostiamo i parametri principali di Git, ovvero il nome utente, l’email a
 `git config --global user.email "qualsiasitizio81@gmail.com"`  
 `git config --global init.defaultBranch main`
 
-<figure><img src="images/02-02-poweshell-parametri.png" alt="powershell git" style="width: 100%; height: auto;"><figcaption>Configurazione di Git nel terminale</figcaption></figure>
+<figure><img src="images/02-02-poweshell-parametri.png" alt="powershell git" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Configurazione di Git nel terminale</figcaption></figure>
 
 A questo punto verifichiamo che la configurazione sia corretta e che il nome utente e l’email siano stati memorizzati:
 
 `git config --global --list`
 
-<figure><img src="images/02-02-poweshell-parametri-verifica.png" alt="verifica powershell git" style="width: 100%; height: auto;"><figcaption>Verifica della configurazione di Git nel terminale</figcaption></figure>
+<figure><img src="images/02-02-poweshell-parametri-verifica.png" alt="verifica powershell git" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Verifica della configurazione di Git nel terminale</figcaption></figure>
 
 
 ## Creazione della repository (repo) su GitHub
 
 Torniamo su <a href="https://github.com/" target="_blank">GitHub</a>, avendo effettuato l’accesso con il nostro account, e creiamo una nuova repository (repo):
 
-<figure><img src="images/03-01-create-repo.png" alt="create repo github" style="width: 100%; height: auto;"><figcaption>Creazione di una nuova repository dal dashboard di GitHub</figcaption></figure>
+<figure><img src="images/03-01-create-repo.png" alt="create repo github" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Creazione di una nuova repository dal dashboard di GitHub</figcaption></figure>
 
 Compiliamo il nome della repository (noi abbiamo scelto "`my-great-report`" per questa illustrazione) e procediamo con la creazione. Per facilitare l’attivazione successiva di GitHub Pages, lasciamo la visibilità impostata su **Public**:
 
-<figure><img src="images/03-02-name-repo.png" alt="name repo github" style="width: 100%; height: auto;"><figcaption>Scelta del nome per la repository</figcaption></figure>
+<figure><img src="images/03-02-name-repo.png" alt="name repo github" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Scelta del nome per la repository</figcaption></figure>
 
-<figure><img src="images/03-03-confirm-repo.png" alt="confirm create repo github" style="width: 100%; height: auto;"><figcaption>Diamo conferma della creazione della repository su GitHub</figcaption></figure>
+<figure><img src="images/03-03-confirm-repo.png" alt="confirm create repo github" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Diamo conferma della creazione della repository su GitHub</figcaption></figure>
 
 
 ## Clonare la repo sul proprio computer
@@ -83,23 +90,23 @@ La repository appena creata è vuota. La cosa più semplice e comoda è **clonar
 
 Per clonare la repo in locale, dobbiamo prima copiare il suo link, che è la prima cosa che vediamo quando entriamo nella repository (ancora vuota) su GitHub:
 
-<figure><img src="images/04-01-copy-link-git.png" alt="copy link repo git" style="width: 100%; height: auto;"><figcaption>Copia del link della repo GitHub</figcaption></figure>
+<figure><img src="images/04-01-copy-link-git.png" alt="copy link repo git" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Copia del link della repo GitHub</figcaption></figure>
 
 Ora andiamo nel punto del nostro computer in cui vogliamo creare, in locale, la cartella corrispondente alla nostra repo (potremo poi comunque spostarla altrove, come qualsiasi altra cartella). Per farlo apriamo il terminale cliccando con il tasto destro del mouse, ad esempio sul Desktop:
 
-<figure><img src="images/02-01-clickdestro.png" alt="right click terminal" style="width: 100%; height: auto;"><figcaption>Apertura del terminale sul Desktop o nella cartella in cui vogliamo clonare la repo</figcaption></figure>
+<figure><img src="images/02-01-clickdestro.png" alt="right click terminal" style="max-width: 500px; width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Apertura del terminale sul Desktop o nella cartella in cui vogliamo clonare la repo</figcaption></figure>
 
 A questo punto digitiamo `git clone`, seguito dal link precedentemente copiato dalla repo su GitHub. Ad esempio:
 
 `git clone https://github.com/qualsiasitizio81/my-great-report.git`
 
-<figure><img src="images/04-02-git-clone.png" alt="cloning repo" style="width: 100%; height: auto;"><figcaption>Clonazione della repo in locale</figcaption></figure>
+<figure><img src="images/04-02-git-clone.png" alt="cloning repo" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Clonazione della repo in locale</figcaption></figure>
 
 È possibile che Git ci mostri un avviso indicando che stiamo clonando una repository vuota, ma va benissimo così: lo sappiamo già.
 
 Dopo il comando `git clone` troveremo una cartella con lo stesso nome della repo, che rappresenta il clone locale della repository:
 
-<figure><img src="images/04-03-cloned-repo.png" alt="cloned repo" style="width: 100%; height: auto;"><figcaption>La repo appena clonata in locale appare come una cartella</figcaption></figure>
+<figure style="text-align: center;"><img src="images/04-03-cloned-repo.png" alt="cloned repo" style="max-width:500px; width: 100%; height: auto; border: 2px solid #444444;"><figcaption>La repo appena clonata in locale appare come una cartella</figcaption></figure>
 
 Se apriamo questa cartella probabilmente la vedremo completamente vuota, oppure, se in Windows abbiamo attivato la visualizzazione dei file nascosti, potremmo vedere al suo interno una cartella nascosta chiamata `.git`. In questo secondo caso **non** dobbiamo toccare né rinominare la cartella `.git`, perché contiene tutte le informazioni necessarie che collegano la cartella locale alla repository su GitHub.
 
@@ -118,7 +125,7 @@ Assumiamo che vogliate creare e pubblicare pagine web e che siate familiari con 
 
 Andare sul sito <a href="https://quarto.org/" target="_blank">https://quarto.org/</a> e scaricare Quarto per Windows. Il file `.exe` è facilmente reperibile alla pagina <a href="https://quarto.org/docs/get-started/" target="_blank">https://quarto.org/docs/get-started/</a>. Scaricate il file di installazione e seguite tutti i passaggi raccomandati per installare Quarto localmente.
 
-<figure><img src="images/05-00-quarto-download.png" alt="quarto download" style="width: 100%; height: auto;"><figcaption>Download del file di installazione di Quarto</figcaption></figure>
+<figure><img src="images/05-00-quarto-download.png" alt="quarto download" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Download del file di installazione di Quarto</figcaption></figure>
 
 Una volta conclusa l’installazione, verifichiamola aprendo il terminale / Windows PowerShell e digitando:
 
@@ -126,7 +133,7 @@ Una volta conclusa l’installazione, verifichiamola aprendo il terminale / Wind
 
 Il comando dovrebbe essere riconosciuto correttamente.
 
-<figure><img src="images/05-01-quarto-check.png" alt="quarto check" style="width: 100%; height: auto;"><figcaption>Verifica dell’installazione di Quarto</figcaption></figure>
+<figure><img src="images/05-01-quarto-check.png" alt="quarto check" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Verifica dell’installazione di Quarto</figcaption></figure>
 
 ### Creazione di un report e del file HTML
 
@@ -136,7 +143,7 @@ Dopo aver installato Quarto, RStudio (oppure Positron, consigliato come alternat
 
 `File > New File > Quarto Document...`
 
-<figure><img src="images/06-00-quarto-document.png" alt="quarto document" style="width: 100%; height: auto;"><figcaption>Creazione di un file Quarto (`.qmd`) da RStudio</figcaption></figure>
+<figure><img src="images/06-00-quarto-document.png" alt="quarto document" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Creazione di un file Quarto (`.qmd`) da RStudio</figcaption></figure>
 
 A questo punto potete scrivere il vostro report in linguaggio Markdown, integrando eventualmente chunk eseguibili di codice R, Python o altri linguaggi (se installati).  
 
@@ -144,7 +151,7 @@ Quando il report è pronto (o mentre lo state ancora scrivendo, per vedere l’a
 
 Il formato predefinito è HTML, ma se avete installato TinyTeX potete produrre anche PDF, utile per articoli, documenti tecnici o slide. Per il momento ci concentriamo sull’HTML, che è la scelta più semplice per la pubblicazione online.
 
-<figure><img src="images/06-01-qmd-render.png" alt="quarto document render" style="width: 100%; height: auto;"><figcaption>Render di un report Quarto</figcaption></figure>
+<figure><img src="images/06-01-qmd-render.png" alt="quarto document render" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Render di un report Quarto</figcaption></figure>
 
 Dopo il render, accanto al file `.qmd` troverete il file `.html` e la cartella associata. Nel mio esempio il file si chiama `index`, ma potete chiamarlo come preferite. Tuttavia, usare `index` è particolarmente conveniente perché un file chiamato `index.html` viene automaticamente riconosciuto come *home page* di un sito web, permettendo di ottenere un URL più semplice e pulito.
 
@@ -153,7 +160,7 @@ Dopo il render, accanto al file `.qmd` troverete il file `.html` e la cartella a
 
 Ora che avete preparato i vostri file nella cartella locale, non resta che inviarli online su GitHub. Avendo Git installato e configurato, il procedimento è semplice. Apriamo il terminale direttamente nella cartella della repository locale (nel nostro caso `my-great-report`):
 
-<figure><img src="images/07-01-open-in-terminal.png" alt="open folder in terminal" style="width: 100%; height: auto;"><figcaption>Apertura della cartella/repository nel terminale</figcaption></figure>
+<figure style="text-align: center;"><img src="images/07-01-open-in-terminal.png" alt="open folder in terminal" style="max-width:500px; width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Apertura della cartella/repository nel terminale</figcaption></figure>
 
 A questo punto digitiamo i seguenti comandi:
 
@@ -165,15 +172,15 @@ A questo punto digitiamo i seguenti comandi:
 - **`git commit -m "first commit"`** registra le modifiche in un nuovo commit; il messaggio dopo `-m` è obbligatorio.  
 - **`git push`** invia effettivamente il commit alla repository su GitHub, rendendolo disponibile online.
 
-<figure><img src="images/07-02-first-commit.png" alt="git first commit" style="width: 100%; height: auto;"><figcaption>Esecuzione di `add`, `commit` e `push` per inviare i file su GitHub</figcaption></figure>
+<figure><img src="images/07-02-first-commit.png" alt="git first commit" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Esecuzione di `add`, `commit` e `push` per inviare i file su GitHub</figcaption></figure>
 
 La prima volta che eseguite `git push`, GitHub potrebbe richiedere un’ulteriore autenticazione tramite una finestra simile alla seguente. Seguite le istruzioni e completate l’accesso:
 
-<figure><img src="images/07-03-credenziali-git-github.png" alt="git github credentials" style="width: 100%; height: auto;"><figcaption>Possibile richiesta di autenticazione al primo push</figcaption></figure>
+<figure style="text-align: center;"><img src="images/07-03-credenziali-git-github.png" alt="git github credentials" style="max-width:400px; width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Possibile richiesta di autenticazione al primo push</figcaption></figure>
 
 Una volta completato il processo, se tutto è andato a buon fine, tornando nella vostra repository online su GitHub vedrete che non è più vuota, ma contiene i file appena inviati. Perfetto!
 
-<figure><img src="images/07-04-pushed-materials.png" alt="github pushed" style="width: 100%; height: auto;"><figcaption>La repository GitHub ora contiene i materiali creati in locale</figcaption></figure>
+<figure><img src="images/07-04-pushed-materials.png" alt="github pushed" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>La repository GitHub ora contiene i materiali creati in locale</figcaption></figure>
 
 
 ## Creazione di GitHub Pages
@@ -184,17 +191,17 @@ Ricordiamo anche che, salvo avere un account GitHub a pagamento, la repository d
 
 Torniamo quindi su GitHub, apriamo la nostra repository e clicchiamo su **Settings**:
 
-<figure><img src="images/08-01-github-settings.png" alt="github settings" style="width: 100%; height: auto;"><figcaption>Apertura delle impostazioni della repository</figcaption></figure>
+<figure><img src="images/08-01-github-settings.png" alt="github settings" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Apertura delle impostazioni della repository</figcaption></figure>
 
 Scorriamo verso il basso fino alla sezione **Pages**:
 
-<figure><img src="images/08-02-settings-pages.png" alt="github pages" style="width: 100%; height: auto;"><figcaption>Accesso alla sezione GitHub Pages</figcaption></figure>
+<figure><img src="images/08-02-settings-pages.png" alt="github pages" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Accesso alla sezione GitHub Pages</figcaption></figure>
 
 Lasciamo l’opzione **Source: Deploy from a branch** (di solito è il default).  
 Poco sotto, in **Branch**, clicchiamo su *None* e selezioniamo invece `main`.  
 Infine clicchiamo su **Save**:
 
-<figure><img src="images/08-03-from-branch.png" alt="deploy from a branch - main" style="width: 100%; height: auto;"><figcaption>Impostazione: Deploy from a branch → main</figcaption></figure>
+<figure><img src="images/08-03-from-branch.png" alt="deploy from a branch - main" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Impostazione: Deploy from a branch → main</figcaption></figure>
 
 **Nota importante:** se lavoriamo con un progetto Quarto più complesso (ad esempio un sito, un blog o un libro), il contenuto renderizzato potrebbe trovarsi dentro una sottocartella chiamata `docs` o simili. In questo caso dovremo selezionare quella cartella al posto di `/ (root)`.
 
@@ -203,7 +210,7 @@ Dopo un minuto circa, aggiorniamo la pagina. Dovremmo vedere due conferme:
 - Che il deploy è attivo su: `main > / (root)`  
 - Che il sito è stato pubblicato, con il messaggio: **"Your site is live at ..."**
 
-<figure><img src="images/08-04-site-is-live.png" alt="site is live" style="width: 100%; height: auto;"><figcaption>Conferma che il sito web è online</figcaption></figure>
+<figure><img src="images/08-04-site-is-live.png" alt="site is live" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Conferma che il sito web è online</figcaption></figure>
 
 L’URL generato sarà simile a:
 
@@ -218,7 +225,7 @@ Gli altri file saranno accessibili tramite URL del tipo:
 
 A questo punto possiamo verificare che la pagina sia effettivamente online:
 
-<figure><img src="images/08-05-page-online.png" alt="home page online" style="width: 100%; height: auto;"><figcaption>Visualizzazione della home page pubblicata</figcaption></figure>
+<figure><img src="images/08-05-page-online.png" alt="home page online" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Visualizzazione della home page pubblicata</figcaption></figure>
 
 
 ## Prossimi passi
@@ -253,7 +260,11 @@ Questa sezione offre però alcuni comandi di base utili per iniziare a sviluppar
 
 ---
 
-#### ⚠️ Nota importante per il lavoro collaborativo
+Per tutto il resto, compresi temi avanzati, personalizzazioni grafiche, gestione di siti complessi e integrazioni con R, Python o bibliografie, si rimanda alla documentazione ufficiale: <a href="https://quarto.org/docs/guide/" target="_blank">Guida completa di Quarto</a>. Al seguente link trovate anche un'utilissima gallery di esempi: <a href="https://examples.quarto.pub/" target="_blank">https://examples.quarto.pub/</a>.
+
+---
+
+#### ⚠️ Nota importante per il lavoro collaborativo su GitHub
 
 Se state lavorando **insieme ad altre persone sulla stessa repository**, ricordate due regole fondamentali:
 
@@ -263,10 +274,5 @@ Se state lavorando **insieme ad altre persone sulla stessa repository**, ricorda
 
 2. **Evitare di lavorare in parallelo sugli stessi file**, perché questo può portare a conflitti difficili da risolvere.  
    In generale, è buona pratica coordinarsi e lavorare in sequenza oppure su file diversi.
-
----
-
-Per tutto il resto, compresi temi avanzati, personalizzazioni grafiche, gestione di siti complessi e integrazioni con R, Python o bibliografie, si rimanda alla documentazione ufficiale:  
-<a href="https://quarto.org/docs/guide/" target="_blank">Guida completa di Quarto</a>.
 
 
