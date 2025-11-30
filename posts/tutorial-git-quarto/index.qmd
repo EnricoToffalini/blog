@@ -9,7 +9,7 @@ Saper creare e pubblicare pagine web online, in particolare pagine tecniche con 
 
 Questa stessa pagina web e questo blog sono stati creati con il sistema di publishing **Quarto** (anche *rmarkdown* va benissimo se si lavora principalmente con R), ma si tratta solo di una delle opzioni disponibili. Pagine HTML, PDF o altri tipi di documenti possono essere prodotti in molti modi diversi e diffusi online tramite **GitHub Pages**. Per capire cosa è possibile realizzare, ecco alcuni esempi concreti di prodotti sviluppati con Quarto (o strumenti simili) e pubblicati su GitHub Pages: 
 
-- siti personali con taglio accademico (es. <a href="drganghe.github.io" target="_blank">drganghe.github.io</a>);
+- siti personali con taglio accademico (es. <a href="https://drganghe.github.io" target="_blank">https://drganghe.github.io</a>);
 - libri online (es. <a href="https://lakens.github.io/statistical_inferences/" target="_blank">https://lakens.github.io/statistical_inferences/</a>, con tanto di <a href="https://lakens.github.io/statistical_inferences/Improving-Your-Statistical-Inferences.pdf" target="_blank">versione pdf impaginata</a>);
 - blog (es. <a href="https://www.jessesadler.com/" target="_blank">https://www.jessesadler.com/</a>); 
 - corsi e materiali didattici (es. <a href="https://enricotoffalini.github.io/Basics-R/" target="_blank">Basics of R for Data Science</a>; <a href="https://github.com/arca-dpss" target="_blank">Corsi ARCA</a>; <a href="https://psicostat.github.io/psicostat-teaching/" target="_blank">Psicostat teaching</a>);
