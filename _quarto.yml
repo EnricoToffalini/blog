@@ -5,7 +5,7 @@ project:
   output-dir: docs
 
 website:
-  title: "home"
+  title: "blog"
   navbar:
     left: 
       - href: https://enricotoffalini.github.io
