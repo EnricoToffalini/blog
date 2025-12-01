@@ -1,5 +1,5 @@
 ---
-title: "Creare Pagine Online: Tutorial base su Git, GitHub, GitHub pages, Quarto (per utenti Windows)"
+title: "Creare Pagine Online: Tutorial base su Git, GitHub, GitHub pages, Quarto"
 author: "Enrico Toffalini"
 image: images/01-01-git.png
 date: "2025-11-30"
@@ -8,16 +8,16 @@ format: html
 
 Saper creare e pubblicare pagine web online, in particolare pagine tecniche con report prodotti in R o Python, ma anche **siti web** più generali, **libri online**, **blog** o singole pagine, è una competenza fondamentale per giovani ricercatori e ricercatrici. Queste abilità permettono di condividere il proprio lavoro in ottica collaborativa, garantire riproducibilità e trasparenza secondo i principi dell’***Open Science***, e contribuire alla <a href="https://enricotoffalini.github.io/blog/posts/terza-missione-open-science/" target="_blank">***Terza Missione***</a>, nel senso di valorizzazione dei prodotti scientifici, diffusione della conoscenza e divulgazione verso utenti non-accademici (collaboratori in aziende, case editrici, professionisti, clinici, ecc.). 
 
-Questa stessa pagina web e <a href="https://enricotoffalini.github.io/blog/" target="_blank">questo blog</a> sono stati creati con il sistema di publishing **Quarto** (anche *rmarkdown* va benissimo se si lavora principalmente con R), ma si tratta solo di una delle opzioni disponibili. Pagine HTML, PDF o altri tipi di documenti possono essere prodotti in molti modi diversi e diffusi online tramite **GitHub Pages**. Per capire cosa è possibile realizzare, ecco alcuni esempi concreti di prodotti sviluppati con Quarto (o strumenti simili) e pubblicati su GitHub Pages: 
+Questa pagina web e <a href="https://enricotoffalini.github.io/blog/" target="_blank">questo stesso blog</a> sono stati creati con il sistema di publishing **Quarto** (anche *rmarkdown* va benissimo se si lavora principalmente con R), ma si tratta solo di una delle opzioni disponibili. Pagine HTML, PDF o altri tipi di documenti possono essere prodotti in molti modi diversi e diffusi online tramite **GitHub Pages**. Per capire cosa è possibile realizzare, ecco alcuni esempi concreti di prodotti sviluppati con Quarto (o strumenti simili) e pubblicati su GitHub Pages: 
 
-- siti personali con taglio accademico (es. <a href="https://drganghe.github.io" target="_blank">https://drganghe.github.io</a>);
-- libri online (es. <a href="https://lakens.github.io/statistical_inferences/" target="_blank">https://lakens.github.io/statistical_inferences/</a>, con tanto di <a href="https://lakens.github.io/statistical_inferences/Improving-Your-Statistical-Inferences.pdf" target="_blank">versione pdf impaginata</a>);
-- blog (es. <a href="https://www.jessesadler.com/" target="_blank">https://www.jessesadler.com/</a>); 
-- corsi e materiali didattici (es. <a href="https://enricotoffalini.github.io/Basics-R/" target="_blank">Basics of R for Data Science</a>; <a href="https://github.com/arca-dpss" target="_blank">Corsi ARCA</a>; <a href="https://psicostat.github.io/psicostat-teaching/" target="_blank">Psicostat teaching</a>);
+- **siti personali** con taglio accademico (es. <a href="https://drganghe.github.io" target="_blank">https://drganghe.github.io</a>);
+- **libri** online (es. <a href="https://lakens.github.io/statistical_inferences/" target="_blank">https://lakens.github.io/statistical_inferences/</a>, con tanto di <a href="https://lakens.github.io/statistical_inferences/Improving-Your-Statistical-Inferences.pdf" target="_blank">versione pdf impaginata</a>);
+- **blog** (es. <a href="https://www.jessesadler.com/" target="_blank">https://www.jessesadler.com/</a>); 
+- **corsi** e materiali didattici (es. <a href="https://enricotoffalini.github.io/Basics-R/" target="_blank">Basics of R for Data Science</a>; <a href="https://github.com/arca-dpss" target="_blank">Corsi ARCA</a>; <a href="https://psicostat.github.io/psicostat-teaching/" target="_blank">Psicostat teaching</a>);
 
 Il presente tutorial dà per scontato che abbiate già più o meno un’idea di come creare i documenti che desiderate e vi guida nei passaggi successivi in modo semplice, passo per passo e con screenshot, fino alla pubblicazione online tramite **GitHub Pages**. GitHub è uno strumento estremamente potente per tutti gli obiettivi citati sopra.  
 
-Il tutorial è rivolto soprattutto a utenti **Windows**. Chi utilizza **Linux** o **macOS** può adattare facilmente i passaggi, chiedere aiuto all’AI oppure consultare altri tutorial specifici.
+Il tutorial è rivolto soprattutto a utenti **Windows**. Chi utilizza **Linux** o **macOS** può adattare facilmente i passaggi, chiedere aiuto all’AI oppure consultare altri tutorial specifici. → Nel caso, <a href="https://filippogambarota.github.io/hnotes/n/intro-gh-pages.html" target="_blank">questa pagina scritta da Filippo Gambarota</a> può essere di aiuto!
 
 ### Obiettivi del tutorial
 
