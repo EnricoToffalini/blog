@@ -1,0 +1,64 @@
+---
+title: "Open Source per l'Università: Dottorati, corsi di laurea e docenti abbandonino software proprietario se c'è alternativa"
+author: "Enrico Toffalini"
+date: "2025-12-01"
+image: rpython.png
+format: html
+---
+
+## Abbandonare il software proprietario negli insegnamenti universitari
+
+Diversi corsi universitari, a vari livelli, si basano tuttora su **software commerciali a licenza onerosa**. Sebbene in alcuni casi tali strumenti offrano funzionalità non facilmente sostituibili, **nella maggior parte dei casi esistono alternative open source, gratuite e ormai assolutamente mainstream** sia nella ricerca internazionale sia nei contesti applicati.
+
+L’anno scorso avevo avanzato una <a href="https://docs.google.com/document/d/1-2Ty2Sd1QQzCCFt3SZpz3hhRkM3XEdvf/" target="_blank">**proposta per l'Open Source**</a> <b>all’interno dell’offerta formativa della Scuola di Dottorato in</b> <a href="https://phd.psy.unipd.it/" target="_blank">**Psychological Sciences**</a> dell’Università di Padova, dove insegno. La proposta puntava a unificare gli insegnamenti metodologici del dottorato adottando un ecosistema coerente basato su R (per l’analisi statistica) e Python (per la programmazione generale). **L’uso di software proprietari dovrebbe rimanere previsto solo quando strettamente necessario**, previa motivazione esplicita giustificata dall'assenza di alternative, e preferibilmente limitato a corsi opzionali. **Abituarsi e abituare colleghe e colleghi, studentesse e studenti, a usare software proprietari per esigenze di data science (es. SPSS) per le quali esistono alternative open significa produrre competenze più fragili, meno trasferibili e non allineate agli standard internazionali.** 
+
+Continuare a insegnare a studentesse e studenti software chiusi e costosi presenta diversi rischi, che incidono sulla qualità della formazione e sulla sua equità:
+
+-   **Dipendenza economica**: Molte licenze sono disponibili agli utenti solo fintanto che sono incardinati in università (e queste licenze vengono pagate con soldi pubblici). **Una volta conclusi gli studi, chi desidera continuare a utilizzare gli stessi strumenti deve sostenere costi elevati** o cercare finanziamenti. Questa dipendenza economica è **in contrasto con la missione dell’università pubblica**. 
+-   **Competenze scarsamente trasferibili**: La maggior parte dei contesti accademici e aziendali utilizza ormai soluzioni open source in specifici ambiti, ad esempio R e Python (vedi sotto) per analisi dati, modeling e programmazione. Sul piano della data science queste due piattaforme coprono praticamente tutte le esigenze, salvo casi altamente specialistici (che nella presente proposta sono ammissibili, ma da giustificare esplicitamente caso per caso).
+-   **Incoerenza didattica**: Corsi che si basano su strumenti diversi senza una logica unitaria **creano confusione a studentesse e studenti**, trovandosi talvolta a studiare temi complementari o addirittura propedeutici usando software diversi.
+
+Gli strumenti open source garantiscono continuità, autonomia e l’accesso a comunità globali attive. Adottare soluzioni libere non è solo una scelta tecnica, ma anche una **scelta politica e culturale**, coerente con i principi dell’Open Science. Peraltro, promuovere attivamente l'uso di software open source implica **un effettivo risparmio per le casse degli atenei**, finanziate prevalentemente, in Italia, dal contribuente pubblico con le tasse.
+
+## R e Python: pilastri della data science all’università e oltre
+
+La <a href="https://docs.google.com/document/d/1-2Ty2Sd1QQzCCFt3SZpz3hhRkM3XEdvf/" target="_blank">proposta che avevo fatto per il dottorato</a> riguardava specialmente <a href="https://www.r-project.org/" target="_blank">R</a> e <a href="https://www.python.org/" target="_blank">Python</a>: i loro immensi ecosistemi, in continuo ampliamento e sempre più integrati tra loro, rappresentano oggi i pilastri fondamentali della data science.
+
+#### R 
+È lo **standard globale per l’analisi statistica**, il modeling statistico avanzato, la psicometria, la visualizzazione dei dati e numerosi metodi sviluppati direttamente nella comunità scientifica. È gratuito, supportato da CRAN e dalle community accademiche, ed è progettato da chi fa ricerca per chi fa ricerca. L'enorme ampliamento del suo ecosistema lo proietta già oltre la sola analisi statistica (es. shiny per webapp basate sui dati, Quarto publishing system per produrre siti, libri, blog, ecc.). 
+
+#### Python
+È il **linguaggio di programmazione più usato in assoluto**, incluse le esigenze di data science generale, l’analisi di *big data*, il *machine learning* e l’intelligenza artificiale (es. chatGPT è stato sviluppato dentro l'ecosistema Python). È onnipresente nel mondo accademico, aziendale e tecnologico, ed è essenziale per chi opera in contesti interdisciplinari o applicati. Per chi lavora nelle scienze del comportamento è molto utile pure per la programmazione di esperimenti (es. <a href="https://osdoc.cogsci.nl/" target="_blank">OpenSesame</a>, <a href="https://www.psychopy.org/" target="_blank">PsychoPy</a>).
+
+Insieme, **R e Python coprono quasi tutto lo spettro delle competenze necessarie all'elaborazione dati contemporanea**. L’università dovrebbe promuoverne l'utilizzo quanto più possibile per garantire autonomia, continuità e accessibilità della formazione, scegliendo strumenti che non mettano barriere economiche né limitazioni tecniche alla ricerca, e soprattutto che non arrechino danno al futuro di studentesse e studenti dei corsi di dottorato, una volta che saranno ricercatrici e ricercatori indipendenti. 
+
+---
+
+<details>
+<summary><p style="font-size:28px;">Riferimenti internazionali: <em>Open Science</em> come standard</p></summary>
+
+Open science e open source sono temi gemelli. Non è possibile promuovere davvero l'open science se metodi, dati, analisi e risultati non sono esaminabili e riproducibili da chiunque, ovunque, al minor costo possibile. L'adozione di software libero / open source è coerente con le linee guida internazionali che promuovono infrastrutture open science, trasparenti e sostenibili per la ricerca.
+
+<a href="https://www.unesco.org/en/open-science/implementation" target="_blank">**UNESCO (2021) – Recommendation on Open Science**</a>
+
+La raccomandazione UNESCO definisce un quadro globale per la scienza aperta e invita gli Stati membri a sviluppare:
+
+- **infrastrutture digitali aperte**, comprese piattaforme e strumenti accessibili senza barriere economiche;  
+- **pratiche scientifiche trasparenti e riproducibili**, favorite dall’uso di strumenti ispezionabili;  
+- **equità nell’accesso alla conoscenza**, riducendo dipendenze da licenze e da soluzioni proprietarie.
+
+**L’uso di software open source nelle università è pienamente coerente con questi principi.**
+
+<a href="https://rea.ec.europa.eu/open-science_en" target="_blank">**European Commission – Open Science in Horizon Europe (REA)**</a>
+
+La Commissione Europea definisce l’Open Science come un approccio basato su **condivisione di conoscenza, risultati e strumenti** lungo tutto il ciclo di ricerca, **infrastrutture aperte e interoperabili**, **trasparenza, collaborazione e accessibilità**. Nelle politiche europee, la **ricerca finanziata con fondi pubblici** deve essere resa quanto più aperta possibile (*"as open as possible, as closed as necessary"*). **L’adozione di strumenti software aperti / open source favorisce la conformità a questo principio**.
+
+<a href="https://www.nationalacademies.org/projects/PGA-OFS-16-02" target="_blank">**National Academies (USA) - Open Science by Design (2018)**</a>
+
+Il rapporto propone la scienza aperta come modello per la ricerca moderna e sottolinea che le pratiche scientifiche dovrebbero basarsi su strumenti: **verificabili**, **modificabili**, **accessibili**. **L’uso di software proprietario nelle università ostacola ovviamente tali condizioni** e limita la formazione alle pratiche di ricerca contemporanee.
+
+</details>
+
+---
+
+> A margine (tema diverso, andrebbe fatto un discorso a parte) vale la pena segnalare la contraddizione della dotazione informatica di base. Da utente pragmatico (tutto quanto detto sopra non è una crociata idealista: è una posizione puramente pragmatica) finisco per essere "Windows user" per forza: l'università fornisce ai docenti esclusivamente computer con Microsoft Windows preinstallato, acquistando licenze pagate con fondi pubblici. Vero è che Microsoft rappresenta di fatto l'opzione mainstream nel suo ambito (al contrario di altri software proprietari), ma questo obbligo implicito finisce per rafforzare uno standard contrario all'open source, scoraggiando istituzionalmente l’adozione di strumenti liberi (es. Linux) anche dentro un contesto (quello universitario) che sarebbe più che predisposto e capace di accoglierli. I dispositivi forniti non sono progettati né configurati per facilitarne l’utilizzo. Ne deriva una dipendenza istituzionale da un unico fornitore commerciale, in contrasto con i principi di autonomia e di buona gestione del denaro pubblico.

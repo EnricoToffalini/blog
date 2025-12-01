@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Enrico Toffalini">
 
-<title>toffeeblog – home</title>
+<title>Open Source per l’Università: Dottorati, corsi di laurea e docenti abbandonino software proprietario se c’è alternativa – home</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,25 +24,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-dfb324f25d9b1687192fa8be62ac8f9c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-dfb324f25d9b1687192fa8be62ac8f9c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -69,79 +68,19 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Ricerca"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-<link rel="shortcut icon" href="images/favicon.png">
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="homestyles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">home</span>
     </a>
   </div>
@@ -159,7 +98,7 @@ window.Quarto = {
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
     <a class="nav-link" href="https://psicostat.dpss.psy.unipd.it/"> 
-<span class="menu-text"><img src="./images/faviconpsicostat2.png" style="height: 22px; margin-top: -4px;"></span></a>
+<span class="menu-text"><img src="../../images/faviconpsicostat2.png" style="height: 22px; margin-top: -4px;"></span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/EnricoToffalini"> <i class="bi bi-github" role="img">
@@ -176,142 +115,99 @@ window.Quarto = {
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page-left">
-      <h1 class="title">toffeeblog</h1>
+    <div class="quarto-title column-body">
+      <h1 class="title">Open Source per l’Università: Dottorati, corsi di laurea e docenti abbandonino software proprietario se c’è alternativa</h1>
                       </div>
   </div>
     
   
-  <div class="quarto-title-meta column-page-left">
+  <div class="quarto-title-meta">
 
+      <div>
+      <div class="quarto-title-meta-heading">Autore/Autrice</div>
+      <div class="quarto-title-meta-contents">
+               <p>Enrico Toffalini </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Data di Pubblicazione</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">1 dicembre 2025</p>
+      </div>
+    </div>
     
       
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categorie</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">Tutti <span class="quarto-category-count">(4)</span></div></div></div>
+    
 <!-- main -->
-<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
 
+<section id="abbandonare-il-software-proprietario-negli-insegnamenti-universitari" class="level2">
+<h2 class="anchored" data-anchor-id="abbandonare-il-software-proprietario-negli-insegnamenti-universitari">Abbandonare il software proprietario negli insegnamenti universitari</h2>
+<p>Diversi corsi universitari, a vari livelli, si basano tuttora su <strong>software commerciali a licenza onerosa</strong>. Sebbene in alcuni casi tali strumenti offrano funzionalità non facilmente sostituibili, <strong>nella maggior parte dei casi esistono alternative open source, gratuite e ormai assolutamente mainstream</strong> sia nella ricerca internazionale sia nei contesti applicati.</p>
+<p>L’anno scorso avevo avanzato una <a href="https://docs.google.com/document/d/1-2Ty2Sd1QQzCCFt3SZpz3hhRkM3XEdvf/" target="_blank"><strong>proposta per l’Open Source</strong></a> <b>all’interno dell’offerta formativa della Scuola di Dottorato in</b> <a href="https://phd.psy.unipd.it/" target="_blank"><strong>Psychological Sciences</strong></a> dell’Università di Padova, dove insegno. La proposta puntava a unificare gli insegnamenti metodologici del dottorato adottando un ecosistema coerente basato su R (per l’analisi statistica) e Python (per la programmazione generale). <strong>L’uso di software proprietari dovrebbe rimanere previsto solo quando strettamente necessario</strong>, previa motivazione esplicita giustificata dall’assenza di alternative, e preferibilmente limitato a corsi opzionali. <strong>Abituarsi e abituare colleghe e colleghi, studentesse e studenti, a usare software proprietari per esigenze di data science (es. SPSS) per le quali esistono alternative open significa produrre competenze più fragili, meno trasferibili e non allineate agli standard internazionali.</strong></p>
+<p>Continuare a insegnare a studentesse e studenti software chiusi e costosi presenta diversi rischi, che incidono sulla qualità della formazione e sulla sua equità:</p>
+<ul>
+<li><strong>Dipendenza economica</strong>: Molte licenze sono disponibili agli utenti solo fintanto che sono incardinati in università (e queste licenze vengono pagate con soldi pubblici). <strong>Una volta conclusi gli studi, chi desidera continuare a utilizzare gli stessi strumenti deve sostenere costi elevati</strong> o cercare finanziamenti. Questa dipendenza economica è <strong>in contrasto con la missione dell’università pubblica</strong>.</li>
+<li><strong>Competenze scarsamente trasferibili</strong>: La maggior parte dei contesti accademici e aziendali utilizza ormai soluzioni open source in specifici ambiti, ad esempio R e Python (vedi sotto) per analisi dati, modeling e programmazione. Sul piano della data science queste due piattaforme coprono praticamente tutte le esigenze, salvo casi altamente specialistici (che nella presente proposta sono ammissibili, ma da giustificare esplicitamente caso per caso).</li>
+<li><strong>Incoerenza didattica</strong>: Corsi che si basano su strumenti diversi senza una logica unitaria <strong>creano confusione a studentesse e studenti</strong>, trovandosi talvolta a studiare temi complementari o addirittura propedeutici usando software diversi.</li>
+</ul>
+<p>Gli strumenti open source garantiscono continuità, autonomia e l’accesso a comunità globali attive. Adottare soluzioni libere non è solo una scelta tecnica, ma anche una <strong>scelta politica e culturale</strong>, coerente con i principi dell’Open Science. Peraltro, promuovere attivamente l’uso di software open source implica <strong>un effettivo risparmio per le casse degli atenei</strong>, finanziate prevalentemente, in Italia, dal contribuente pubblico con le tasse.</p>
+</section>
+<section id="r-e-python-pilastri-della-data-science-alluniversità-e-oltre" class="level2">
+<h2 class="anchored" data-anchor-id="r-e-python-pilastri-della-data-science-alluniversità-e-oltre">R e Python: pilastri della data science all’università e oltre</h2>
+<p>La <a href="https://docs.google.com/document/d/1-2Ty2Sd1QQzCCFt3SZpz3hhRkM3XEdvf/" target="_blank">proposta che avevo fatto per il dottorato</a> riguardava specialmente <a href="https://www.r-project.org/" target="_blank">R</a> e <a href="https://www.python.org/" target="_blank">Python</a>: i loro immensi ecosistemi, in continuo ampliamento e sempre più integrati tra loro, rappresentano oggi i pilastri fondamentali della data science.</p>
+<section id="r" class="level4">
+<h4 class="anchored" data-anchor-id="r">R</h4>
+<p>È lo <strong>standard globale per l’analisi statistica</strong>, il modeling statistico avanzato, la psicometria, la visualizzazione dei dati e numerosi metodi sviluppati direttamente nella comunità scientifica. È gratuito, supportato da CRAN e dalle community accademiche, ed è progettato da chi fa ricerca per chi fa ricerca. L’enorme ampliamento del suo ecosistema lo proietta già oltre la sola analisi statistica (es. shiny per webapp basate sui dati, Quarto publishing system per produrre siti, libri, blog, ecc.).</p>
+</section>
+<section id="python" class="level4">
+<h4 class="anchored" data-anchor-id="python">Python</h4>
+<p>È il <strong>linguaggio di programmazione più usato in assoluto</strong>, incluse le esigenze di data science generale, l’analisi di <em>big data</em>, il <em>machine learning</em> e l’intelligenza artificiale (es. chatGPT è stato sviluppato dentro l’ecosistema Python). È onnipresente nel mondo accademico, aziendale e tecnologico, ed è essenziale per chi opera in contesti interdisciplinari o applicati. Per chi lavora nelle scienze del comportamento è molto utile pure per la programmazione di esperimenti (es. <a href="https://osdoc.cogsci.nl/" target="_blank">OpenSesame</a>, <a href="https://www.psychopy.org/" target="_blank">PsychoPy</a>).</p>
+<p>Insieme, <strong>R e Python coprono quasi tutto lo spettro delle competenze necessarie all’elaborazione dati contemporanea</strong>. L’università dovrebbe promuoverne l’utilizzo quanto più possibile per garantire autonomia, continuità e accessibilità della formazione, scegliendo strumenti che non mettano barriere economiche né limitazioni tecniche alla ricerca, e soprattutto che non arrechino danno al futuro di studentesse e studenti dei corsi di dottorato, una volta che saranno ricercatrici e ricercatori indipendenti.</p>
+<hr>
+<details>
+<summary>
+<p style="font-size:28px;">
+Riferimenti internazionali: <em>Open Science</em> come standard
+</p>
+</summary>
+<p>Open science e open source sono temi gemelli. Non è possibile promuovere davvero l’open science se metodi, dati, analisi e risultati non sono esaminabili e riproducibili da chiunque, ovunque, al minor costo possibile. L’adozione di software libero / open source è coerente con le linee guida internazionali che promuovono infrastrutture open science, trasparenti e sostenibili per la ricerca.</p>
+<p><a href="https://www.unesco.org/en/open-science/implementation" target="_blank"><strong>UNESCO (2021) – Recommendation on Open Science</strong></a></p>
+<p>La raccomandazione UNESCO definisce un quadro globale per la scienza aperta e invita gli Stati membri a sviluppare:</p>
+<ul>
+<li><strong>infrastrutture digitali aperte</strong>, comprese piattaforme e strumenti accessibili senza barriere economiche;<br>
+</li>
+<li><strong>pratiche scientifiche trasparenti e riproducibili</strong>, favorite dall’uso di strumenti ispezionabili;<br>
+</li>
+<li><strong>equità nell’accesso alla conoscenza</strong>, riducendo dipendenze da licenze e da soluzioni proprietarie.</li>
+</ul>
+<p><strong>L’uso di software open source nelle università è pienamente coerente con questi principi.</strong></p>
+<p><a href="https://rea.ec.europa.eu/open-science_en" target="_blank"><strong>European Commission – Open Science in Horizon Europe (REA)</strong></a></p>
+<p>La Commissione Europea definisce l’Open Science come un approccio basato su <strong>condivisione di conoscenza, risultati e strumenti</strong> lungo tutto il ciclo di ricerca, <strong>infrastrutture aperte e interoperabili</strong>, <strong>trasparenza, collaborazione e accessibilità</strong>. Nelle politiche europee, la <strong>ricerca finanziata con fondi pubblici</strong> deve essere resa quanto più aperta possibile (<em>“as open as possible, as closed as necessary”</em>). <strong>L’adozione di strumenti software aperti / open source favorisce la conformità a questo principio</strong>.</p>
+<p><a href="https://www.nationalacademies.org/projects/PGA-OFS-16-02" target="_blank"><strong>National Academies (USA) - Open Science by Design (2018)</strong></a></p>
+<p>Il rapporto propone la scienza aperta come modello per la ricerca moderna e sottolinea che le pratiche scientifiche dovrebbero basarsi su strumenti: <strong>verificabili</strong>, <strong>modificabili</strong>, <strong>accessibili</strong>. <strong>L’uso di software proprietario nelle università ostacola ovviamente tali condizioni</strong> e limita la formazione alle pratiche di ricerca contemporanee.</p>
+</details>
+<hr>
+<blockquote class="blockquote">
+<p>A margine (tema diverso, andrebbe fatto un discorso a parte) vale la pena segnalare la contraddizione della dotazione informatica di base. Da utente pragmatico (tutto quanto detto sopra non è una crociata idealista: è una posizione puramente pragmatica) finisco per essere “Windows user” per forza: l’università fornisce ai docenti esclusivamente computer con Microsoft Windows preinstallato, acquistando licenze pagate con fondi pubblici. Vero è che Microsoft rappresenta di fatto l’opzione mainstream nel suo ambito (al contrario di altri software proprietari), ma questo obbligo implicito finisce per rafforzare uno standard contrario all’open source, scoraggiando istituzionalmente l’adozione di strumenti liberi (es. Linux) anche dentro un contesto (quello universitario) che sarebbe più che predisposto e capace di accoglierli. I dispositivi forniti non sono progettati né configurati per facilitarne l’utilizzo. Ne deriva una dipendenza istituzionale da un unico fornitore commerciale, in contrasto con i principi di autonomia e di buona gestione del denaro pubblico.</p>
+</blockquote>
 
 
+</section>
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1764543600000" data-listing-file-modified-sort="1764603970063" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1087">
-<div class="thumbnail"><a href="./posts/dottorato-open-source/index.html" class="no-external">
-
-<img loading="lazy" src="./posts/dottorato-open-source/rpython.png" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/dottorato-open-source/index.html" class="no-external">Open Source per l’Università: Dottorati, corsi di laurea e docenti abbandonino software proprietario se c’è alternativa</a>
-</h3>
-<div class="delink listing-description"><a href="./posts/dottorato-open-source/index.html" class="no-external">
-Diversi corsi universitari, a vari livelli, si basano tuttora su <strong>software commerciali a licenza onerosa</strong>. Sebbene in alcuni casi tali strumenti offrano funzionalità non…<strong></strong>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/dottorato-open-source/index.html" class="no-external">
-<div class="listing-date">
-1 dic 2025
-</div>
-<div class="listing-author">
-Enrico Toffalini
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1764457200000" data-listing-file-modified-sort="1764587824668" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="13" data-listing-word-count-sort="2494">
-<div class="thumbnail"><a href="./posts/tutorial-git-quarto/index.html" class="no-external">
-
-<img loading="lazy" src="./posts/tutorial-git-quarto/images/01-01-git.png" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/tutorial-git-quarto/index.html" class="no-external">Creare Pagine Online: Tutorial base su Git, GitHub, GitHub pages, Quarto</a>
-</h3>
-<div class="delink listing-description"><a href="./posts/tutorial-git-quarto/index.html" class="no-external">
-Saper creare e pubblicare pagine web online, in particolare pagine tecniche con report prodotti in R o Python, ma anche <strong>siti web</strong> più generali, <strong>libri online</strong>, <strong>blog</strong> o singole…<strong><em></em></strong><strong><em></em></strong>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/tutorial-git-quarto/index.html" class="no-external">
-<div class="listing-date">
-30 nov 2025
-</div>
-<div class="listing-author">
-Enrico Toffalini
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1764025200000" data-listing-file-modified-sort="1764186193443" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1660">
-<div class="thumbnail"><a href="./posts/terza-missione-open-science/index.html" class="no-external">
-
-<p class="card-img-top"><img src="posts\terza-missione-open-science\hardwicke.png" alt="Hardwicke et al. 2024"  class="thumbnail-image card-img"/></p>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/terza-missione-open-science/index.html" class="no-external">L’Open Science è Terza Missione?</a>
-</h3>
-<div class="delink listing-description"><a href="./posts/terza-missione-open-science/index.html" class="no-external">
-Negli ultimi anni la <strong>Terza Missione</strong> è diventata centrale all’interno dell’università italiana, diventando non solo un ambito riconosciuto a livello istituzionale, ma anche…<strong></strong><strong></strong>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/terza-missione-open-science/index.html" class="no-external">
-<div class="listing-date">
-25 nov 2025
-</div>
-<div class="listing-author">
-Enrico Toffalini
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1763766000000" data-listing-file-modified-sort="1764189472440" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-word-count-sort="1838">
-<div class="thumbnail"><a href="./posts/soddisfazione-studenti/index.html" class="no-external">
-
-<p class="card-img-top"><img src="posts\soddisfazione-studenti\goodhart.png" alt="Legge di Goodhart"  class="thumbnail-image card-img"/></p>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/soddisfazione-studenti/index.html" class="no-external">L’Illusione della Soddisfazione: Perché “Opinioni di Studentesse e Studenti” NON Misurano la Qualità Didattica</a>
-</h3>
-<div class="delink listing-description"><a href="./posts/soddisfazione-studenti/index.html" class="no-external">
-<em>“Quando un indicatore diventa un target da massimizzare, smette di essere un buon indicatore”</em> - Legge di Goodhart
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/soddisfazione-studenti/index.html" class="no-external">
-<div class="listing-date">
-22 nov 2025
-</div>
-<div class="listing-author">
-Enrico Toffalini
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">Nessun risultato</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

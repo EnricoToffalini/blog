@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/dottorato-open-source/index.html",
       "/posts/tutorial-git-quarto/index.html",
       "/posts/terza-missione-open-science/index.html",
       "/posts/soddisfazione-studenti/index.html"
