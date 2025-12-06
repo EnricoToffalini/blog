@@ -6,7 +6,7 @@ image: rpython.png
 format: html
 ---
 
-## Abbandonare il software proprietario negli insegnamenti universitari
+## Ban al software proprietario negli insegnamenti universitari
 
 Diversi corsi universitari, a vari livelli, si basano tuttora su **software commerciali a licenza onerosa**. Sebbene in alcuni casi tali strumenti offrano funzionalità non facilmente sostituibili, **nella maggior parte dei casi esistono alternative open source, gratuite e ormai assolutamente mainstream** sia nella ricerca internazionale sia nei contesti applicati.
 
