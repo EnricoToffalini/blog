@@ -1,5 +1,5 @@
 ---
-title: 'L’Illusione della Soddisfazione: Perché "Opinioni di Studentesse e Studenti" NON Misurano la Qualità Didattica'
+title: 'L’Illusione della Soddisfazione: "Opinioni di Studentesse e Studenti" NON Misurano la Qualità Didattica'
 author: "Enrico Toffalini"
 date: "2025-11-22"
 bibliography: "references.bib"

@@ -2,7 +2,7 @@
 title: "Creare Pagine Online: Tutorial base su Git, GitHub, GitHub pages, Quarto"
 author: "Enrico Toffalini"
 image: images/01-01-git.png
-date: "2025-11-30"
+date: "2025-12-05"
 format: html
 ---
 
