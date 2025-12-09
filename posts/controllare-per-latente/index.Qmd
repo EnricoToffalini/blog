@@ -1,0 +1,110 @@
+---
+title: '"Controllare per" ma dimenticare le cause comuni (i.e., "latenti")'
+author: "Enrico Toffalini"
+date: "2025-12-09"
+bibliography: "references.bib"
+format: html
+---
+
+*(Questi appunti, ancora da riordinare sono stimolati da un recente e utilissimo <a href="https://feracotommaso.github.io/posts/iatmeasure.html" target="_blank">post di Tommaso Feraco</a> e da numerose cose viste negli anni, nonché dai miei stessi errori.)*
+
+::: abstract
+**Riassunto: Non basta controllare per tante cose, serve un modello di misura e un vero DAG per l'inferenza causale. E i SEM sono lo strumento per implementarli e per testare davvero le teorie.**
+:::
+
+Poniamo di vedere in un paper una cosa tipo quella sotto. È un caso paradigmatico. Il paper racconta che diverse abilità cognitive predicono l'outcome (es. l'adattamento), ciascuna indipendentemente e *above and beyond* le altre. Assumendo che i fattori cognitivi siano causali rispetto all'adattamento, si può anche dire che *ciascuna abilità cognitiva causa l'outcome al netto delle altre*. 
+
+<figure>
+  <img src="wrong-model.png" alt="wrong-model" style="width: 100%; height: auto;">
+  <figcaption><b>Figura 1</b>. <em>Diverse abilità cognitive sembrano predire indipendentemente lo stesso outcome</em></figcaption>
+</figure>
+
+In realtà, nessuna delle abilità cognitive causa necessariamente l'adattamento, nemmeno sotto l'assunzione fatta. Perché? Perché probabilmente, almeno secondo i modelli ora mainstream, è un errore di inferenza causale. 
+
+I predittori (abilità verbali, ragionamento fluido, ecc.) evidentemente correlano tra loro: mostrano una *positive manifold*. ***Ma perché correlano?*** Questo è il problema. Sebbene esistano diverse teorie dell'intelligenza, la visione tuttora mainstream è che diverse abilità correlano perché condividono delle ***cause comuni***. Queste cause comuni sono spesso definite "fattore generale" (g) dell'intelligenza. Si può opinare, si può dire che in tutto o in parte alcune abilità siano a loro volta causali rispetto ad altre (es. alcuni danno forte centralità alla memoria di lavoro/working memory, ritenendola a monte di altre abilità). Va bene: in qualsiasi caso, per fare inferenza valida dovremmo partire da un DAG delle relazioni causali, in cui non ci si limita a dire "le cose correlano", ma si cerca di dare conto del perché. 
+
+Se prendiamo il caso più semplice, quello mainstream, assunto dai modelli gerarchici delle abilità cognitive quali il CHC, possiamo assumere che le diverse abilità cognitive correlino anche *solo* perché condividono cause comuni (il fattore g). Se implementiamo questo modello correttamente, senza dover raccogliere nessuno dato in più, usando solo quello che abbiamo già nel dataset, potremmo scoprire che ***tutti*** gli effetti precedentemente "scoperti" spariscono, si azzerano, non sono più significativi. 
+
+<figure>
+  <img src="right-model.png" alt="right-model" style="width: 100%; height: auto;">
+  <figcaption><b>Figura 2</b>. <em>Una volta aggiunto un fattore sovraordinato che spiega la positive manifold tra i predittori assumendo cause comuni tra essi, potremmo scoprire che è tale fattore che spiega l'outcome, non i fattori specifici</em></figcaption>
+</figure>
+
+Per gli utenti di R che conoscono il pacchetto `lavaan`, qui sotto c'è del codice R che simula e riproduce la situazione illustrata sopra (non è possibile fittare un modello che abbia contemporaneamente *g* e anche tutti i fattori cognitivi come predittori dell'outcome, ma si possono testare uno alla volta o a blocchi) 👇 *Enjoy it!*
+
+```{r}
+#| eval: false
+#| echo: true
+#| code-fold: true
+#| code-summary: "Clicca qui per vedere il codice R"
+
+library(lavaan)
+
+# set seed per riproducibility
+set.seed(0)
+
+# genera dati e metti in un dataframe
+N = 10000
+g = rnorm(N,0,1)
+Verbal = g*0.7 + rnorm(N,0,0.51)
+Visual = g*0.6 + rnorm(N,0,0.64)
+Memory = g*0.7 + rnorm(N,0,0.51)
+Fluid = g*0.8 + rnorm(N,0,0.36)
+
+AdaptiveBehavior = g*0.5 + rnorm(N,0,1)
+
+df = data.frame(verb1 = Verbal + rnorm(N,0,0.7),
+                verb2 = Verbal + rnorm(N,0,0.7),
+                verb3 = Verbal + rnorm(N,0,0.7),
+                vis1 = Visual + rnorm(N,0,0.7),
+                vis2 = Visual + rnorm(N,0,0.7),
+                vis3 = Visual + rnorm(N,0,0.7),
+                mem1 = Memory + rnorm(N,0,0.7),
+                mem2 = Memory + rnorm(N,0,0.7),
+                fluid1 = Fluid + rnorm(N,0,0.7),
+                fluid2 = Fluid + rnorm(N,0,0.7),
+                fluid3 = Fluid + rnorm(N,0,0.7),
+                adapt1 = AdaptiveBehavior + rnorm(N,0,0.7),
+                adapt2 = AdaptiveBehavior + rnorm(N,0,0.7),
+                adapt3 = AdaptiveBehavior + rnorm(N,0,0.7)
+)
+
+#### Fittiamo il Modello Sbagliato
+wrong_model = "
+Verbal_factor =~ verb1 + verb2 + verb3
+Visual_factor =~ vis1 + vis2 + vis3
+Memory_factor =~ mem1 + mem2
+Fluid_factor =~ fluid1 + fluid2 + fluid3
+
+Adaptive_factor =~ adapt1 + adapt2 + adapt3
+
+Adaptive_factor ~ Verbal_factor + Visual_factor + Memory_factor + Fluid_factor
+"
+fitWrong = sem(model=wrong_model, data=df, std.lv=T)
+summary(fitWrong)
+
+
+#### Fittiamo il Modello Giusto
+ok_model = "
+Verbal_factor =~ verb1 + verb2 + verb3
+Visual_factor =~ vis1 + vis2 + vis3
+Memory_factor =~ mem1 + mem2
+Fluid_factor =~ fluid1 + fluid2 + fluid3
+
+g =~ Verbal_factor + Visual_factor + Memory_factor + Fluid_factor
+
+Adaptive_factor =~ adapt1 + adapt2 + adapt3
+
+Adaptive_factor ~ g + Verbal_factor + Visual_factor + Fluid_factor
+"
+fitOk = sem(model=ok_model, data=df, std.lv=T)
+summary(fitOk)
+```
+
+## Alcuni altri appunti pratici 
+
+1. Dire che le abilità cognitive *"sono fattori distinti"* per evitare il fattore sovraordinato elude il problema teorico, non considera l'esistenza di cause comuni, e comunque non spiega le intercorrelazioni. Sì, alla fine è tutto un problema di inferenza causale e di DAG, che sono cose che s'insegnano troppo poco all'università.
+1. Spesso errori concettuali come quelli illustrati sopra si sono visti usare per accreditare il ruolo delle "*Funzioni Esecutive*" al di sopra della "*Intelligenza*" rispetto all'*Adattamento*, senza considerare che in quanto abilità cognitive anche le *Funzioni Esecutive* sono teoricamente sottoposte alle cause comuni delle abilità cognitive (g); la cosa andrebbe comunque testata seriamente. 
+1. Spesso si considera che controllare per "Ragionamento fluido" / intelligenza fluida sia sufficiente e paragonabile a "controllare per intelligenza generale": anch'io sono caduto spesso in questo equivoco; ma no, "Ragionamento fluido" **non** è uguale a g.
+1. Di solito la situazione è anche peggiore di come mostrato sopra, perché ci si limita a variabili osservate, senza nemmeno ricorrere ai SEM. 
+1. Anche se avete un solo indicatore per abilità cognitiva, potete fare un sem lo stesso, dovendo però forzare quanta componente di abilità e quanta di rumore ci sia nell'indicatore osservato.

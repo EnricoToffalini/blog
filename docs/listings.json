@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/controllare-per-latente/index.html",
       "/posts/tutorial-git-quarto/index.html",
       "/posts/dottorato-open-source/index.html",
       "/posts/terza-missione-open-science/index.html",
