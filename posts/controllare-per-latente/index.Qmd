@@ -107,4 +107,7 @@ summary(fitOk)
 1. Spesso errori concettuali come quelli illustrati sopra si sono visti usare per accreditare il ruolo delle "*Funzioni Esecutive*" al di sopra della "*Intelligenza*" rispetto all'*Adattamento*, senza considerare che in quanto abilità cognitive anche le *Funzioni Esecutive* sono teoricamente sottoposte alle cause comuni delle abilità cognitive (g); la cosa andrebbe comunque testata seriamente. 
 1. Spesso si considera che controllare per "Ragionamento fluido" / intelligenza fluida sia sufficiente e paragonabile a "controllare per intelligenza generale": anch'io sono caduto spesso in questo equivoco; ma no, "Ragionamento fluido" **non** è uguale a g.
 1. Di solito la situazione è anche peggiore di come mostrato sopra, perché ci si limita a variabili osservate, senza nemmeno ricorrere ai SEM. 
-1. Anche se avete un solo indicatore per abilità cognitiva, potete fare un sem lo stesso, dovendo però forzare quanta componente di abilità e quanta di rumore ci sia nell'indicatore osservato.
+1. Anche se avete un solo indicatore per ogni abilità cognitiva, potete fare un sem lo stesso, dovendo però forzare quanta componente di abilità e quanta di rumore ci sia nell'indicatore osservato.
+1. Il problema si ripresenta spesso in vari ambiti (ad esempio modelli longitudinali).
+1. Il preciso pattern di coefficienti di regressioni nel modello "sbagliato" dipende da quanto fortemente ciascuna abilità cognitiva particolare riflette le cause comuni (g).
+1. "g" non è un'entità mistica, sono solo le cause comuni.
