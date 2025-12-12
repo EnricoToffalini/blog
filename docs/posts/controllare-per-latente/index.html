@@ -187,10 +187,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
+<p><em>Questi appunti, ancora da riordinare sono stimolati da un recente e utilissimo <a href="https://feracotommaso.github.io/posts/iatmeasure.html" target="_blank">post di Tommaso Feraco</a> e da numerose cose viste negli anni, nonché dai miei stessi errori.</em></p>
 <div class="abstract">
 <p><strong>Riassunto: Non basta controllare per tante cose, serve un modello di misura e un vero DAG per l’inferenza causale. E i SEM sono lo strumento per implementarli e per testare davvero le teorie.</strong></p>
 </div>
-<p><em>(Questi appunti, ancora da riordinare sono stimolati da un recente e utilissimo <a href="https://feracotommaso.github.io/posts/iatmeasure.html" target="_blank">post di Tommaso Feraco</a> e da numerose cose viste negli anni, nonché dai miei stessi errori.)</em></p>
 <p>Poniamo di vedere in un paper una cosa tipo quella sotto. È un caso paradigmatico. Il paper racconta che diverse abilità cognitive predicono l’outcome (es. l’adattamento), ciascuna indipendentemente e <em>above and beyond</em> le altre. Assumendo che i fattori cognitivi siano causali rispetto all’adattamento, si può anche dire che <em>ciascuna abilità cognitiva causa l’outcome al netto delle altre</em>.</p>
 <figure class="figure">
 <img src="wrong-model.png" alt="wrong-model" style="width: 100%; height: auto;" class="figure-img">
@@ -279,9 +279,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol type="1">
 <li>Dire che le abilità cognitive <em>“sono fattori distinti”</em> per evitare il fattore sovraordinato elude il problema teorico, non considera l’esistenza di cause comuni, e comunque non spiega le intercorrelazioni. Sì, alla fine è tutto un problema di inferenza causale e di DAG, che sono cose che s’insegnano troppo poco all’università.</li>
 <li>Spesso errori concettuali come quelli illustrati sopra si sono visti usare per accreditare il ruolo delle “<em>Funzioni Esecutive</em>” al di sopra della “<em>Intelligenza</em>” rispetto all’<em>Adattamento</em>, senza considerare che in quanto abilità cognitive anche le <em>Funzioni Esecutive</em> sono teoricamente sottoposte alle cause comuni delle abilità cognitive (g); la cosa andrebbe comunque testata seriamente.</li>
-<li>Spesso si considera che controllare per “Ragionamento fluido” / intelligenza fluida sia sufficiente e paragonabile a “controllare per intelligenza generale”: anch’io sono caduto spesso in questo equivoco; ma no, “Ragionamento fluido” <strong>non</strong> è uguale a g.</li>
+<li>Spesso si considera che controllare per “Ragionamento fluido” / intelligenza fluida sia sufficiente e paragonabile a “controllare per intelligenza generale”: anch’io sono caduto spesso in questo equivoco; ma no, “Ragionamento fluido” <strong>non</strong> è uguale a g (es. <a href="https://doi.org/10.1016/j.intell.2015.07.006" target="_blank">Gignac, 2015</a>).</li>
 <li>Di solito la situazione è anche peggiore di come mostrato sopra, perché ci si limita a variabili osservate, senza nemmeno ricorrere ai SEM.</li>
-<li>Anche se avete un solo indicatore per abilità cognitiva, potete fare un sem lo stesso, dovendo però forzare quanta componente di abilità e quanta di rumore ci sia nell’indicatore osservato.</li>
+<li>Anche se avete un solo indicatore per ogni abilità cognitiva, potete fare un sem lo stesso, dovendo però forzare quanta componente di abilità e quanta di rumore ci sia nell’indicatore osservato.</li>
+<li>Il problema si ripresenta spesso in vari ambiti (ad esempio modelli longitudinali).</li>
+<li>Il preciso pattern di coefficienti di regressioni nel modello “sbagliato” dipende da quanto fortemente ciascuna abilità cognitiva particolare riflette le cause comuni (g).</li>
+<li>“g” non è un’entità mistica, sono solo le cause comuni.</li>
 </ol>
 
 
