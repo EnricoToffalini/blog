@@ -19,6 +19,9 @@ website:
 
 format:
   html:
+    include-in-header:
+       text: |
+          <script data-goatcounter="https://toffeeblog.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
     theme:
       - cosmo
       - brand
