@@ -8,11 +8,8 @@ listing:
   sort-ui: false
   filter-ui: false
 format:
-  html:
-    include-in-header:
-       text: |
-         <link rel="shortcut icon" href="images/favicon.png"/>
-    css: homestyles.css
+   html:
+     css: homestyles.css
 page-layout: full
 title-block-banner: true
 ---

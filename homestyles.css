@@ -31,6 +31,23 @@ a:hover {
   color: #9B0014 !important;
 }
 
+/* RED BAR WITH WHITE TEXT AND ICONS */
+#quarto-header .navbar{
+  background-color: #9B0014 !important;
+}
+#quarto-header,
+#quarto-header a,
+#quarto-header .navbar-brand,
+#quarto-header .navbar-nav .nav-link,
+#quarto-header .navbar-text {
+  color: #ffffff !important;
+}
+#quarto-header svg,
+#quarto-header svg path {
+  stroke: #ffffff !important;
+  fill: #ffffff !important;
+}
+
 /* CALLOUTS */
 .callout {
   border-color: #aaa !important;
