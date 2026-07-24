@@ -1,0 +1,60 @@
+CONTESTO (Mini-Deco)
+Ho un dataset di esempio pronto: Mini-Deco_Sample.csv con colonne:
+- id
+- age (anni, continua)
+- syllsec (sillabe/secondo, continuo, higher=better)
+- lessdec (corrette decisione lessicale, discreto, higher=better)
+- lessdecTRIALS (k, qui 60)
+
+OBIETTIVO PROSSIMO STEP (per il blogpost Quarto)
+Costruire una pipeline didattica e riproducibile di continuous norming con controllo per età, separando nettamente:
+A) upstream: modello + diagnostica minima + generazione tabelle
+B) downstream: scoring deterministico da tabelle + esempio caso individuale
+
+SCELTE OPERATIVE DA RENDERE ESPLICITE
+- Età trattata come continua, ma le tabelle vengono consegnate su una griglia (ogni 4 mesi, ovvero 1/3 di anno).
+- Percentili con correzione per discreto (mid-P o equivalente) per lessdec.
+- Clamp delle code: mai percentile 0/100, quindi p in [eps, 1-eps], e z finito.
+- Conversione grezzo→metriche: percentile, z, SS_1_19 (M=10, SD=3) con clamping 1..19.
+- Monotonicità entro età: imporre monotonia grezzo→SS se necessario (cummax dopo sorting).
+- Interpolazione: età non in griglia -> interpolare in z (poi riconvertire) o nearest age-bin, dichiarandolo.
+- Output auditabile: distribuire tabelle (CSV) invece del modello.
+
+MODELLI (minimali, coerenti con lo scopo)
+1) syllsec (continua positiva): modello per media e (se serve) dispersione in funzione di age.
+   Scelta semplice: GAMLSS Gamma o lognormal, o in alternativa un approccio pragmatico:
+   stimare mu(age) e sigma(age) via smooth (p.es. gam), poi assumere normalità su scala log
+   per ottenere CDF/quantili condizionati.
+2) lessdec (conteggio bounded): modello binomiale con overdispersione:
+   Beta-Binomial in GAMLSS (coerente con esempi precedenti), con p(age) smooth.
+
+TABELLE DA PRODURRE (CORE DEL POST)
+- Tabella primaria (raw_to_norm):
+  measure, age_grid, raw, p, z, ss_1_19
+  (per syllsec raw puo essere su una griglia fine, p.es. seq(min,max, by=0.01))
+  (per lessdec raw e 0..k)
+- Tabella inversa (ss_to_raw_intervals), che e l’output “ideale”:
+  measure, age_grid, ss_1_19, raw_min, raw_max
+  NA quando SS non raggiungibile, Inf se intervallo aperto in coda (se previsto dalla policy).
+
+DOWNSTREAM
+- Scrivere helper:
+  score_from_table(raw_to_norm, measure, age, raw) -> p, z, ss
+  interval_from_ss(ss_to_raw_intervals, measure, age, ss) -> raw_min/raw_max
+- Mostrare uno scoring individuale (un bambino: age + raw su entrambi i task):
+  ottenere p/z/SS per ciascun task, poi composito:
+  z_comp = mean(z_task1, z_task2)
+  SS_100_15 = round(100 + 15*z_comp)
+
+PLOT MINIMI DA INCLUDERE NEL BLOGPOST
+- Curve dei quantili (p5,p15,p50,p75, che sono quelli considerati clinicamente rilevanti per assessment) per eta per entrambi i task (empiriche o dal modello).
+- Estratto tabella ss_to_raw_intervals (poche righe) per un’eta specifica.
+- Esempio di scoring individuale (tabella con risultati).
+
+PROSSIMA AZIONE IMMEDIATA
+1) Leggere Mini-Deco_Sample.csv.
+2) Definire age_grid (p.es. seq(6,13, by=0.25)).
+3) Fit dei due modelli (versione corta e spiegabile).
+4) Generare raw_to_norm e ss_to_raw_intervals per entrambi i task.
+5) Implementare score_from_table e interval_from_ss.
+6) Preparare i tre output didattici (plot quantili, estratto tabella, scoring caso).

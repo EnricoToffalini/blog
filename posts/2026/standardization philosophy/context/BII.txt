@@ -1,0 +1,391 @@
+Norming and standardization, in my view, are not “statistics applied to test scores”, they are an interpretation service. A battery is deployable only when it turns heterogeneous task outputs into a common, transparent metric that supports responsible decisions, while remaining auditable by a professional who was not present at model-fitting time.
+
+Core philosophy: what standardization is for
+Standardization exists to make scores interpretable, comparable, and communicable across tasks, people, and ages. The central deliverable is not a model, it is a stable mapping from observed performance to an age-referenced metric that supports: (a) within-person profile interpretation, (b) between-person comparison, and (c) defensible reporting.
+
+This implies several non-negotiable design choices.
+
+First, a common metric across heterogeneous tasks is the primary goal. Different tasks produce raw scores with different ranges, distributions, ceiling/floor behavior, and sometimes different “meaning” (counts of successes, counts of errors, time-limited totals, threshold-like outcomes). Without a common metric, profiles become a collage of incomparable numbers.
+
+Second, directionality must be aligned universally: “higher standardized score means better performance” must hold everywhere, even when the raw score is an error count or a threshold where lower is better. Directionality alignment is not cosmetic. It is what makes profiles readable and reduces cognitive load and reporting errors.
+
+Third, manual auditability matters. A clinician or researcher should be able to reproduce the conversion from raw score to age-normed score using distributed tables and clear rules, without requiring access to specialized model objects, custom environments, or opaque code paths. The scoring pipeline should be transparent enough that disagreements can be localized to a specific step and resolved.
+
+Fourth, the system must minimize opportunities for silent errors. Norming is one of those workflows where “it ran without crashing” is not evidence of correctness. You want explicit checks, strong input validation, warnings when values are out of range or implausible, and clear policies for missingness versus valid “not administered” cases. Fail loudly when assumptions are violated, and make the failure informative. :contentReference[oaicite:0]{index=0}
+
+Fifth, scoring tools should prioritize coherence over cleverness. I prefer event-driven computation and atomic updates: when the user changes an input or triggers an action, the system should recompute the whole dependent state in one consistent pass, rather than partially updating plots, tables, and composites on different schedules. This reduces the risk of mixed-state outputs that look plausible but are internally inconsistent.
+
+Modeling stance: sophisticated upstream, simple downstream
+At the norms level, I like a clear separation of roles.
+
+Upstream: use flexible distributional modeling of age effects. Rather than forcing normality or constant variance, fit age-related changes in location and dispersion (and shape when needed) using a distributional framework, for example GAMLSS. This is especially useful when raw scores are bounded, discrete, skewed, or show age-dependent compression near ceilings. A distributional approach can model mean and variance as smooth functions of age, and can support smooth, age-continuous percentile functions rather than jagged age-band artifacts. :contentReference[oaicite:1]{index=1}
+
+Downstream: the end user should not need any of those model objects. This is a portability and governance decision, not a limitation. Shipping model objects invites version instability, dependency drift, and irreproducible predictions when environments change. It also weakens auditability: a professional cannot “look up” a result if it depends on executing a specific object with a specific set of packages and hidden assumptions.
+
+So the compromise is deliberate: sophisticated modeling is used only to generate stable tabular norm products (and to inform their quality checks). Once tables are generated and validated, they are frozen, versioned, and distributed as the authoritative scoring layer. Users score from tables, not from models. :contentReference[oaicite:2]{index=2}
+
+Exported norm products: what users actually receive
+A deployable battery should ship with user-facing artifacts that make scoring transparent and reproducible.
+
+1) Primary lookup grid (raw → percentile/z/scaled score)
+The backbone is a lookup grid that maps (measure × age × raw) to:
+- percentile rank (age-referenced),
+- z score on the normative scale,
+- scaled score on a bounded reporting metric.
+
+In practice, this grid may be defined on age bands (for tables that fit in a manual or can be printed) while still being derived from an age-continuous model. Age bands are a delivery format choice, not a modeling limitation. :contentReference[oaicite:3]{index=3}
+
+2) Secondary inversion support (scaled score → raw interval)
+A second table should support the inverse question: “for this age, what raw score range corresponds to scaled score X?” This is useful for documentation, clinical explanation, and reporting (for example when you want to communicate what a scaled score implies in task units). Importantly, because of discreteness and ties, the inverse mapping is often an interval rather than a single raw value.
+
+3) Interpolation policy (delivery-layer pragmatism)
+No table can list every possible age value. You need an explicit interpolation policy.
+- Ages between grid points: linear interpolation on the normative metric (typically z or percentile, then convert to scaled score) is acceptable at the delivery layer if the upstream model is smooth and the age grid is sufficiently dense. The key is to state the rule and keep it deterministic.
+- Raw values between tabulated values: for tasks with integer raw scores, this is usually irrelevant because the raw scale is discrete. For tasks with quasi-continuous measures (for example time-based latencies), you can either tabulate at a fine resolution or use linear interpolation between raw grid points, but you must state which layer performs interpolation.
+
+Interpolation is acceptable when it is (a) explicit, (b) monotone-preserving, and (c) treated as an approximation in reporting. It is not acceptable when it is silent or creates discontinuities that confuse interpretation.
+
+4) Discrete vs continuous measures: embrace gaps when needed
+Continuous measures can naturally support full interval coverage. Discrete measures are different: at some ages, some scaled scores may be unattainable because the raw distribution has gaps, heavy ties, or bounded compression. In those cases, leaving certain scaled scores as unattainable (NA) is not a defect, it is honest documentation. Forcing a complete mapping can create ambiguous or misleading results that confuse humans and undermine auditability.
+
+Directionality and metric alignment: one rule, applied everywhere
+I treat directionality alignment as a formal part of the norming pipeline, with a single universal rule.
+
+Step 1: convert raw to percentile and z on the “as-modeled” scale.
+You begin by mapping the observed raw score to an age-referenced percentile and a corresponding z score, based on the normative model (or the frozen table derived from it).
+
+Step 2: align directionality after conversion, when needed.
+For measures where lower raw values reflect better performance (for example an error measure, or a threshold where fewer errors is better), you flip sign on the normative metric:
+- z_aligned = - z_raw
+
+This is the simplest and most auditable alignment rule because it is defined on a common metric rather than on idiosyncratic raw units.
+
+Step 3: derive scaled scores from aligned z.
+Scaled scores should always be derived from z_aligned, so that “higher is better” is guaranteed at the reporting level.
+
+The point of alignment is interpretability and cross-task comparability, not data manipulation. It makes the profile readable and reduces the probability of directionality mistakes in composites and plots.
+
+Scaled score metric and reporting choices
+I prefer a bounded scaled-score metric (for example 1–19) derived from the aligned z score and clamped to the reporting bounds. The rationale is pragmatic:
+- It is fine-grained enough for profile work while remaining easy to read.
+- It reduces the perceived precision of extremes that are often least stable.
+- It supports consistent visualization with reference bands.
+
+Transparency requires reporting multiple layers, not just the scaled score. At minimum:
+- raw score (task units),
+- scaled score (profile unit),
+- aligned z (computational unit for composites and cross-task comparisons).
+
+The aligned z is the bridge between tasks, and it supports composite construction with explicit formulas.
+
+Profile plots should privilege standardized scores only, with reference bands, and should make it difficult to accidentally compare raw values across tasks. The visual design is not decoration, it is a safety feature.
+
+Composite philosophy: if a total score exists
+Composites are where interpretability can fail most quietly, because a single number can look authoritative even when its prerequisites are not met.
+
+I only compute a total score when the formula is transparent and defensible, and when its intended interpretation is explicitly constrained. A composite must be:
+- defined in terms of aligned metrics (typically aligned z, or sums of scaled scores that are already aligned),
+- computed with clear inclusion rules,
+- accompanied by missingness guardrails.
+
+A typical defensible approach is:
+- compute a composite on aligned z (for example an average or weighted sum with stated weights),
+- then map it to an IQ-like metric (mean 100, SD 15) only when that reporting frame is justified and clearly labeled as a rescaling of an underlying normative metric. :contentReference[oaicite:4]{index=4}
+
+Guardrails matter:
+- compute composites only when all required components are present,
+- otherwise report missingness and stop, rather than inventing pseudo-precision via partial scoring,
+- if substitutions are allowed, the substitution rules must be explicit and constrained.
+
+I also prefer item- or task-level standardization before aggregation when components differ in distribution, reliability, or ceiling behavior. Raw aggregation can overweight subcomponents with higher variance or different scaling, producing composites that are numerically stable but psychometrically distorted.
+
+Practical scoring procedures and engineering choices
+The philosophy only works if the scoring system is engineered to protect it.
+
+Input parsing and validation
+- Define strict parsing rules for uploads and data entry.
+- Validate age ranges and enforce plausibility checks for raw score ranges.
+- Distinguish “missing because not administered under adaptive rules” from “missing because the observation is genuinely absent”. These are different states with different interpretive implications.
+
+Reproducible scoring functions
+- Implement scoring functions that mirror task logic exactly and are testable.
+- Maintain “reference implementations” that can be used in regression checks when code evolves. A scoring change without a detectable diff against reference cases should be treated as suspicious. :contentReference[oaicite:5]{index=5}
+
+Warning hierarchy and user messaging
+- Put critical warnings where they cannot be ignored (for example at the top of an output panel).
+- Keep informational messages visible but secondary.
+- Ensure warnings are specific: which variable, which range, which policy triggered.
+
+No hidden state, coherent refresh
+- Avoid hidden reactive state that can leave the UI in a partially updated condition.
+- Prefer a compute button that triggers a full refresh, or event-driven recomputation with an atomic commit of outputs, so plots, tables, and composites always correspond to the same input snapshot.
+
+Failure modes and how this philosophy handles them
+Non-monotone raw ↔ percentile mappings
+A common norming failure is a table that violates monotonicity (a higher raw score maps to a lower scaled score) because of construction bugs, misapplied directionality, or interpolation artifacts. This is not a cosmetic issue, it breaks interpretability.
+
+The system should include fail-fast monotonicity checks within each measure × age slice, and should block export if monotonicity is violated. If monotonicity must be enforced (for example via isotonic adjustments), that decision must be documented and applied consistently, not ad hoc. :contentReference[oaicite:6]{index=6}
+
+Discrete-score ties and ambiguous inversions
+With discrete raw scores, ties are inevitable. The correct response is not to pretend the inverse is one-to-one. Prefer a deterministic raw → scaled mapping, and in the reverse direction provide raw intervals for each scaled score. If some scaled scores are unattainable at some ages, leave them blank rather than forcing an arbitrary mapping.
+
+Reliability anomalies and interpretive add-ons
+If reliability checks produce anomalies (for example negative alpha, or unstable estimates across age), that is a signal to stop adding interpretive layers like SEMs, confidence intervals, or fine-grained profile claims until the measurement issue is resolved. Norming cannot compensate for a broken score. The governance rule here is simple: do not dress unstable measurement with extra reporting that looks precise.
+
+End checklist: what must always be true
+A battery is normed and deployable under this philosophy only if all of the following hold:
+
+1) Common metric: every task maps to a shared age-normed metric (percentile, z, scaled score), making profiles comparable across tasks.
+2) Directionality: higher standardized scores always mean better performance, for every measure, with explicit alignment rules for error/threshold measures.
+3) Auditability: a professional can reproduce scoring from raw to standardized scores using distributed tables and documented rules, without model objects or black-box dependencies.
+4) Determinism: given the same inputs, the scoring pipeline produces the same outputs across machines and versions, and interpolation policies are explicit.
+5) Validation and guardrails: out-of-range inputs, implausible values, and missing components trigger clear warnings or hard stops, not silent fallbacks.
+6) Monotonicity: within each measure and age slice, higher raw performance never maps to a lower standardized score, and this is checked automatically before release.
+7) Honest discreteness: unattainable scaled scores in discrete measures are allowed to remain unattainable (NA), rather than being forced into misleading completeness.
+8) Composite discipline: composites are computed only with transparent formulas, only when prerequisites are met, and missingness never produces pseudo-precise totals.
+9) Coherent tooling: user-facing tools update outputs atomically, avoiding mixed-state displays, and present critical warnings prominently.
+
+
+################################
+
+
+TECHNICAL ADDENDUM (FOR RESEARCHERS)
+
+Technical addendum for researchers: computational pipeline and R implementation notes
+
+This addendum describes an implementation pattern for age-norming a multi-task battery in a way that is smooth, auditable, and stable across software versions. The emphasis is on how to operationalize the philosophy computationally, not on any specific task content.
+
+1) Data contracts and naming conventions (the part most people under-specify)
+A norming pipeline is only as reproducible as its input and output schemas. I treat schemas as contracts.
+
+Input dataset (standardization sample)
+- One row per person.
+- Required fields:
+  - age_y (age in years, numeric, continuous, not rounded)
+  - optionally age_m (age in months, integer), if not present it can be derived as round(age_y * 12)
+  - raw task columns, consistently named, e.g. <TASK>_raw (or <TASK>_grezzo)
+- Strong expectations:
+  - raw scores are already computed deterministically from item-level logic (including basal/ceiling inference where applicable)
+  - missingness is explicit (NA), and never silently coerced to 0
+  - raw ranges are validated against known theoretical minima and maxima per task
+
+Output artifacts
+I recommend producing three primary, versioned artifacts:
+A) fits_<BATTERY>.rds
+   - internal, model objects used only for table generation and QA, not distributed to end users
+B) task_conversion_tables_<RAW>_to_<SCALED>_by_ageband.csv
+   - distributed, frozen lookup tables for raw to percentile, z, scaled score, by age band
+C) standardization_sample_scored_<SCALED>.csv
+   - the scored standardization dataset, useful for downstream composite calibration and psychometric QC
+
+2) Upstream modeling in R: distributional age norming with GAMLSS
+R packages commonly used
+- gamlss, gamlss.dist for distributional regression and bounded families
+- dplyr, tidyr, readr, tibble, stringr for data manipulation and export
+- lavaan, semTools for optional CFA and reliability summaries (QC layer)
+
+Why a distributional family matters
+Many cognitive task scores are bounded counts or bounded difference scores. For bounded counts, a beta-binomial family is often a pragmatic default, because it models:
+- a mean function over age
+- overdispersion beyond a simple binomial
+- bounded support by construction
+
+Canonical fitting pattern (conceptual)
+- Shift scores to start at 0 if the theoretical minimum is not 0.
+- Let bd = maxScore - minScore be the task-specific bound.
+- Model the response as cbind(successes, failures), where:
+  - successes = score_shift
+  - failures  = bd - score_shift
+
+Smooth age functions
+- For the location (mean) component, I often prefer a monotone smooth in age when the construct is expected to improve with development. In GAMLSS this can be done with pbm(age_y, mono="up") for mu.
+- For the scale (dispersion) component, allow flexibility, for example sigma.fo = ~ pb(age_y).
+
+Practical, often overlooked detail: model portability inside RDS
+If you intend to save model objects for later prediction within the same codebase, ensure that predict methods do not depend on external objects in the calling environment. A simple defensive pattern is to ensure the model call stores the data used for fitting, so predictAll can work after readRDS without hunting for temporary objects.
+
+3) Age banding as a delivery layer, with deterministic assignment rules
+Even when modeling uses continuous age, distribution products are typically age-banded for auditability.
+
+A practical banding scheme (example)
+- ages under 10 years: 4-month bands
+- ages 10 to 16: 6-month bands
+- ages 16 and above: 12-month bands
+
+Implementation idea
+- represent bands in months with integer boundaries (age_lo_m, age_hi_m)
+- define age_ref_m = round((age_lo_m + age_hi_m)/2), and age_ref_y = age_ref_m / 12
+- define a deterministic assignment function from an individual’s age_m to the correct band label
+
+Why deterministic assignment matters
+If age is near a boundary, different rounding conventions can send people to different bands. That creates “ghost discontinuities” that are not psychometric, they are implementation artifacts. Deterministic assignment eliminates this.
+
+4) From fitted model to table: percentile, z, scaled score
+Core idea
+The exported table should contain, for each task, each age band, and each admissible raw score:
+- percentile (age-referenced)
+- z score (age-referenced)
+- scaled score (bounded reporting metric)
+
+Discrete bounded scores and mid-P
+For discrete bounded outcomes, a naive percentile definition can create visible steps and tie artifacts. A pragmatic alternative is mid-P, computed from the model-implied CDF:
+
+Let:
+- P_le = P(X <= x)
+- P_lt = P(X <= x-1)
+- P_eq = P_le - P_lt
+
+Then define:
+- P_mid = P_lt + 0.5 * P_eq
+
+In R terms, if your family provides a CDF function (for beta-binomial, pBB), you can compute:
+- P_le = pBB(q = score_shift,     ...)
+- P_lt = pBB(q = score_shift - 1, ...)
+
+Then:
+- percentile = 100 * P_mid
+- z_raw = qnorm(P_mid)
+
+Practical tail handling
+To avoid infinite z values due to probabilities at 0 or 1, clamp P_mid to a conservative range, for example corresponding to ±3 SD:
+- P_mid <- pmin(pnorm( 3), pmax(pnorm(-3), P_mid))
+
+Scaled score mapping (bounded, 1–19)
+A common reporting layer is:
+- scaled_prelim = round( target_mean + target_sd * z_raw )
+- clamp to [1, 19]
+
+Typical defaults:
+- target_mean = 10
+- target_sd   = 3
+
+This mapping is deterministic and auditable. The choice of 1–19 is not sacred, but it is a useful compromise between readability and resolution, and it discourages pseudo-precision at extremes via clamping.
+
+5) A calibration step that improves interpretability within age bands
+Even with a good continuous model, rounding and discretization can cause small drifts. One pragmatic solution is to recalibrate the preliminary scaled scores within each task × age_band, using the standardization sample as the reference.
+
+Two calibration modes
+A) Mean-only centering
+- scaled_adj = scaled_prelim + (target_mean - mean_in_band)
+
+B) Mean and SD calibration (more aggressive)
+- scaled_adj = target_mean + target_sd * (scaled_prelim - mean_in_band) / sd_in_band
+
+Then:
+- round, clamp to bounds
+
+Why this step is defensible
+It makes the delivered scaled scores behave as a stable reporting metric within each band, without requiring end users to run models. It also improves visual interpretability of profile plots because the normative band is anchored consistently.
+
+6) Monotonicity enforcement, fail-fast checks, and why I use both
+A raw to scaled mapping should be non-decreasing within task × age_band. In practice, rounding and calibration can introduce tiny inversions.
+
+I separate:
+- detection (fail-fast QC), and
+- enforcement (repair as a last resort, with documentation)
+
+Detection checks (per task × age_band)
+- verify that scaled(grezzo) is monotone non-decreasing
+- verify that percentiles are monotone non-decreasing
+- verify that all admissible raw values are covered, no accidental gaps unless explicitly allowed for discrete unattainability
+
+Enforcement pattern (if you choose to enforce)
+A simple deterministic enforcement is:
+- scaled <- cummax(scaled) after sorting by raw
+
+This should be treated as a safety mechanism, not a substitute for diagnosing why inversions occurred. When the enforcement changes any values, log it and surface it in QA reports.
+
+7) Scoring individuals from tables in R, with explicit missingness behavior
+I treat scoring as a pure join operation with explicit policies.
+
+Recommended long format join
+- pivot longer: one row per person × task
+- keys: task, age_band, raw
+- join to lookup table
+- pivot wider back to person-level columns
+
+This approach is auditable because it makes “what matched what” inspectable.
+
+Missingness policy
+- if raw is NA, the join yields NA, and you keep it as NA
+- you never silently replace missing with a default score
+- you can compute composites only when all required components are present, otherwise return NA and emit a warning
+
+8) Composite scores: table-based calibration vs parametric assumptions
+For composites defined as sums of scaled scores, I do not assume a theoretical SD based on “k tasks times 3” or similar shortcuts. Discreteness and rounding break those assumptions.
+
+Empirical calibration within broad age groups
+A robust approach is:
+- define age_group as a small number of macro groups, for example 6–10, 11–16, 17–22
+- compute sommaPP = rowSums(task_scaled_scores)
+- estimate mu and sd of sommaPP empirically within each age_group
+- map to a standard score metric:
+  - SS = round(100 + 15 * (sommaPP - mu) / sd)
+
+Optional guardrails
+- cap SS to a plausible range (for example [40, 160]) if you want to avoid extreme instability
+- enforce monotonicity in sommaPP to SS tables via cummax
+- warn if any age_group has small N, because mu and sd will be unstable
+
+Export a composite conversion table
+Even if you compute SS directly via mu and sd, exporting a sommaPP to SS table by age_group has audit value, it supports manual checks and documentation.
+
+9) Optional psychometric QC layer: CFA as a diagnostic, not a scoring dependency
+If you want a structure check for a multi-domain battery, a simple CFA can be run on the scored standardization dataset.
+
+R implementation notes
+- lavaan::cfa for model fitting
+- estimator = "MLR" can be a pragmatic robust choice for discrete-ish scaled scores
+- missing = "fiml" for handling missing values in the standardization dataset (if any)
+- semTools::compRelSEM for composite reliability summaries
+
+Two baseline models worth comparing
+- correlated-factor model (domains as separate but correlated)
+- one-factor model (single general factor)
+
+Interpretation stance
+CFA results should not be required to score individuals. They are a QC instrument that informs how cautious you should be about profile interpretation and about the meaning of composites.
+
+10) Reproducibility and governance: what I actually recommend in practice
+Versioning and metadata
+- include a version field in every exported CSV (even if repeated across rows), or ship a sidecar YAML/JSON with:
+  - date, git commit hash, R sessionInfo, package versions
+  - range specs per task (minScore, maxScore)
+  - directionality flags (higher_is_better)
+  - band definitions
+
+Deterministic pipelines
+- set.seed only for simulation steps, never for norming from real data
+- avoid non-deterministic parallelism unless you lock RNG streams
+- do not distribute model objects to end users, distribute only tables and a human-readable scoring spec
+
+Unit-test style QC (high value, low cost)
+- monotonicity tests for every task × age_band
+- coverage tests, every admissible raw score appears exactly once per task × age_band
+- drift tests, within-band correlation of scaled score with centered age should be near 0
+- join tests, scoring the standardization sample via the exported tables should reproduce the stored scored dataset exactly
+
+Minimal R pseudocode fragments (illustrative, not a full script)
+- Fit (bounded counts):
+  gamlss(cbind(score_shift, bd-score_shift) ~ pbm(age_y, mono="up"),
+         sigma.fo = ~ pb(age_y),
+         family = BB, data = tmp)
+
+- Mid-P from fitted family:
+  P_le <- pBB(q = x,     mu = mu_hat, sigma = sig_hat, bd = bd)
+  P_lt <- pBB(q = x - 1, mu = mu_hat, sigma = sig_hat, bd = bd)
+  P_mid <- P_lt + 0.5 * (P_le - P_lt)
+
+- Scaled score:
+  z <- qnorm(P_mid_clamped)
+  scaled <- pmin(19, pmax(1, round(10 + 3*z)))
+
+- Monotonicity enforcement:
+  scaled <- cummax(scaled[order(raw)])
+
+Final reminder
+The key computational principle is separation of concerns:
+- sophisticated modeling to generate smooth, defensible normative functions
+- frozen, tabular, auditable products for all end-user scoring and reporting
+- explicit QC gates that block deployment when basic invariants are violated
+

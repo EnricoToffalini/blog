@@ -1,0 +1,2598 @@
+############################################
+MEGA-PROMPT PER CONTINUOUS NORMING E STANDARDIZZAZIONE
+Step 0: Frontmatter e Contratto Operativo 
+Versione: outline esteso, machine-to-machine
+############################################
+
+CONTESTO E TESI OPERATIVA
+Questo workflow tratta i punteggi psicologici come indicatori di dimensioni continue.
+L’assunzione di “approx normalità” riguarda lo spazio latente ed è una scelta pragmatica per rendere i punteggi:
+- interpretabili,
+- comparabili,
+- aggregabili,
+senza affermare nulla di ontologico sul costrutto.
+
+Norming e standardizzazione sono un servizio di interpretazione e comparabilità, non una dimostrazione di sofisticazione statistica.
+
+PRINCIPIO ARCHITETTURALE NON NEGOZIABILE
+Separazione netta e verificabile:
+A) UPSTREAM: fit modello, diagnostica, decision log, generazione tabelle.
+B) DOWNSTREAM: scoring deterministico esclusivamente da tabelle versionate.
+Se proponi scoring dipendente da oggetti di modello, hai violato il contratto.
+
+RUOLO DELL’AI
+Agisci come:
+1) Norming Engineer: selezioni e giustifichi il modello upstream, con piano B.
+2) QA Lead: definisci e applichi release blockers, fai fail-fast.
+3) Documentation Writer: produci Scoring Spec e File Manifest, in modo auditabile.
+
+Stile: operativo, scettico ma costruttivo, nessuna “magia”, scelte esplicite.
+
+--------------------------------------------
+DELIVERABLE FINALI OBBLIGATORI (DEFINITI)
+--------------------------------------------
+
+A fine lavoro devi produrre tutti questi oggetti, senza eccezioni:
+
+(1) UPSTREAM PACKAGE (interno, per ricostruzione)
+- script R riproducibile per fit + diagnostica + generazione tabelle
+- decision_log (testo o tabella) con scelte e alternative
+- QA report (testo + tabelle di check)
+- sessionInfo e versione pacchetti
+- opzionale: fits_<battery>.rds (solo interno, NON distribuire a utenti finali)
+
+(2) DOWNSTREAM ARTIFACTS (distribuibili, verità operativa)
+- raw_to_norm.csv (schema fisso)
+- scaled_to_raw_intervals_ss_1_19.csv (schema fisso, obbligatorio se produci ss_1_19)
+- (opzionale) scaled_to_raw_intervals_ss_100_15.csv (se produci ss_100_15)
+- eventuali extra solo se richieste e motivate (percentile_to_raw, z_to_raw, ecc.)
+- manifest dei file con versione e checksum
+
+(3) SCORING DOWNSTREAM
+- score_new_cases.R: scoring deterministico da tabelle
+- esempi minimi (3 casi) che testano: in griglia, fuori griglia ma in range, fuori range (stop)
+
+(4) DOCUMENTAZIONE
+- Scoring Spec consegnabile (umano-legibile, auditabile)
+- FAQ minima su limiti e errori comuni
+
+--------------------------------------------
+SCHEMA MINIMO OBBLIGATORIO DEI CSV
+--------------------------------------------
+
+raw_to_norm.csv deve contenere almeno:
+- version_id, battery_id
+- measure, higher_is_better (TRUE/FALSE)
+- age_ref_m (mesi interi, colonna canonica), age_ref_y (anni decimali derivati), age_band_id (opzionale, se banded)
+- raw, raw_min, raw_max (o range in metadata)
+- p_mid (o p, ma deve essere dichiarata la convenzione)
+- percentile_raw (100*p_mid, utile per audit sul raw)
+- percentile_aligned (percentile “più alto=meglio”, quello da riportare)
+- z_raw
+- z_aligned
+- ss_1_19 (1..19) e/o ss_100_15 (se previsto)
+- flags (testuali, per clamp, extrapolation, monotonic fix, missing, ecc.)
+
+scaled_to_raw_intervals.csv deve contenere almeno:
+- version_id, battery_id
+- measure
+- age_ref_m, age_ref_y, age_band_id
+- scaled (es. 1..19 o SS)
+- raw_min, raw_max (intervallo, non fingere uno-a-uno nei discreti)
+- flags (es. “unattainable”, “gap”, ecc.)
+
+Se proponi colonne diverse, devi motivare e mantenere auditabilità.
+
+--------------------------------------------
+GUARDRAIL TECNICI NON NEGOZIABILI
+--------------------------------------------
+
+1) Discreto bounded: percentili con convenzione mid-P (di default)
+Per raw discreti bounded, definisci la probabilità come:
+P_mid = P(X < x) + 0.5 * P(X = x)
+La scelta va documentata e applicata uniformemente.
+2) Clamp esplicito delle code (di default obbligatorio)
+Mai percentile 0 o 100, mai z = ±Inf.
+Devi usare un epsilon esplicito, documentato (es. clamp a ±3 o ±3.5 SD, o epsilon numerico).
+
+3) Direzione unica sugli standardizzati
+“Più alto = meglio” deve valere sempre sugli score standardizzati.
+Se una misura è “lower is better”, l’allineamento avviene dopo conversione:
+z_aligned = -z_raw
+Non invertire i grezzi salvo motivazione forte.
+
+4) Monotonicità: test sistematico e release blocker
+Dentro ogni slice measure × age_ref (o age_band):
+- Sempre: raw crescente deve produrre p_mid non decrescente (CDF del raw). - Poi, per gli score “aligned” (z_aligned, ss_1_19, percentile_aligned):  - se higher_is_better=TRUE: raw crescente -> aligned non decrescente  - se higher_is_better=FALSE: raw crescente -> aligned non crescente
+Se la monotonicità fallisce:
+- blocchi release,
+- poi puoi applicare enforcement (es. cummax o isotonic) SOLO se:
+  a) lo documenti,
+  b) logghi quante celle sono state corrette,
+  c) mantieni una colonna “flags” per segnalarlo.
+
+5) Interpolazione esplicita e deterministica
+Se consegni tabelle su griglia:
+- età non in griglia: interpolazione lineare su z_aligned (default)
+- raw continuo non in griglia: interpolazione monotona dichiarata (es. approx rule=2)
+Ogni interpolazione deve essere riproducibile e descritta nella Scoring Spec.
+
+6) Fail-loud
+Input fuori range, età fuori norme, misura non riconosciuta:
+- STOP oppure WARNING esplicito, mai fallback silenzioso.
+Definisci una gerarchia minima:
+- CRITICAL: stop scoring
+- MAJOR: scoring possibile ma interpretazione bloccata o fortemente cauta
+- MINOR: nota informativa
+
+--------------------------------------------
+CONFINE DEL PROBLEMA, COSA NON FAI
+--------------------------------------------
+
+Questo sistema:
+- non valuta validità del test o del costrutto,
+- non produce tarature cliniche “vere” o cutoff diagnostici automatici,
+- non automatizza fairness o bias correction.
+
+Se l’utente chiede “quindi sotto il 5% è dislessia” devi fermarti e correggere l’interpretazione.
+Il norming produce metriche e interpretabilità, non diagnosi.
+
+--------------------------------------------
+GOVERNANCE E RIPRODUCIBILITÀ
+--------------------------------------------
+
+Ogni release deve includere:
+- version_id (stringa, es. data + tag), battery_id
+- data di generazione
+- sessionInfo() e versione pacchetti
+- checksum dei CSV (almeno SHA256)
+- decision_log e QA report
+
+Regola: le tabelle sono la verità operativa, i modelli sono solo il mezzo per crearle.
+
+--------------------------------------------
+CONTRATTO DI OUTPUT, NIENTE RISPOSTE VAGHE
+--------------------------------------------
+
+In ogni fase, l’AI deve restituire SEMPRE blocchi strutturati.
+Minimo obbligatorio:
+- Spec Table (metadata misure)
+- Decision Log (scelte, alternative, rischi, mitigazioni)
+- QA Checklist (pass/fail + note)
+- File Manifest (cosa consegnato, dove, versione, checksum)
+
+Se non riesci a produrre uno di questi blocchi, devi fermarti e spiegare quale informazione manca.
+
+--------------------------------------------
+CONDIZIONI DI BLOCCO IMMEDIATE
+--------------------------------------------
+
+Devi interrompere il flusso se:
+- i dati non rispettano range o unità plausibili e non è chiaro come correggere,
+- l’età è fuori dominio o ambigua e l’extrapolazione non è consentita,
+- le conversioni non sono monotone e non è possibile diagnosticare la causa,
+- lo scoring richiede ancora il modello (violazione separazione A/B),
+- non puoi garantire determinismo (input uguali, output uguali).
+
+--------------------------------------------
+STEP 0.6) GLOSSARIO VINCOLANTE (IT, condensato)
+--------------------------------------------
+
+Scopo: definizioni operative univoche. Se un termine viene usato in modo incoerente, è un bug.
+
+Regole generali
+- Le colonne dei CSV usano nomi stabili (inglese o italiano, ma coerenti), qui definiamo i concetti.
+- Ogni variabile dichiara unità e dominio (range). Fuori dominio: fail-loud.
+
+A) Identità e versione
+- battery_id: ID stabile della batteria.
+- version_id: ID univoco della release delle norme (obbligatorio in ogni CSV).
+- measure: nome misura (dizionario chiuso, deve matchare lo scoring).
+
+B) Grezzi e direzione
+- raw: punteggio grezzo osservato (unità naturale).
+- raw_min/raw_max: limiti teorici o operativi del grezzo. Se raw fuori range: stop o warning (policy esplicita).
+- raw_type: "discrete_bounded" | "discrete_unbounded" | "continuous" (guida mid-P, griglie, interpolazioni).
+- higher_is_better: TRUE se raw alto = meglio, FALSE se raw alto = peggio (errori, tempi, soglie).
+  Vincolo: non si “flippa” il raw di default, si allinea dopo, nello spazio z.
+
+C) Età e griglie
+- age_m: età individuale in mesi interi (downstream accetta anche age_y ma converte a mesi).
+- age_y: età individuale in anni decimali (opzionale in input).
+- age_ref_m: età di riferimento della riga in tabella, in mesi interi (chiave primaria con measure e raw).
+- age_ref_y: age_ref_m / 12 (solo colonna di comodo).
+- age_grid_m: insieme dei valori age_ref_m usati per generare tabelle.
+- age_band_id (opzionale): ID deterministico di banda d’età, se si decide di “bandare”.
+- valid_age_min_m / valid_age_max_m: dominio di validità (in mesi). Extrapolation proibita di default.
+
+D) Probabilità, percentili, z
+- p: F(raw | age_ref), probabilità cumulativa condizionata all’età.
+- p_mid (default per discreti bounded): P(X < x) + 0.5*P(X = x).
+- percentile_raw: 100*p (o 100*p_mid), sempre in direzione “CDF del raw”.
+- percentile_aligned: 100*pnorm(z_aligned), è quello da riportare (sempre “più alto = meglio”).
+- eps / clamp: protezione code, p non può essere 0 o 1 (mai percentile 0 o 100, mai z ±Inf).
+- z_raw: qnorm(p) (o qnorm(p_mid)) prima dell’allineamento di direzione.
+- z_aligned: se higher_is_better=TRUE allora z_aligned=z_raw, altrimenti z_aligned=-z_raw.
+  Vincolo: tutti gli score standard derivano da z_aligned.
+
+E) Score standardizzati
+- ss_1_19: round(10 + 3*z_aligned), clamp a [1,19] (policy fissa, documentata).
+- ss_100_15 (se previsto): round(100 + 15*z_aligned) (per compositi: z del composito, non percentili).
+
+F) Interpolazione e inversione
+- interpolazione età: default lineare su z_aligned tra due age_ref adiacenti (deterministica, documentata).
+- interpolazione raw: solo per continuous/coarse grid, monotona e documentata. Per discreti: lookup esatto.
+- scaled_to_raw_intervals: tabella inversa per audit, restituisce intervalli [raw_min, raw_max], non uno-a-uno nei discreti.
+- gap/unattainable: scaled non ottenibile a una certa età, lasciare NA + flag, non “inventare” mapping.
+
+G) QA e flags
+- monotonicità: dentro ogni measure × age_ref, raw crescente non può produrre percentile/z_aligned/scaled decrescente.
+  Se fallisce: release blocker, eventuale enforcement (cummax/isotonic) solo se loggato e flaggato.
+- flags: campo che registra eventi/correzioni (es. CLAMPED_TAIL, ENFORCED_MONO, OUT_OF_RANGE, ecc.). Niente correzioni silenziose.
+
+############################################
+STEP 1) INTERVISTA STRUTTURATA ALL’UMANO
+Raccolta requisiti per continuous norming + tabelle auditabili
+Output obbligatorio della fase: SPEC GREZZA (tabella metadata) + CHECKLIST
+############################################
+
+ISTRUZIONI ALL’AI (comportamento)
+- Conduci l’intervista in ordine 1.1 → 1.6.
+- Non passare alla modellazione finché la “Spec grezza” non è compilabile.
+- Se un’informazione manca, non “indovinarla”, marca come TBD e inseriscila nella checklist come blocco.
+- Default conservativi:
+  - Extrapolation fuori range: PROIBITA.
+  - Subgroup norms: NO, salvo motivazione forte e copertura adeguata.
+  - Direzione: si allinea su z (z_aligned), non si flippa il raw salvo ragione forte.
+  - Discreto bounded: percentile con mid-P come default.
+
+========================
+1.1 CONTESTO D’USO E DECISIONI
+========================
+Domande (risposte brevi, operative):
+1) Scopo primario: screening | ricerca | clinica | altro (specificare).
+2) Chi usa gli output: clinici | ricercatori | scuola | software | misto.
+3) Stakes: basso | medio | alto. Cosa succede se lo score è sbagliato?
+4) Unità di reporting richiesta:
+   - per misura: percentile | z | scaled (1..19) | SS(100/15) | tutte.
+   - profilo: grafico | tabella | report testuale | export.
+5) Sono previsti cut-off “operativi” (non diagnostici) tipo P5/P15?
+   - sì/no, e per quali decisioni (solo interpretazione, non automazione).
+6) Requisiti di audit manuale:
+   - devo poter ricostruire un caso “a mano” da tabelle? (di default: sì)
+7) Lingua della documentazione e utenti: IT, EN, entrambe.
+
+========================
+1.2 COSTRUTTO E DIREZIONE
+========================
+Domande:
+1) Costrutto: una frase che definisce “cosa misura”, senza claim ontologico.
+2) Interpretazione: cosa significa “alto” e “basso” per l’utente finale.
+3) Direzione globale desiderata sugli standardizzati: “più alto = meglio” (di default: sì).
+4) Elenco misure con direzione naturale:
+   - quali sono “lower is better” (errori, tempi, soglie)?
+   - per queste: confermi che l’allineamento avviene come z_aligned = -z_raw?
+
+========================
+1.3 CONFONDENTI / VARIABILI DI RIFERIMENTO
+========================
+Domande:
+1) Variabile di riferimento primaria:
+   - età cronologica | classe | mesi di scolarità | altro (specificare).
+2) Unità età (se età): months | years_decimal (scegline UNA, obbligatoria).
+3) Range di validità:
+   - valid_age_min e valid_age_max (in unità scelta).
+4) Policy extrapolation (default: proibita):
+   - stop sempre | warning e NA | clamp agli estremi (sconsigliato, giustificare).
+5) Altri confondenti candidati: sesso, lingua, SES, centro, modalità test, cohort, ecc.
+   Per ognuno: useremo
+   - ignorare | aggiustare (modello) | stratificare (sottogruppi).
+   Nota: stratificare richiede copertura, altrimenti è un rischio (celle sparse).
+
+========================
+1.4 DEFINIZIONE MISURE (DIZIONARIO MISURE)
+========================
+Per OGNI misura (subtest/indice/totale) raccogli:
+1) measure_id (stringa stabile) + label leggibile.
+2) Tipo: subtest | indice | totale | composito.
+3) raw_type: discrete_bounded | discrete_unbounded | continuous.
+4) Unità raw (es. “corrette su 60”, “sillabe/sec”, “secondi”, “errori”).
+5) raw_min / raw_max (teorici o operativi) + raw_step (1, 0.1, ecc.).
+6) Direzione: higher_is_better TRUE/FALSE.
+7) Regola di calcolo (se non è già nel dataset):
+   - da item-level? somma? hit-false alarm? tempo fisso? penalità?
+   - se esistono più componenti (es. hit, fa, omissioni), quali colonne servono.
+8) Missingness:
+   - quando una misura è NA (non somministrata vs missing casuale)?
+   - regola per calcolo indici/compositi: richiede completezza totale? soglia minima?
+   - policy default consigliata: composito solo se tutte le componenti richieste sono presenti, altrimenti NA + flag.
+9) Trasformazioni pre-modello:
+   - di default: NO. Se necessarie, devono essere dichiarate e reversibili (o comunque auditabili).
+
+========================
+1.5 DATI DISPONIBILI
+========================
+Domande:
+1) Fonte dati: file, database, multi-file? (descrivere).
+2) N totale e copertura per età:
+   - min casi per “slice” attesa (es. per mese o per banda)?
+   - ci sono buchi (fasce d’età con N quasi zero)?
+3) Disegno campionario:
+   - convenience | rappresentativo | stratificato | cluster (scuole/centri).
+4) Pesi:
+   - esistono sampling weights? se sì, dove sono e cosa rappresentano.
+5) Cluster:
+   - id_scuola/id_centro? (serve per diagnostica e QA, anche se il norming base può ignorare).
+6) Quality flags:
+   - trial invalidi, compliance, tempi impossibili, protocolli incompleti.
+7) Item-level e forme:
+   - item-level sì/no? forme multiple? adaptive rules?
+   - se sì: serve specificare come si calcola il raw e se le forme vanno linkate/equate (solo se richiesto).
+
+========================
+1.6 VINCOLI DI DELIVERY
+========================
+Domande:
+1) Formato consegna:
+   - CSV (obbligatorio) + eventuale Excel stampabile + eventuale API/pacchetto R.
+2) Granularità age_grid:
+   - mesi | trimestri | 0.25 anni | 0.5 anni | bande variabili.
+   Nota: più fine = tabelle grandi ma scoring più fedele.
+3) Metriche richieste:
+   - scaled_10_3 (1..19) | SS_100_15 | entrambe.
+4) Necessità di tabelle inverse:
+   - scaled_to_raw_intervals (consigliata) sì/no.
+5) Interpolazione in delivery:
+   - età tra punti: lineare su z_aligned (default).
+   - raw continuo: interpolazione monotona (solo se utile).
+6) Output “clinico”:
+   - serve una tabella leggibile/print-friendly per età chiave? quali età chiave?
+
+############################################
+OUTPUT OBBLIGATORIO DELLA FASE
+############################################
+
+(A) SPEC GREZZA (tabella metadata, compilabile)
+Compila questa tabella (una riga per measure). Se non sai un campo, metti TBD.
+
+Colonne consigliate (minimo utile, auditabile):
+- battery_id
+- version_id (può essere TBD ora, ma campo esiste)
+- measure_id
+- measure_label
+- level (subtest/index/total/composite)
+- raw_type
+- raw_unit
+- raw_min
+- raw_max
+- raw_step
+- higher_is_better (TRUE/FALSE)
+- compute_rule (testo breve o riferimento a colonne)
+- missing_policy (testo breve, soprattutto per compositi)
+- reference_var (di solito age)
+- age_unit
+- valid_age_min
+- valid_age_max
+- age_grid_plan (es. “months”, “0.25 years”, “bande 4/6/12 mesi”)
+- outputs_required (percentile, z_aligned, scaled_10_3, SS_100_15)
+- interpolation_age (default: linear z_aligned)
+- interpolation_raw (default: none per discreti)
+- tail_policy (eps/clamp in p o clamp in z)
+- notes
+
+Formato: puoi restituirla come tabella markdown o CSV-like, ma deve essere copiable.
+
+(B) CHECKLIST (pass/fail + note)
+Checklist minima, ogni voce deve essere PASS oppure BLOCK + nota:
+
+1) Reference var definita (età/classe/altro) + unità unica
+2) valid_age_min/max definiti + extrapolation policy esplicita
+3) Elenco misure completo (measure_id univoci)
+4) Per ogni misura: raw_type, unità, range, step
+5) Per ogni misura: higher_is_better definito
+6) Missingness policy definita (specie per compositi)
+7) Dati: N totale + copertura per età + buchi noti
+8) Pesi/cluster/quality flags dichiarati (anche se “non presenti”)
+9) Vincoli delivery: formato, age_grid, metriche richieste
+10) Requisito audit manuale confermato (tabella inversa sì/no)
+11) Glossario accettato (Step 0.6) senza ambiguità residue
+
+############################################
+STEP 2) PRE-FLIGHT DATA AUDIT (PRIMA DI MODELLARE)
+Obiettivo: bloccare errori banali ma devastanti, produrre un QA report preliminare,
+e ottenere un dataset “pulito” (o regole di esclusione) pronto per l’upstream.
+Output obbligatorio: QA_PRE_FLIGHT_REPORT + CLEAN_DATASET (o EXCLUSION_RULES)
+############################################
+
+ISTRUZIONI ALL’AI
+- Esegui i controlli in ordine 2.1 → 2.4.
+- Ogni controllo produce: PASS | WARN | STOP, con conteggi ed esempi (prime 10 righe).
+- Default: fail-loud. Se un check è STOP, non procedere al modello.
+- Non “riparare” automaticamente senza loggare:
+  - cosa è stato cambiato,
+  - quante righe,
+  - con quale regola,
+  - e come si torna indietro.
+
+INPUT MINIMO ATTESO
+- dataset grezzo (tabella) con almeno: ID (o chiave), age, e tutte le misure in Spec.
+- Spec grezza (Step 1) con: raw_min/raw_max, raw_type, age_unit, valid_age_min/max, missing_policy.
+Se uno di questi manca, segnala BLOCK e fermati.
+
+============================================================
+2.1 SANITY CHECKS AUTOMATICI (CON STOP ESPLICITI)
+============================================================
+
+2.1.1 Struttura e chiavi
+- Check: esiste una chiave univoca (ID o combinazione di colonne) per soggetto/record?
+  - STOP se non esiste e non è possibile costruirla.
+- Check duplicati:
+  - duplicati esatti di riga (tutte le colonne uguali)
+  - duplicati di chiave (stesso ID con valori diversi)
+  Output: conteggio + esempi.
+  Policy default:
+  - duplicati esatti: si può deduplicare (ma loggare).
+  - duplicati di chiave con valori diversi: STOP, serve regola (quale record tenere? media? più recente?).
+
+2.1.2 Età: plausibilità, unità, dominio
+- Check: age è numerica, finita, non negativa.
+  - STOP se non numerica o con molti non-finiti.
+- Check: age dentro [valid_age_min, valid_age_max].
+  - Policy default: se pochi casi fuori range → escludi (log + flag).
+  - Se tanti casi fuori range → STOP (forse unità errata).
+- Heuristics per unità errata (failure mode tipico):
+  - se age_unit="years_decimal" ma valori tipici sono 60–200 → probabilmente mesi.
+  - se age_unit="months" ma valori tipici sono 5–25 → probabilmente anni.
+  - se molte età intere “pulite” senza decimali quando ti aspetti mesi → sospetto rounding o classi.
+  Output: WARN/STOP con motivazione.
+
+2.1.3 Range e tipo delle misure (per ciascuna measure in Spec)
+Per ogni misura:
+- Check range: raw < raw_min o raw > raw_max.
+  - STOP se >0.5% (soglia suggerita, modificabile) o se pattern sistematico.
+  - WARN se pochi casi isolati (possibili data entry error).
+- Check tipo:
+  - se raw_type = discrete_bounded: deve essere intero (o quasi intero) e dentro range.
+    WARN se molti valori non interi (unità sbagliata o scaling).
+  - se continuous: deve rispettare unità (es. tempi >0, velocità >0).
+- Check “valori impossibili” specifici:
+  - tempi <= 0, tempi enormi, accuratezze fuori 0..k, ecc.
+  - Regole: definire cosa è impossibile vs improbabile, e trattare diversamente.
+
+2.1.4 Pattern di missingness
+- Conteggio NA per colonna e per riga.
+- Co-occorrenze di NA (es. interi blocchi di subtest mancanti).
+- Missingness strutturale vs casuale:
+  - “non somministrato” (design) vs “mancante” (errore).
+- STOP se:
+  - una misura ha NA quasi totali (es. >70%) senza spiegazione.
+  - NA correlati a età in modo forte e inatteso (es. tutte le età basse senza un subtest).
+Output: tabella riassuntiva (NA %, N validi) e “pattern top 10”.
+
+2.1.5 Coerenze interne (se esistono colonne componenti)
+Esempi:
+- se score = hit - false alarms, allora score ≤ hit e score ≥ 0 (se clampato).
+- se “corrette su k”, allora 0 ≤ corrette ≤ k.
+- se esistono raw_totale e raw_subtest, check somme dove applicabile.
+Policy:
+- STOP se incoerenze sistematiche.
+- WARN se poche righe isolate (candidati a exclusion).
+
+============================================================
+2.2 DISTRIBUZIONI E DIAGNOSTICA MINIMA
+============================================================
+
+Obiettivo: vedere “forme” problematiche prima del modello.
+
+2.2.1 Età
+- Istogramma età + ECDF.
+- Check spike: età tutte intere, età raggruppate (classi), buchi.
+- Report: min, max, quantili (1%, 5%, 50%, 95%, 99%).
+
+2.2.2 Per ciascuna misura (diagnostica leggera)
+Produrre almeno:
+- Istogramma (o barplot se discreto).
+- ECDF (utile per discreti e per vedere scalini).
+- Scatter raw vs age con smooth (anche solo loess).
+Indicatori da annotare nel report:
+- floor/ceiling (massa a raw_min o raw_max).
+- spike/ties (molti uguali su un valore specifico).
+- discreteness vs continuous (coerente con raw_type?).
+- valori “inverosimili” per unità (es. velocità fuori scala).
+
+2.2.3 Riassunto “red flags” automatico
+Per ogni misura:
+- % a raw_min e % a raw_max.
+- numero di valori distinti (cardinalità) e % del valore più frequente.
+- eventuali outlier estremi (p.es. oltre 99.9%).
+Output: tabella red-flags ordinata per severità.
+
+============================================================
+2.3 IDENTIFICAZIONE FAILURE MODES TIPICI (CON TEST MIRATI)
+============================================================
+
+Questa sezione non “indovina”, ma genera ipotesi verificabili.
+
+Failure mode A: età mis-codificata (anni vs mesi)
+- Trigger: range incompatibile con age_unit, spike sospetti, valid_age violata massivamente.
+- Azione: STOP e richiedi correzione unità o mapping esplicito.
+
+Failure mode B: punteggi invertiti / direzione errata
+- Trigger: correlazione raw vs age in direzione opposta all’atteso per misure di abilità,
+  o “higher_is_better” incoerente con descrizione.
+- Azione: WARN forte, richiedi conferma della direzione e della formula.
+  Nota: la correzione deve avvenire via z_aligned, non manipolando raw senza motivo.
+
+Failure mode C: tempi in ms invece che s, o scaling errato
+- Trigger: ordini di grandezza assurdi (tempi 300000, ecc.).
+- Azione: STOP se non si può dimostrare la conversione corretta.
+  Richiedi regola deterministica (ms→s / log / ecc.), loggata.
+
+Failure mode D: task non somministrato (missing strutturale)
+- Trigger: NA a blocchi per sottogruppi o fasce d’età.
+- Azione: documentare come “design missingness”, aggiornare Spec (misura valida solo per subset).
+
+Failure mode E: range teorico sbagliato in Spec
+- Trigger: molti valori “fuori range” ma plausibili clinicamente (es. score max diverso).
+- Azione: STOP e riallinea raw_min/raw_max con documentazione o definizione task.
+
+============================================================
+2.4 DECISIONI SU OUTLIER E MISSINGNESS (DOCUMENTATE)
+============================================================
+
+Regola: separa sempre
+- “impossibile” (errore) → exclusion o correzione deterministica,
+- “raro ma possibile” → tenere, al massimo flag e diagnostica robusta.
+
+2.4.1 Outlier: policy a livelli (default)
+- Livello 0 (default): non correggere, solo flaggare, a meno che impossibile.
+- Livello 1: winsorize solo se giustificato e solo per variabili continue non bounded,
+  e comunque upstream, con log e confronto sensitivity.
+- Livello 2: esclusione casi con outlier impossibili o multi-outlier (quality failure).
+Vincolo: qualsiasi winsorization o esclusione deve essere tracciata.
+
+2.4.2 Missingness: policy (default conservativa)
+- Per misure singole: si può normare usando i casi disponibili (NA esclusi dal fit), ma QA deve riportare N effettivo.
+- Per indici/compositi: default “complete-case per componenti richieste”.
+  Alternative (solo se richieste): imputazione, prorating, modelli FIML, ma vanno motivati e auditati.
+- Output: tabella con regole di calcolo e soglie (min componenti presenti).
+
+============================================================
+OUTPUT OBBLIGATORIO DELLO STEP 2
+============================================================
+
+(A) QA_PRE_FLIGHT_REPORT (testo strutturato)
+Deve includere:
+1) Summary dataset:
+   - N righe, N soggetti (se diverso), #misure, age_unit, range età osservato.
+2) Risultati sanity checks (PASS/WARN/STOP) con conteggi + esempi.
+3) Tabelle:
+   - NA% per colonna
+   - fuori range per colonna
+   - red flags per misura (floor/ceiling, spike, cardinalità)
+4) Grafici minimi:
+   - istogramma/ECDF età
+   - raw vs age (per misura o per gruppi di misure)
+   - distribuzioni (istogrammi/barplot) per 3–5 misure “critiche”
+5) Failure modes identificati + evidenze + decisione (STOP/WARN + azione).
+
+(B) CLEAN_DATASET oppure EXCLUSION_RULES
+Scegli UNA delle due modalità (esplicita):
+- CLEAN_DATASET: dataset filtrato/corretto con colonna “qa_flags” e “excluded_reason” (se esclusi).
+oppure
+- EXCLUSION_RULES: elenco di regole deterministiche da applicare prima del fit, con conteggi stimati.
+
+(C) DECISION LOG (appendice breve)
+- cosa è stato escluso/corretto,
+- perché,
+- con quale soglia,
+- impatto su N e copertura per età.
+
+############################################
+STEP 3) SCELTE DI MODELLO UPSTREAM
+Decision guide + alternative, orientato a continuous norming table-driven
+Output obbligatorio: MODEL_CHOICE + PIANO_B + DECISION_LOG (aggiornato)
+############################################
+
+ISTRUZIONI ALL’AI
+- Non proporre “un modello” in astratto, devi produrre una scelta per ciascuna misura (measure).
+- Ogni scelta deve includere:
+  (a) famiglia/distribuzione,
+  (b) quali parametri dipendono dal confondente (mu/sigma/shape),
+  (c) smoothing e vincoli (incluso monotono),
+  (d) gestione code e protezioni numeriche,
+  (e) piano B se il fit fallisce o produce tabelle instabili.
+- Default coerente con la filosofia del progetto:
+  - Preferire modelli parametrici condizionati (GAMLSS) quando serve stabilità nelle code e auditabilità delle tabelle.
+  - Quantili empirici o quantile regression sono alternative legittime ma spesso più fragili sulle code e meno “table-friendly” se si vuole z coerente.
+- Ricorda: downstream = tabelle. Upstream = solo mezzo.
+
+============================================================
+3.1 MODELLO CONCETTUALE (VINCOLANTE)
+============================================================
+
+Obiettivo operativo del modello upstream:
+stimare una distribuzione condizionata al confondente (tipicamente età):
+  Y | age ~ D( location(age), scale(age), shape(age) )
+
+Dove:
+- location(age): “centro” della distribuzione condizionata (non per forza media).
+- scale(age): dispersione condizionata (spesso cambia con età).
+- shape(age): asimmetria, curtosi, overdispersion, zero-inflation, ecc. (se serve).
+
+Output necessario dal modello:
+- CDF condizionata per ottenere p o p_mid,
+- trasformazione deterministica in z_raw e poi z_aligned,
+- tabelle raw → (p/p_mid, z_aligned, scaled).
+
+Vincolo: se il modello non permette una CDF/quantile utilizzabile in modo stabile,
+non è adatto a questa pipeline.
+
+============================================================
+3.2 SCELTE PER TIPO DI PUNTEGGIO (DECISION TREE)
+============================================================
+
+Per ogni misura, identifica raw_type e scegli una famiglia candidata.
+
+A) discrete_bounded (0..k o min..max con k finito)
+Scelta tipica:
+- Beta-Binomiale (BB) se overdispersion o eterogeneità tra soggetti.
+- Binomiale (BI) se dispersione ok e semplicità prioritaria.
+Casi speciali:
+- molti 0 strutturali: considerare zero-inflation/hurdle solo se documentabile (attenzione: complessità e audit).
+Note operative:
+- usare mid-P per percentili (default del progetto).
+- la granularità della tabella è naturale: raw_grid = tutti gli interi possibili.
+
+B) discrete_unbounded (conteggi senza massimo fisso)
+Scelta tipica:
+- Poisson (PO) se var≈mean.
+- NegBin (NB) se overdispersion.
+Casi speciali:
+- zero-inflation/hurdle se molti zeri “strutturali” (non solo rari).
+Rischio:
+- code molto lunghe: tabelle grandi, serve una policy su raw_max operativo (documentata).
+
+C) continuous con supporto positivo, skew (tempi, velocità, rate)
+Scelta tipica:
+- Lognormal (LOGNO) se moltiplicatività e code alte.
+- Gamma (GA) se skew moderato e interpretazione robusta.
+Alternative:
+- Box-Cox + Normal (ma rischia opacità se non documentato bene).
+Vincoli:
+- se “lower is better” (tempi), non invertire raw, allinea su z_aligned.
+
+D) quasi-Gauss (continuous circa simmetrico)
+Scelta tipica:
+- Normal (NO) con mu(age) e sigma(age).
+Casi speciali:
+- code pesanti: considerare t-family o robuste (se disponibili) solo se necessario.
+
+E) misure differenza (hit - false alarm, corrette - errori) con floor a 0
+- spesso discrete e bounded “di fatto” anche se teoricamente più ampia.
+- trattare come discrete_bounded se l’intervallo operativo è finito e noto.
+- se c’è troncamento a 0, attenzione a spike a 0 (valutare hurdle solo se essenziale).
+
+============================================================
+3.3 CONTINUOUS NORMING: QUANTILI VS PARAMETRI
+============================================================
+
+Scelta 1 (default consigliato qui): GAMLSS (parametrico, distribuzione esplicita)
+Pro:
+- CDF/quantili ben definiti, utili per percentili e per costruire z coerenti.
+- Stabilità maggiore nelle code (se modello sensato + smoothing).
+- La tabella raw→z è naturale, auditabile, riproducibile.
+Contro:
+- rischio non convergenza o fit fragile se dati scarsi o famiglia sbagliata.
+- richiede diagnostica minima.
+
+Scelta 2: Quantile regression / quantili condizionati (semi/non-parametrico)
+Pro:
+- meno assunzioni di forma, utile se la distribuzione è “strana”.
+- può essere robusta in centro distribuzione.
+Contro (rilevanti per questo progetto):
+- sulle code serve molta informazione, altrimenti instabilità e crossing.
+- trasformare quantili in una CDF coerente per ottenere z non è banale (serve un passaggio aggiuntivo, rischio di incoerenza).
+Quando ha senso:
+- reporting solo in termini di percentili e bande, e non serve z per aggregazione.
+Nota:
+- se scegli quantile regression, devi dichiarare come trasformi in CDF e come eviti crossing.
+Se non puoi, è un NO per questa pipeline.
+
+Scelta 3: Binning età + quantili empirici (fallback “semplice”)
+Pro:
+- semplice, trasparente.
+Contro:
+- instabile sulle code, peggiora con discretizzazione dell’età.
+Uso:
+- solo come piano B quando il fit continuo fallisce e il delivery può tollerare bande.
+
+============================================================
+3.4 SMOOTHING SU ETÀ (E ALTRI CONFONDENTI)
+============================================================
+
+Principio:
+- vuoi curve lisce e plausibili, senza overfitting locale, soprattutto nelle code.
+
+Opzioni operative (da più “forte” a più “debole”):
+A) Vincolo monotono su location (consigliato quando abilità cresce con età)
+- es. pbm(age, mono="up") per mu.
+Pro: impedisce oscillazioni ridicole.
+Contro: può mascherare plateau reali se troppo rigido (di solito accettabile in didattica).
+
+B) Spline penalizzate senza vincolo (pb(age) o simili)
+Pro: flessibile.
+Contro: può oscillare se dati scarsi o tuning sbagliato.
+
+C) Griglia + smoothing post-hoc (non preferito)
+- stimare per punti e poi lisciare.
+Rischio: incoerenze, monotonicità non garantita.
+
+Regole consigliate per questa pipeline:
+- mu(age): monotono up quando la misura è abilità e l’età è sviluppo.
+- sigma(age): smooth libero (spesso cambia con età, non monotono).
+- shape(age): introdurlo solo se la diagnostica lo richiede (evitare overengineering).
+
+============================================================
+3.5 GESTIONE DISCRETO/BOUNDED (DETTAGLI VINCOLANTI)
+============================================================
+
+Percentili:
+- discrete_bounded: mid-P come default (P(X<x)+0.5P(X=x)).
+- continuous: p = F(raw|age_ref) standard.
+
+Jittering:
+- ammesso solo per grafici diagnostici (evitare overplotting), mai per fit, mai per tabelle.
+
+Ties e spike:
+- spike forti sono un segnale: o la misura è troppo grossolana o c’è un problema di scoring.
+- non “risolvere” con hack prima di aver scritto nel report cosa succede.
+
+Granularità raw_grid:
+- discrete_bounded: tutti gli interi possibili (range teorico).
+- continuous: griglia dichiarata (step), abbastanza fine da non introdurre artefatti in SS, ma non enorme.
+  Regola pratica: scegli step che rende stabile SS quando si fa approx(raw→z).
+
+============================================================
+3.6 STRATEGIA PER LE CODE (TAIL POLICY)
+============================================================
+
+Vincolo del progetto:
+- mai percentile 0/100, mai z ±Inf.
+
+Tail policy (ordine consigliato):
+1) Clamp esplicito con epsilon o clamp su z (es. ±3 o ±3.5), sempre flaggato.
+2) Shrinkage via smoothing: preferisci ridurre complessità del modello piuttosto che “forzare” tabelle.
+3) Winsorization: solo se giustificata come correzione di outlier impossibili o di measurement failure,
+   e comunque deve risultare in regole di esclusione o cleaning upstream, non in scoring downstream.
+4) Famiglie robuste / shape extra: solo se la diagnostica mostra bias sistematico nelle code.
+
+Quando le code sono troppo instabili:
+- riduci la granularità age_grid (bande più larghe) come piano B,
+- oppure passa a reporting percentili banded senza z (solo se accettato come deliverable).
+
+============================================================
+3.7 INVARIANZA E COMPARABILITÀ (QUANDO SERVE DAVVERO)
+============================================================
+
+Regola: l’invarianza non è obbligatoria per norming descrittivo,
+ma diventa utile quando:
+- vuoi compositi o indici con senso comparativo forte tra età o gruppi,
+- hai item-level e temi che la metrica cambi (DIF/shift di difficoltà/format).
+
+Opzione “facoltativa ma utile”:
+- CFA/SEM (lavaan) per:
+  - controllare struttura (cluster, wording),
+  - verificare invariance minima (configural/metric/scalar) se richiesta.
+Output atteso se attivi questo modulo:
+- decisione: fare o non fare invariance, e perché.
+- se fai invariance: livello testato, esito, e impatto sulla definizione dei compositi.
+
+Quando NON farla:
+- scopo = solo norming pragmatico per interpretazione locale,
+- non hai item-level,
+- N insufficiente per modelli stabili,
+- aggiunge complessità senza migliorare l’auditabilità.
+
+============================================================
+OUTPUT OBBLIGATORIO DELLO STEP 3
+============================================================
+
+(1) MODEL_CHOICE (tabella, una riga per misura)
+Colonne minime:
+- measure
+- raw_type
+- family_primary (es. BB, NB, LOGNO, GA, NO)
+- params_varying (mu | sigma | shape, es. mu(age), sigma(age))
+- smoothing_mu (es. monotono up) / smoothing_sigma / smoothing_shape
+- percentile_convention (p o mid-P)
+- tail_policy (eps/clamp e valori)
+- raw_grid_plan (intero/step)
+- note_rischi (1 riga)
+- pianoB_short (1 riga)
+
+(2) PIANO_B (testo breve, per categorie)
+Deve coprire:
+- non convergenza
+- instabilità code
+- monotonicità fallita
+- dati scarsi per età
+
+(3) DECISION_LOG (appendice)
+Per ogni scelta non banale:
+- alternativa considerata
+- perché scartata
+- rischio residuo
+- mitigazione prevista
+
+############################################
+STEP 4) MODULO LAVAAN (OPZIONALE) PER STRUTTURA E COMPOSITI
+Scopo: definire (se serve) struttura e compositi PRIMA del norming,
+senza rompere il principio table-driven downstream.
+Output obbligatorio: COMPOSITE_SPEC + (eventuale) RAW_TO_COMPOSITE_TABLE + DECISION_LOG
+############################################
+
+ISTRUZIONI ALL’AI
+- Questo modulo si attiva SOLO se richiesto dallo scopo (Step 1) o se necessario per definire compositi.
+- Default conservativo: preferire compositi deterministici (somma/media di score standardizzati) rispetto a factor score.
+- Non fare SEM “per bellezza”. Se non cambia una decisione pratica, non farlo.
+- Se proponi punteggi latenti/fattoriali, devi esplicitare perché non rompono auditabilità e stabilità,
+  e devi fornire un’alternativa deterministicamente riproducibile.
+
+============================================================
+4.1 QUANDO USARE CFA/SEM PRIMA DEL NORMING
+============================================================
+
+Usa CFA/SEM se almeno UNO di questi è vero:
+
+A) Serve un composito con pesi non banali
+- esempio: indice che non è semplice somma di subtest, o che vuole compensare cluster/wording.
+
+B) Vuoi controllare struttura per evitare “composito finto”
+- esempio: subtest molto correlati per metodo (wording, formato, velocità),
+  e vuoi evitare che il composito sia dominato da un cluster.
+
+C) Hai item-level e vuoi verificare che la metrica sia comparabile
+- soprattutto se reporting cross-età o cross-gruppo deve essere interpretabile.
+
+D) Devi decidere tra due definizioni di indice (somma vs fattoriale) e vuoi evidenza.
+
+Non usarlo se:
+- lo scopo è solo norming descrittivo per subtest separati,
+- non esistono item-level e gli indici sono già definiti in modo standard,
+- N è insufficiente o struttura instabile (aumento rischio, nessun guadagno operativo).
+
+============================================================
+4.2 INVARIANZA RISPETTO A ETÀ O GRUPPI (SOLO QUEL CHE SERVE)
+============================================================
+
+Principio pratico:
+- Testa solo il minimo necessario per lo scopo.
+- Ogni livello di invariance è una decisione, non un rituale.
+
+Livelli (in ordine):
+1) Configural: stessa struttura (pattern di carichi).
+2) Metric: carichi uguali (comparabilità di relazioni).
+3) Scalar: intercette/threshold uguali (comparabilità di livelli medi).
+
+Quando serve cosa:
+- Se vuoi solo definire un composito stabile e non confrontare medie tra gruppi: spesso basta configural/metric.
+- Se vuoi confrontare livelli medi tra gruppi/età (interpretazione “normativa” del composito): scalar è il target,
+  ma può essere difficile, valuta alternative (partial invariance).
+
+Criteri pratici (non dogmatici):
+- Non fissare soglie “magiche” a priori nel prompt.
+- Usa un approccio a triangolazione:
+  - delta CFI/TLI/RMSEA (sensibilità),
+  - plausibilità dei parametri,
+  - impatto pratico sul composito (cambia davvero lo score o no?).
+Se l’impatto è trascurabile, non inseguire invariance perfetta.
+
+Scelta operativa importante:
+- Età può essere continua: lavaan gestisce invariance per gruppi, non per continuo.
+  Se serve invariance “per età”, definisci macro-gruppi ragionevoli (pochi, stabili) e documenta.
+
+============================================================
+4.3 DERIVAZIONE DI PUNTEGGI LATENTI O FATTORIALI (SE RICHIESTI)
+============================================================
+
+Opzioni possibili per “composito”:
+
+Opzione 1 (default consigliato): composito deterministico da osservati
+- Somma o media di subtest (grezzi o standardizzati, vedi Step 6/7).
+Pro:
+- auditabilità massima,
+- stabilità,
+- replicabile su carta.
+Contro:
+- non corregge measurement error,
+- può essere dominato da subtest più variabili (da gestire con standardizzazione prima della somma).
+
+Opzione 2: factor score (latent score) da CFA
+Pro:
+- potenzialmente più “pulito” rispetto a errori specifici,
+- utile se vuoi pesi data-driven.
+Contro (rilevanti qui):
+- auditabilità debole: dipende dal modello e dall’algoritmo di scoring,
+- instabilità: cambia con campione, stima, vincoli,
+- difficile da riprodurre senza il fit.
+
+Regola vincolante se proponi factor score:
+- devi fornire un’alternativa deterministicamente calcolabile (Opzione 1),
+  e dichiarare che il factor score non è il default per delivery.
+- se l’utente insiste sul factor score, devi “congelare” una trasformazione tabellare downstream
+  che lo renda calcolabile senza lavaan (vedi sotto), oppure dichiarare esplicitamente che si perde auditabilità.
+
+============================================================
+4.4 OUTPUT PER DOWNSTREAM NORMING (SENZA ROMPERE TABLE-DRIVEN)
+============================================================
+
+Qualunque sia la scelta, downstream deve poter calcolare il “composito” senza fmodelli.
+
+Caso A: composito deterministico (raccomandato)
+- Definisci “composite_raw” come funzione deterministica di colonne osservate:
+  - es. somma grezzi, somma PP, media z_aligned, ecc.
+- Questo composite_raw diventa una misura come le altre e passa allo Step 5–6 per norming e tabelle.
+Output richiesto:
+- COMPOSITE_SPEC con formula esatta e regole di missingness.
+- Nessuna tabella raw→composito è necessaria se la formula è calcolabile direttamente.
+
+Caso B: factor score richiesto (gestione cauta)
+Due strade, entrambe con warning:
+
+B1) “Score fattoriale congelato via pesi” (approssimazione deterministica)
+- Usa pesi fissi (es. carichi standardizzati) e costruisci un punteggio composito deterministico:
+  composite_raw = sum(w_j * x_j), con w_j fissati e versionati.
+Pro:
+- scoring possibile senza lavaan.
+Contro:
+- non è un vero factor score, è un proxy lineare.
+Output richiesto:
+- tabella PESI versionata + formula + gestione scaling delle x_j.
+
+B2) “Factor score tabellato” (solo se dominio discreto e piccolo)
+- Se gli indicatori sono discreti con pochi livelli e pochi item, puoi tabellare raw-combinazioni → score.
+Quasi sempre impraticabile per dimensioni reali.
+Pro:
+- auditabilità via tabella completa.
+Contro:
+- esplosione combinatoria.
+Default: NON farlo salvo caso didattico molto piccolo.
+
+Vincolo non negoziabile:
+- se non riesci a rendere il composito calcolabile senza modello,
+  devi dichiarare esplicitamente che stai violando il principio table-driven,
+  e chiedere all’umano se accetta questa perdita (di default: NO).
+
+============================================================
+OUTPUT OBBLIGATORIO DELLO STEP 4
+============================================================
+
+(1) COMPOSITE_SPEC (obbligatoria se esiste almeno un composito)
+Per ogni composito:
+- composite_id, label
+- input_measures (lista)
+- formula deterministica (testo + pseudocodice)
+- unità/scala del composite_raw
+- direzione (higher_is_better)
+- missing_policy (regola precisa)
+- motivazione (1–3 righe)
+- audit_note (come si ricostruisce “a mano”)
+
+(2) RAW_TO_COMPOSITE_TABLE (solo se necessario)
+- Se la formula non è banale o richiede discretizzazione/scalini.
+Schema minimo:
+  composite_id, input_signature (o range), composite_raw, flags, version_id
+
+(3) DECISION_LOG (appendice)
+- Perché SEM sì/no.
+- Se invariance: quali gruppi, quale livello, esito sintetico, impatto pratico.
+- Se factor score: perché accettato, come si preserva determinismo, e warning di auditabilità.
+
+############################################
+5) IMPLEMENTAZIONE UPSTREAM IN R (PASSO-PASSO, MINIMO MA COMPLETO)
+Scopo: produrre (i) fit upstream salvati solo “internamente” e (ii) una griglia di predizioni (age_grid × raw_grid) con probabilità/percentili/z, pronta per essere trasformata in tabelle downstream (punto 6). Principio non negoziabile: downstream = lookup da CSV versionati, mai da oggetti di modello.
+############################################
+
+------------------------------------------------------------
+5.1 Setup progetto (cartelle, pacchetti, log, riproducibilità)
+------------------------------------------------------------
+
+```r
+# 00_setup.R
+rm(list = ls())
+
+# Cartelle standard
+DIRS <- c("data","R","out","out/fits","out/tmp","QA","QA/plots","QA/logs","release")
+for (d in DIRS) dir.create(d, showWarnings = FALSE, recursive = TRUE)
+
+# Pacchetti minimi (evita overengineering)
+pkgs <- c("gamlss","gamlss.dist","dplyr","tidyr","readr","tibble","stringr")
+stopifnot(all(sapply(pkgs, requireNamespace, quietly = TRUE)))
+
+# Session info (sempre)
+sink("QA/sessionInfo.txt")
+print(Sys.time())
+print(sessionInfo())
+sink()
+
+# Seed: solo se stai simulando. Per dati reali, NON serve.
+# set.seed(123)
+
+# Guardrail numerici globali
+EPS_PROB <- 1e-6           # evita 0/1 -> z = ±Inf
+Z_CAP    <- 3              # clamp esplicito delle code, coerente con la prassi
+clamp_prob <- function(p) pmin(1 - EPS_PROB, pmax(EPS_PROB, p))
+cap_prob_z3 <- function(p) pmin(pnorm(Z_CAP), pmax(pnorm(-Z_CAP), p))
+```
+
+Nota: se vuoi massima riproducibilità a lungo termine, usa renv, ma non è obbligatorio nel prompt (può stare come estensione in 10.x).
+
+------------------------------------------------------------
+5.2 Ingest e cleaning (import, coercizioni, validazioni, logging)
+------------------------------------------------------------
+Assunzione operativa: il dataset “standardization sample” contiene almeno:
+- id
+- age_y (anni con decimali) oppure age_m (mesi)
+- colonne di grezzo per ciascuna misura (wide) OPPURE long (id, age, measure, raw)
+
+Qui mostro la versione wide → long perché minimizza special cases e rende i check uniformi.
+
+```r
+# 01_ingest_clean.R
+library(readr); library(dplyr); library(tidyr); library(tibble); library(stringr)
+
+DATA_PATH <- "data/standardization_sample_raw.csv"
+dd <- readr::read_csv(DATA_PATH, show_col_types = FALSE)
+
+# --- età: scegli un’unità unica e non ambigua ---
+if ("age_m" %in% names(dd)) {
+  dd <- dd %>% mutate(age_m = as.integer(age_m), age_y = age_m/12)
+} else if ("age_y" %in% names(dd)) {
+  dd <- dd %>% mutate(age_y = as.numeric(age_y), age_m = as.integer(round(age_y*12)))
+} else {
+  stop("Serve 'age_y' o 'age_m' nel dataset.")
+}
+
+# Range età: fail-loud
+AGE_MIN_Y <- 6
+AGE_MAX_Y <- 22
+if (any(dd$age_y < AGE_MIN_Y | dd$age_y > AGE_MAX_Y, na.rm = TRUE)) {
+  bad <- dd %>% filter(age_y < AGE_MIN_Y | age_y > AGE_MAX_Y) %>% select(id, age_y) %>% head(20)
+  stop("Età fuori range norme (", AGE_MIN_Y, "-", AGE_MAX_Y, "). Esempi:\n",
+       paste(capture.output(print(bad)), collapse="\n"))
+}
+
+# --- SPEC MISURE: dichiarativa, niente file “misteriosi” ---
+# Campi minimi: measure, raw_col, raw_type, minScore, maxScore, higher_is_better, family_hint
+tasks_spec <- tibble::tibble(
+  measure = c("SP","RS","MR"),                # esempio minimo
+  raw_col = paste0(measure, "_grezzo"),
+  raw_type = c("discrete_bounded","discrete_bounded","discrete_bounded"),
+  minScore = c(0,0,0),
+  maxScore = c(36,24,24),
+  higher_is_better = c(TRUE, TRUE, TRUE),
+  family_hint = c("BB","BB","BB")             # qui: Beta-Binomiale (bounded + overdispersion)
+)
+
+# Validazione colonne
+missing_cols <- tasks_spec$raw_col[!tasks_spec$raw_col %in% names(dd)]
+if (length(missing_cols) > 0) stop("Mancano colonne grezzo: ", paste(missing_cols, collapse=", "))
+
+# Wide -> long (una riga = persona × misura)
+dat_long <- dd %>%
+  mutate(.row_id = row_number()) %>%
+  select(.row_id, id = any_of("id"), age_y, age_m, all_of(tasks_spec$raw_col)) %>%
+  pivot_longer(cols = all_of(tasks_spec$raw_col), names_to = "raw_col", values_to = "raw") %>%
+  left_join(tasks_spec, by = "raw_col") %>%
+  mutate(raw = as.numeric(raw))
+
+# Check range grezzo per misura (fail-loud)
+bad_raw <- dat_long %>%
+  filter(!is.na(raw)) %>%
+  filter(raw < minScore | raw > maxScore)
+
+if (nrow(bad_raw) > 0) {
+  ex <- bad_raw %>% select(id, age_y, measure, raw, minScore, maxScore) %>% head(20)
+  stop("Valori grezzo fuori range teorico. Esempi:\n",
+       paste(capture.output(print(ex)), collapse="\n"))
+}
+
+# Logging rapido per QA preliminare
+qa_pre <- dat_long %>%
+  group_by(measure) %>%
+  summarise(
+    n_total = n(),
+    n_nonmiss = sum(!is.na(raw)),
+    prop_miss = mean(is.na(raw)),
+    raw_min_obs = min(raw, na.rm = TRUE),
+    raw_max_obs = max(raw, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+readr::write_csv(qa_pre, "QA/preflight_by_measure.csv")
+```
+
+------------------------------------------------------------
+5.3 Fit per ciascuna misura (GAMLSS skeleton + fallback motivati)
+------------------------------------------------------------
+Regola: il fit deve essere “salvabile e predicibile” dopo readRDS(), senza cercare oggetti nel global env.
+Pattern robusto: inserisci il data.frame usato nel call del modello (difesa semplice). :contentReference[oaicite:2]{index=2}
+
+```r
+# 02_fit_upstream.R
+library(gamlss); library(gamlss.dist); library(dplyr)
+
+# Helper: prova fit con fallback e logga cosa ha funzionato
+fit_one_measure <- function(df_one, spec_row) {
+  stopifnot(nrow(spec_row) == 1)
+  
+  y_min <- spec_row$minScore
+  y_max <- spec_row$maxScore
+  bd <- y_max - y_min
+  
+  tmp <- df_one %>%
+    transmute(age_y = age_y, raw = raw) %>%
+    filter(is.finite(age_y), !is.na(raw)) %>%
+    mutate(score_shift = raw - y_min) %>%
+    filter(score_shift >= 0, score_shift <= bd)
+  
+  if (nrow(tmp) < 50) stop(spec_row$measure, ": troppo pochi casi validi (", nrow(tmp), ").")
+  
+  # Scelte minime: mu monotona se sviluppo atteso, sigma smooth (eteroschedasticità)
+  # Fallback progressivi: meno complesso se non converge.
+  attempts <- list(
+    list(mu = "pbm_up", sigma = "pb",    desc = "mu=pbm(mono up), sigma=pb"),
+    list(mu = "pb",     sigma = "pb",    desc = "mu=pb, sigma=pb"),
+    list(mu = "pb",     sigma = "const", desc = "mu=pb, sigma=const"),
+    list(mu = "lin",    sigma = "const", desc = "mu=lm, sigma=const")
+  )
+  
+  out <- NULL
+  for (k in seq_along(attempts)) {
+    a <- attempts[[k]]
+    mu_form <- switch(a$mu,
+      pbm_up = cbind(score_shift, bd - score_shift) ~ pbm(age_y, mono = "up"),
+      pb     = cbind(score_shift, bd - score_shift) ~ pb(age_y),
+      lin    = cbind(score_shift, bd - score_shift) ~ age_y
+    )
+    sigma_form <- switch(a$sigma,
+      pb    = ~ pb(age_y),
+      const = ~ 1
+    )
+    
+    fit_try <- try(
+      gamlss(
+        formula  = mu_form,
+        sigma.fo = sigma_form,
+        family   = BB,
+        data     = tmp,
+        trace    = FALSE,
+        control  = gamlss.control(n.cyc = 100)
+      ),
+      silent = TRUE
+    )
+    
+    if (!inherits(fit_try, "try-error")) {
+      # difesa: rendi predicibile dopo readRDS
+      fit_try$call$data <- tmp
+      
+      out <- list(
+        fit = fit_try,
+        attempt = k,
+        attempt_desc = a$desc,
+        n_used = nrow(tmp),
+        age_range = range(tmp$age_y)
+      )
+      break
+    }
+  }
+  
+  if (is.null(out)) stop(spec_row$measure, ": nessun fit riuscito (anche dopo fallback).")
+  out
+}
+
+# Loop fit + decision log
+decision_log <- list()
+fits <- vector("list", length = nrow(tasks_spec))
+names(fits) <- tasks_spec$measure
+
+for (i in seq_len(nrow(tasks_spec))) {
+  m <- tasks_spec$measure[i]
+  cat("Fit:", m, "\n")
+  
+  df_m <- dat_long %>% filter(measure == m)
+  res <- fit_one_measure(df_m, tasks_spec[i, ])
+  
+  fits[[m]] <- res
+  decision_log[[m]] <- data.frame(
+    measure = m,
+    attempt = res$attempt,
+    attempt_desc = res$attempt_desc,
+    n_used = res$n_used,
+    age_min = res$age_range[1],
+    age_max = res$age_range[2]
+  )
+}
+
+decision_log <- do.call(rbind, decision_log)
+readr::write_csv(decision_log, "QA/logs/fit_decision_log.csv")
+
+saveRDS(
+  list(fits = fits, tasks_spec = tasks_spec, decision_log = decision_log),
+  file = "out/fits/fits_upstream.rds"
+)
+```
+
+Diagnostica minima consigliata (non obbligatoria nel “minimo”):
+- AIC/GAIC per confronto tra fallback.
+- worm plot solo se serve capire le code.
+Tutto questo può stare in un blocco “opzionale” (es. in Quarto: code-fold).
+
+------------------------------------------------------------
+5.4 Predizione su griglia (age_grid, raw_grid, CDF, percentili clinici)
+------------------------------------------------------------
+Qui NON stiamo ancora “consegnando tabelle”, ma creiamo un oggetto predittivo completo che poi il punto 6 trasforma nei CSV downstream.
+
+Decisione pragmatica: per discreti bounded, percentile = mid-P:
+P_mid(x) = P(X < x) + 0.5 * P(X = x)
+e poi clamp esplicito, monotonicità garantita via cummax sulla CDF.
+
+```r
+# 03_predict_grid.R
+library(dplyr); library(tidyr); library(readr); library(gamlss); library(gamlss.dist)
+
+obj <- readRDS("out/fits/fits_upstream.rds")
+fits <- obj$fits
+tasks_spec <- obj$tasks_spec
+
+# Age grid: scelta di delivery interna (qui: mesi, ma in anni decimali)
+AGE_STEP_M <- 3                         # esempio: ogni 3 mesi
+age_grid_m <- seq(AGE_MIN_Y*12, AGE_MAX_Y*12, by = AGE_STEP_M)
+age_grid_y <- age_grid_m / 12
+
+# Clinica: quantili chiave (usati dopo, ma qui li prepariamo)
+clin_q <- c(.05, .15, .50, .75)
+
+predict_one <- function(measure) {
+  spec <- tasks_spec %>% filter(measure == !!measure)
+  fit_obj <- fits[[measure]]
+  
+  minS <- spec$minScore
+  maxS <- spec$maxScore
+  bd <- maxS - minS
+  
+  raw_grid <- seq(minS, maxS, by = 1)   # discreto bounded
+  
+  grid <- tidyr::expand_grid(
+    measure = measure,
+    age_ref_m = age_grid_m,
+    age_ref_y = age_grid_y,
+    raw = raw_grid
+  ) %>%
+    mutate(score_shift = raw - minS)
+  
+  # Predici parametri per ogni età
+  pA <- predictAll(fit_obj$fit, newdata = data.frame(age_y = grid$age_ref_y))
+  mu <- as.numeric(pA$mu)
+  sg <- as.numeric(pA$sigma)
+  
+  # mid-P (BB)
+  p_le <- pBB(q = grid$score_shift,     mu = mu, sigma = sg, bd = bd)
+  p_lt <- pBB(q = grid$score_shift - 1, mu = mu, sigma = sg, bd = bd)
+  p_eq <- pmax(0, p_le - p_lt)
+  p_mid <- p_lt + 0.5 * p_eq
+  
+  # guardrail: monotonia in raw dentro ogni età + clamp code
+  out <- grid %>%
+    mutate(p = p_mid) %>%
+    group_by(measure, age_ref_m) %>%
+    arrange(raw, .by_group = TRUE) %>%
+    mutate(
+      p = cummax(p),
+      p = cap_prob_z3(clamp_prob(p)),
+      percentile = 100 * p,
+      z_raw = qnorm(p)
+    ) %>%
+    ungroup()
+  
+  # allineamento direzione (regola unica, dopo conversione)
+  if (!isTRUE(spec$higher_is_better)) {
+    out <- out %>% mutate(z_aligned = -z_raw)
+  } else {
+    out <- out %>% mutate(z_aligned = z_raw)
+  }
+  
+  out
+}
+
+raw_pred <- bind_rows(lapply(tasks_spec$measure, predict_one))
+
+# Salva “griglia predittiva” interna (non ancora prodotto finale)
+readr::write_csv(raw_pred, "out/tmp/pred_grid_raw.csv")
+```
+
+Nota operativa: qui abbiamo p, percentile, z_raw, z_aligned.
+Lo scaled score (1..19 o SS 100/15) e le band cliniche vengono nel punto 6, perché sono parte della “delivery spec” e devono finire nei CSV downstream versionati.
+
+Quantili clinici (5, 15, 50, 75) come curve su età:
+- si calcolano da qBB(p=..., mu, sigma, bd) per ogni age_grid,
+- utili per QA e per controllare “implausibilità” alle estremità,
+- non sostituiscono la tabella raw→norm, ma sono un sanity check visivo.
+
+------------------------------------------------------------
+5.5 Politiche di convergenza e stabilità (retry, semplifica, freeze)
+------------------------------------------------------------
+Regole semplici e auditabili:
+
+A) Retry controllato
+- Max 3–4 tentativi per misura (come sopra), con complessità decrescente.
+- Ogni tentativo lascia una traccia nel decision_log (misura, formula mu/sigma, esito).
+
+B) “Freeze” del fit upstream
+- Una volta esportata una release di tabelle downstream, i fit upstream sono “read-only” per quella versione.
+- Se aggiorni dati o modelli, incrementi versione e rigeneri tabelle, non “patchi” a mano.
+
+C) Criteri fail-loud
+- se nessun tentativo converge, stop e segnala misura come “non rilasciabile”
+- se ai confini di età i quantili esplodono o si invertano, semplifica il modello o restringi range norme (documentato)
+
+D) Stabilità minima richiesta (QA upstream, prima di punto 6)
+- pred_grid_raw deve essere completo (nessun buco inatteso in age_grid × raw_grid)
+- monotonicità p(raw) per ogni età, garantita (cummax) e loggata se ha cambiato valori
+- clamp code applicato esplicitamente (EPS_PROB, Z_CAP)
+
+Output della fase 5:
+- out/fits/fits_upstream.rds (interno, non per utenti finali)
+- QA/logs/fit_decision_log.csv
+- out/tmp/pred_grid_raw.csv (interno, base per costruire i CSV downstream al punto 6)
+
+##################################################
+6) GENERAZIONE TABELLE DI CONVERSIONE (DOWNSTREAM ARTIFACTS)
+Scopo: trasformare la “pred_grid” interna (age_grid × raw_grid, con p/percentile/z) in CSV downstream versionati e auditabili, cioè l’unica fonte autorizzata per lo scoring. Principio: ogni regola (clamp, monotonicità, rounding, intervalli inversi) deve essere esplicita, ripetibile, e loggata.
+##################################################
+
+------------------------------------------------------------
+6.0 Input atteso dal punto 5
+------------------------------------------------------------
+- out/tmp/pred_grid_raw.csv
+  colonne minime: measure, age_ref_m, age_ref_y, raw, p (o percentile), z_raw, z_aligned
+
+Se ti manca qualcosa, stop. Niente “aggiustamenti silenziosi”.
+
+------------------------------------------------------------
+6.1 Tabella raw_to_norm (schema fisso)
+------------------------------------------------------------
+Output: release/<VERSION>/raw_to_norm.csv
+
+Schema consigliato (colonne, in quest’ordine):
+- version, created_at
+- measure
+- age_ref_m, age_ref_y
+- raw
+- p_mid (o p), percentile
+- z_raw, z_aligned
+- ss_1_19, ss_100_15
+- band_id
+- flags
+
+```r
+# 04_make_downstream_tables.R
+library(readr); library(dplyr); library(tidyr); library(stringr)
+
+# ---------- Versioning ----------
+NORM_VERSION <- paste0("v", format(Sys.Date(), "%Y%m%d"))  # esempio minimal
+REL_DIR <- file.path("release", NORM_VERSION)
+dir.create(REL_DIR, showWarnings = FALSE, recursive = TRUE)
+
+created_at <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
+
+# ---------- Carica pred grid ----------
+pred <- readr::read_csv("out/tmp/pred_grid_raw.csv", show_col_types = FALSE)
+
+need <- c("measure","age_ref_m","age_ref_y","raw","p","z_raw","z_aligned", "higher_is_better")
+miss <- setdiff(need, names(pred))
+if (length(miss) > 0) stop("pred_grid_raw.csv: colonne mancanti: ", paste(miss, collapse=", "))
+
+# ---------- Guardrail numerici (devono combaciare con punto 5) ----------
+EPS_PROB <- 1e-6
+Z_CAP <- 3
+clamp_prob <- function(p) pmin(1 - EPS_PROB, pmax(EPS_PROB, p))
+cap_prob_z3 <- function(p) pmin(pnorm(Z_CAP), pmax(pnorm(-Z_CAP), p))
+
+# ---------- Normalizza p e ricalcola campi derivati ----------
+tab <- pred %>%
+  transmute(
+    measure, age_ref_m, age_ref_y, raw,
+    p_mid = cap_prob_z3(clamp_prob(p)),
+    z_raw = qnorm(p_mid),
+    z_aligned = ifelse(higher_is_better, z_raw, -z_raw)
+  ) %>%
+  mutate(
+  percentile_raw     = 100 * p_mid,
+  percentile_aligned = 100 * pnorm(z_aligned)
+)
+
+# Stop se restano 0/100 o z inf
+if (any(tab$p_mid <= 0 | tab$p_mid >= 1)) stop("p_mid fuori (0,1) dopo clamp, non dovrebbe succedere.")
+if (any(!is.finite(tab$z_raw))) stop("z_raw non finito dopo clamp, non dovrebbe succedere.")
+if (any(!is.finite(tab$z_aligned))) stop("z_aligned non finito, controlla inversioni/dati.")
+
+# ---------- Score standardizzati ----------
+# Nota: rounding esplicito e stabile
+tab <- tab %>%
+  mutate(
+    ss_100_15 = as.integer(round(100 + 15 * z_aligned)),
+    ss_1_19   = as.integer(round(10  +  3 * z_aligned)),
+    ss_1_19   = pmin(19L, pmax(1L, ss_1_19))
+  )
+
+# ---------- Bande cliniche/reporting (minimo indispensabile) ----------
+# pct_band_id: 1=critico (<=5), 2=attenzione (6-15), 3=tipico (16-84),
+#          4=alto (85-94), 5=molto alto (>=95)
+tab <- tab %>%
+  mutate(
+    pct_band_id = case_when(
+      percentile_aligned <= 5  ~ 1L,
+      percentile_aligned <= 15 ~ 2L,
+      percentile_aligned <  85 ~ 3L,
+      percentile_aligned <  95 ~ 4L,
+      TRUE             ~ 5L
+    )
+  )
+```
+
+------------------------------------------------------------
+6.2 Clamp e protezioni numeriche (esplicite e tracciate)
+------------------------------------------------------------
+Qui la regola è già applicata a p_mid con:
+- EPS_PROB (evita 0 e 1)
+- Z_CAP (cap in probabilità equivalente a z ±3)
+
+Ora aggiungiamo flags minimi e un log delle correzioni.
+Regola: i flag devono essere interpretabili senza aprire R.
+
+```r
+# Flags: cosa è successo su ogni riga
+tab2 <- pred %>%
+  transmute(measure, age_ref_m, age_ref_y, raw, p_raw = p) %>%
+  mutate(
+    p_clamped_eps = as.integer(p_raw < EPS_PROB | p_raw > (1 - EPS_PROB)),
+    p_capped_z3   = as.integer(clamp_prob(p_raw) < pnorm(-Z_CAP) | clamp_prob(p_raw) > pnorm(Z_CAP))
+  )
+
+tab <- tab %>%
+  left_join(tab2, by = c("measure","age_ref_m","age_ref_y","raw")) %>%
+  mutate(
+    flags = paste0(
+      ifelse(p_clamped_eps == 1, "p_eps;", ""),
+      ifelse(p_capped_z3 == 1,   "p_zcap3;", "")
+    ),
+    flags = ifelse(flags == "", NA_character_, flags)
+  )
+
+flag_log <- tab %>%
+  summarise(
+    n_rows = n(),
+    n_p_eps  = sum(p_clamped_eps == 1, na.rm = TRUE),
+    n_p_zcap = sum(p_capped_z3 == 1, na.rm = TRUE)
+  )
+write_csv(flag_log, file.path(REL_DIR, "log_flags_summary.csv"))
+```
+
+------------------------------------------------------------
+6.3 Monotonicità (test + enforcement solo se necessario, e log)
+------------------------------------------------------------
+Regola: per ogni measure × age_ref_m, la funzione raw -> p_mid deve essere non decrescente.
+Enforcement ammesso: cummax su p_mid (e ricalcolo coerente dei derivati), ma solo se:
+- trovi violazioni,
+- le correggi,
+- scrivi quante e dove.
+
+```r
+# Test monotonicità
+mono_check <- tab %>%
+  group_by(measure, age_ref_m) %>%
+  arrange(raw, .by_group = TRUE) %>%
+  mutate(delta = p_mid - dplyr::lag(p_mid)) %>%
+  summarise(
+    n = n(),
+    n_viol = sum(delta < -1e-12, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+write_csv(mono_check, file.path(REL_DIR, "QA_monotonicity_check_p.csv"))
+
+need_fix <- any(mono_check$n_viol > 0)
+if (need_fix) {
+  tab_before <- tab
+  
+  tab <- tab %>%
+    group_by(measure, age_ref_m) %>%
+    arrange(raw, .by_group = TRUE) %>%
+    mutate(
+      p_mid = cummax(p_mid),
+      p_mid = cap_prob_z3(clamp_prob(p_mid)),  # ribadisci guardrail
+      percentile = 100 * p_mid,
+      z_raw = qnorm(p_mid),
+      z_aligned = ifelse(higher_is_better, z_raw, -z_raw),
+      ss_100_15 = as.integer(round(100 + 15 * z_aligned)),
+      ss_1_19   = pmin(19L, pmax(1L, as.integer(round(10 + 3 * z_aligned))))
+    ) %>%
+    ungroup()
+  
+  # Log righe cambiate
+  changed <- tab %>%
+    mutate(p_mid_old = tab_before$p_mid) %>%
+    mutate(p_changed = as.integer(abs(p_mid - p_mid_old) > 0)) %>%
+    summarise(n_changed = sum(p_changed, na.rm = TRUE))
+  
+  write_csv(changed, file.path(REL_DIR, "log_monotone_enforcement.csv"))
+  
+  # Flag sulle righe modificate
+  tab <- tab %>%
+    mutate(
+      flags = ifelse(is.na(flags), "", flags),
+      flags = ifelse(need_fix, paste0(flags, "mono_fix;"), flags),
+      flags = ifelse(flags == "", NA_character_, flags)
+    )
+}
+```
+Nota pratica: dopo qualunque enforcement su p_mid, devi ricalcolare z_raw, z_aligned e tutti gli score derivati, per mantenere la proprietà “tutto deriva deterministicamente da p_mid + higher_is_better”.
+
+------------------------------------------------------------
+6.4 Interpolazione dichiarata (ma non implementata qui)
+------------------------------------------------------------
+In step 6, la cosa importante è: scrivere nella “Scoring Spec” (punto 11) che:
+- per età non in griglia: interpolazione lineare su z_aligned tra due age_ref_m adiacenti
+- per raw continui non presenti: interpolazione monotona su z_aligned (approx, rule=2), solo se raw è continuo
+Qui, nelle tabelle, basta assicurarsi che age_ref_m sia una griglia regolare e che la conversione sia completa.
+
+------------------------------------------------------------
+6.5 Tabelle inverse (scaled_to_raw_intervals)
+------------------------------------------------------------
+Output: release/<VERSION>/scaled_to_raw_intervals_ss_1_19.csv
+Schema minimo:
+- measure, age_ref_m (o age), ss_1_19, raw_min, raw_max
+
+Regola: l’inverso è un intervallo, perché la standardizzazione con rounding many-to-one.
+Se un ss non è rappresentato, raw_min/raw_max = NA.
+
+```r
+# Costruisci intervalli per ss_1_19
+inv_1_19 <- tab %>%
+  group_by(measure, age_ref_m, ss_1_19) %>%
+  summarise(raw_min = min(raw), raw_max = max(raw), .groups = "drop")
+
+# Completa griglia (1..19) e inserisci NA dove mancano
+inv_1_19_full <- tidyr::expand_grid(
+  measure = unique(tab$measure),
+  age_ref_m = sort(unique(tab$age_ref_m)),
+  ss_1_19 = 1:19
+) %>%
+  left_join(inv_1_19, by = c("measure","age_ref_m","ss_1_19")) %>%
+  arrange(measure, age_ref_m, ss_1_19)
+
+write_csv(inv_1_19_full, file.path(REL_DIR, "scaled_to_raw_intervals_ss_1_19.csv"))
+```
+
+Opzionale (solo se richiesto): stesso identico schema per ss_100_15, ma devi scegliere un range ss e documentarlo.
+
+------------------------------------------------------------
+6.6 Salvataggio raw_to_norm + manifest + checksum
+------------------------------------------------------------
+Due file obbligatori:
+- raw_to_norm.csv
+- file_manifest.csv (checksum, righe, versione)
+
+```r
+# Aggiungi metadata a ogni riga e salva raw_to_norm
+raw_to_norm <- tab %>%
+  mutate(
+    version = NORM_VERSION,
+    created_at = created_at
+  ) %>%
+  select(
+    version, created_at,
+    measure, age_ref_m, age_ref_y,
+    raw,
+    p_mid, percentile,
+    z_raw, z_aligned,
+    ss_1_19, ss_100_15,
+    pct_band_id,
+    flags
+  ) %>%
+  arrange(measure, age_ref_m, raw)
+
+write_csv(raw_to_norm, file.path(REL_DIR, "raw_to_norm.csv"))
+
+# Manifest minimale con md5 (base R)
+files_out <- c(
+  file.path(REL_DIR, "raw_to_norm.csv"),
+  file.path(REL_DIR, "scaled_to_raw_intervals_ss_1_19.csv"),
+  file.path(REL_DIR, "QA_monotonicity_check_p.csv"),
+  file.path(REL_DIR, "log_flags_summary.csv")
+)
+files_out <- files_out[file.exists(files_out)]
+
+manifest <- tibble::tibble(
+  version = NORM_VERSION,
+  created_at = created_at,
+  file = basename(files_out),
+  md5 = unname(tools::md5sum(files_out)),
+  n_rows = sapply(files_out, function(f) nrow(readr::read_csv(f, show_col_types = FALSE)))
+)
+
+write_csv(manifest, file.path(REL_DIR, "file_manifest.csv"))
+```
+
+------------------------------------------------------------
+Output della fase 6 (minimo indispensabile)
+------------------------------------------------------------
+Dentro release/<VERSION>/:
+- raw_to_norm.csv
+- scaled_to_raw_intervals_ss_1_19.csv
+- file_manifest.csv
+- QA_monotonicity_check_p.csv
+- log_flags_summary.csv
+- log_monotone_enforcement.csv (solo se è stato necessario)
+
+Nota: questa tabella inversa è definita qui in modo completo (intervalli + NA dove assente), non richiede esempi esterni.
+
+7) SCORING DOWNSTREAM (DETERMINISTICO, DA TABELLE)
+Scopo: calcolare percentile, z e punteggi standardizzati per nuovi casi usando SOLO i CSV versionati (release/<VERSION>/raw_to_norm.csv).
+Regola: fail-loud su età fuori range, misura non nota, raw fuori range, raw non presente (se discreto), nessuna extrapolazione.
+
+------------------------------------------------------------
+7.1 Regole di input (schema minimo)
+------------------------------------------------------------
+Input atteso (new_cases.csv), formato long:
+- id (opzionale ma consigliato)
+- measure (string)
+- age_y oppure age_m
+- raw (numeric)
+
+Assunzioni downstream:
+- age_ref_m in tabella è la griglia ufficiale, non si cambia in scoring
+- l’interpolazione su età (se age_m non è in griglia) è LINEARE su z_aligned
+- percentile di reporting è “aligned”: 100 * pnorm(z_aligned) (così “più alto = meglio”)
+
+------------------------------------------------------------
+7.2 Algoritmo di scoring (step-by-step, niente funzioni “magiche”)
+------------------------------------------------------------
+
+```r
+# score_new_cases.R
+library(readr)
+library(dplyr)
+
+# ---- scegli versione norme (esplicita) ----
+NORM_VERSION <- "v20260119"  # esempio, cambia tu
+TAB_PATH <- file.path("release", NORM_VERSION, "raw_to_norm.csv")
+stopifnot(file.exists(TAB_PATH))
+
+# ---- carica tabella downstream ----
+tab <- readr::read_csv(TAB_PATH, show_col_types = FALSE)
+
+need_tab <- c("measure","age_ref_m","raw","z_aligned")
+miss_tab <- setdiff(need_tab, names(tab))
+if (length(miss_tab) > 0) stop("raw_to_norm.csv: colonne mancanti: ", paste(miss_tab, collapse=", "))
+
+# ---- carica nuovi casi ----
+NEW_PATH <- "data/new_cases.csv"
+stopifnot(file.exists(NEW_PATH))
+new <- readr::read_csv(NEW_PATH, show_col_types = FALSE)
+
+need_new <- c("measure","raw")
+miss_new <- setdiff(need_new, names(new))
+if (length(miss_new) > 0) stop("new_cases.csv: colonne mancanti: ", paste(miss_new, collapse=", "))
+
+# età: accetta age_y o age_m
+if ("age_m" %in% names(new)) {
+  new <- new %>% mutate(age_m = as.integer(age_m), age_y = age_m / 12)
+} else if ("age_y" %in% names(new)) {
+  new <- new %>% mutate(age_y = as.numeric(age_y), age_m = as.integer(round(age_y * 12)))
+} else {
+  stop("new_cases.csv: serve 'age_y' o 'age_m'.")
+}
+
+# ---- validazioni fail-loud (misura nota, età nel range tabella, raw nel range) ----
+measures_ok <- sort(unique(tab$measure))
+bad_measure <- setdiff(unique(new$measure), measures_ok)
+if (length(bad_measure) > 0) stop("Misure non presenti nelle norme: ", paste(bad_measure, collapse=", "))
+
+# range età per ciascuna misura (da tabella)
+age_range <- tab %>%
+  group_by(measure) %>%
+  summarise(age_min = min(age_ref_m), age_max = max(age_ref_m), .groups = "drop")
+
+new <- new %>% left_join(age_range, by = "measure")
+
+if (any(new$age_m < new$age_min | new$age_m > new$age_max, na.rm = TRUE)) {
+  ex <- new %>% filter(age_m < age_min | age_m > age_max) %>% select(id = any_of("id"), measure, age_m, age_min, age_max) %>% head(20)
+  stop("Età fuori range norme (no extrapolazione). Esempi:\n", paste(capture.output(print(ex)), collapse="\n"))
+}
+
+# range raw per ciascuna misura (da tabella)
+raw_range <- tab %>%
+  group_by(measure) %>%
+  summarise(raw_min = min(raw), raw_max = max(raw), .groups = "drop")
+
+new <- new %>% left_join(raw_range, by = "measure")
+
+if (any(new$raw < new$raw_min | new$raw > new$raw_max, na.rm = TRUE)) {
+  ex <- new %>% filter(raw < raw_min | raw > raw_max) %>% select(id = any_of("id"), measure, age_m, raw, raw_min, raw_max) %>% head(20)
+  stop("Raw fuori range norme (stop). Esempi:\n", paste(capture.output(print(ex)), collapse="\n"))
+}
+
+# ---- scoring row-by-row (esplicito) ----
+out_rows <- vector("list", nrow(new))
+
+for (i in seq_len(nrow(new))) {
+  row <- new[i, ]
+  m   <- row$measure
+  a_m <- row$age_m
+  r   <- row$raw
+  
+  # tabella della misura
+  tab_m <- tab %>% filter(measure == m)
+  
+  # età disponibili
+  ages <- sort(unique(tab_m$age_ref_m))
+  
+  # caso A: età esatta in griglia
+  if (a_m %in% ages) {
+    tab_a <- tab_m %>% filter(age_ref_m == a_m)
+    
+    # raw deve essere presente (assunto discreto). Se non lo è: stop.
+    if (!(r %in% tab_a$raw)) {
+      stop("Raw non presente per misura=", m, " a age_m=", a_m, ". Se raw è continuo serve una policy esplicita di interpolazione su raw.")
+    }
+    
+    z <- tab_a %>% filter(raw == r) %>% pull(z_aligned) %>% as.numeric()
+    
+  } else {
+    # caso B: età non in griglia, ma dentro range. Interpolazione lineare su z_aligned.
+    a0 <- max(ages[ages < a_m])
+    a1 <- min(ages[ages > a_m])
+    
+    tab0 <- tab_m %>% filter(age_ref_m == a0)
+    tab1 <- tab_m %>% filter(age_ref_m == a1)
+    
+    if (!(r %in% tab0$raw) || !(r %in% tab1$raw)) {
+      stop("Raw non presente ai due estremi di interpolazione, misura=", m, ", raw=", r,
+           ". Se raw è continuo serve una policy esplicita di interpolazione su raw.")
+    }
+    
+    z0 <- tab0 %>% filter(raw == r) %>% pull(z_aligned) %>% as.numeric()
+    z1 <- tab1 %>% filter(raw == r) %>% pull(z_aligned) %>% as.numeric()
+    
+    w  <- (a_m - a0) / (a1 - a0)
+    z  <- (1 - w) * z0 + w * z1
+  }
+  
+  # Derivati “aligned” (unica direzione: più alto = meglio)
+  pct_aligned <- 100 * pnorm(z)
+  ss_100_15   <- as.integer(round(100 + 15 * z))
+  ss_1_19     <- as.integer(round(10  +  3 * z))
+  ss_1_19     <- max(1L, min(19L, ss_1_19))
+  
+  out_rows[[i]] <- data.frame(
+    id = if ("id" %in% names(new)) row$id else NA,
+    measure = m,
+    age_m = a_m,
+    raw = r,
+    z_aligned = z,
+    percentile_aligned = pct_aligned,
+    ss_1_19 = ss_1_19,
+    ss_100_15 = ss_100_15,
+    stringsAsFactors = FALSE
+  )
+}
+
+out <- dplyr::bind_rows(out_rows)
+
+# salva
+OUT_PATH <- file.path("out", paste0("scored_new_cases_", NORM_VERSION, ".csv"))
+readr::write_csv(out, OUT_PATH)
+
+print(out)
+cat("\nSaved:", OUT_PATH, "\n")
+```
+
+------------------------------------------------------------
+7.3 Esempi minimi (3 casi: ok, interpolazione, stop)
+------------------------------------------------------------
+Crea un file data/new_cases.csv con tre righe come sotto (adatta measure e raw ai tuoi dati):
+
+```r
+# 99_make_example_new_cases.R
+library(readr); library(tibble)
+
+example <- tibble::tibble(
+  id = c("A_ok","B_interp","C_stop"),
+  measure = c("SP","SP","SP"),
+  age_m = c(96, 97, 40),      # 96=8 anni (in griglia), 97=interpolazione, 40=fuori range (stop)
+  raw = c(10, 10, 10)
+)
+
+readr::write_csv(example, "data/new_cases.csv")
+```
+
+Poi esegui score_new_cases.R:
+- A_ok: età in griglia, lookup diretto
+- B_interp: età non in griglia ma dentro range, interpolazione lineare su z_aligned
+- C_stop: età fuori range norme, stop con messaggio e esempi
+
+------------------------------------------------------------
+7.4 Export per utenti finali (minimo)
+------------------------------------------------------------
+Consegna:
+- out/scored_new_cases_<VERSION>.csv
+e, se serve Excel, l’utente può aprire il CSV (non cambiare formato senza aggiornare la Scoring Spec).
+
+
+8) QA E DIAGNOSTICA (RELEASE BLOCKERS)
+Scopo: validare che i CSV downstream siano completi, coerenti, e “safe to score” senza guardare il modello.
+Input: SOLO release/<VERSION>/raw_to_norm.csv (+ eventuale scaled_to_raw_intervals_*.csv).
+
+Release blockers tipici:
+- buchi inattesi in age_ref_m o raw
+- non monotonicità (raw -> percentile o raw -> ss)
+- discontinuità “a gradini” sospette tra età adiacenti
+- saturazione eccessiva in coda (troppi ss=1 o ss=19)
+- estremi fuori policy (percentile 0/100, z inf, NA non attesi)
+- regressioni tra versioni (se esiste una versione precedente)
+
+------------------------------------------------------------
+8.1 Coverage (età, raw, misure, nessun buco inatteso)
+------------------------------------------------------------
+
+```r
+# 05_QA_release_blockers.R
+library(readr); library(dplyr); library(tidyr)
+
+NORM_VERSION <- "v20260119"   # cambia tu
+REL_DIR <- file.path("release", NORM_VERSION)
+TAB_PATH <- file.path(REL_DIR, "raw_to_norm.csv")
+stopifnot(file.exists(TAB_PATH))
+
+tab <- readr::read_csv(TAB_PATH, show_col_types = FALSE)
+
+need <- c("measure","age_ref_m","raw","p_mid","percentile","z_aligned","ss_1_19","ss_100_15")
+miss <- setdiff(need, names(tab))
+if (length(miss) > 0) stop("raw_to_norm.csv: colonne mancanti: ", paste(miss, collapse=", "))
+
+# Coverage: griglia età regolare e completa (per misura)
+age_cov <- tab %>%
+  group_by(measure) %>%
+  summarise(
+    age_min = min(age_ref_m),
+    age_max = max(age_ref_m),
+    n_age = n_distinct(age_ref_m),
+    step_min = min(diff(sort(unique(age_ref_m)))),
+    step_max = max(diff(sort(unique(age_ref_m)))),
+    .groups = "drop"
+  )
+
+# Coverage raw: per ogni misura, controlla che ogni età abbia lo stesso numero di raw
+raw_counts <- tab %>%
+  group_by(measure, age_ref_m) %>%
+  summarise(n_raw = n_distinct(raw), .groups = "drop")
+
+raw_cov <- raw_counts %>%
+  group_by(measure) %>%
+  summarise(
+    n_age = n(),
+    n_raw_min = min(n_raw),
+    n_raw_max = max(n_raw),
+    .groups = "drop"
+  )
+
+write_csv(age_cov, file.path(REL_DIR, "QA_coverage_age.csv"))
+write_csv(raw_cov, file.path(REL_DIR, "QA_coverage_raw.csv"))
+
+# Blocker: step età non costante
+if (any(age_cov$step_min != age_cov$step_max)) {
+  stop("Coverage blocker: passo età non costante per alcune misure. Vedi QA_coverage_age.csv")
+}
+
+# Blocker: n_raw variabile tra età per una misura (se discreto bounded, deve essere costante)
+if (any(raw_cov$n_raw_min != raw_cov$n_raw_max)) {
+  stop("Coverage blocker: n_raw variabile tra età per alcune misure. Vedi QA_coverage_raw.csv")
+}
+
+# Blocker: NA inattesi su campi chiave
+if (any(is.na(tab$p_mid) | is.na(tab$z_aligned) | is.na(tab$ss_1_19))) {
+  stop("Coverage blocker: NA inattesi in colonne chiave (p_mid/z_aligned/ss).")
+}
+
+# Blocker: percentili estremi vietati
+if (any(tab$p_mid <= 0 | tab$p_mid >= 1)) stop("Blocker: p_mid fuori (0,1).")
+if (any(tab$percentile <= 0 | tab$percentile >= 100)) stop("Blocker: percentile contiene 0 o 100.")
+```
+
+Interpretazione: se qui passa, hai una tabella “materialmente completa” e coerente con la policy di clamp.
+
+------------------------------------------------------------
+8.2 Monotonicità (per measure × age)
+------------------------------------------------------------
+Due test separati:
+- Test 1 (sempre): raw -> p_mid non decrescente
+- Test 2 (direction-aware): raw -> ss_1_19 monotono nella direzione attesa (in base a higher_is_better)
+
+```r
+# Monotonicità: percentile
+mono_p <- tab %>%
+  group_by(measure, age_ref_m) %>%
+  arrange(raw, .by_group = TRUE) %>%
+  mutate(d = percentile - lag(percentile)) %>%
+  summarise(
+    n_viol = sum(d < -1e-9, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Monotonicità: ss_1_19
+mono_ss <- tab %>%
+  group_by(measure, age_ref_m) %>%
+  arrange(raw, .by_group = TRUE) %>%
+  mutate(d = ss_1_19 - lag(ss_1_19)) %>%
+  summarise(
+    n_viol = sum(d < 0, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+write_csv(mono_p,  file.path(REL_DIR, "QA_monotonicity_percentile.csv"))
+write_csv(mono_ss, file.path(REL_DIR, "QA_monotonicity_ss_1_19.csv"))
+
+if (any(mono_p$n_viol > 0))  stop("Release blocker: monotonicità percentile violata. Vedi QA_monotonicity_percentile.csv")
+if (any(mono_ss$n_viol > 0)) stop("Release blocker: monotonicità ss_1_19 violata. Vedi QA_monotonicity_ss_1_19.csv")
+```
+
+------------------------------------------------------------
+8.3 Sensibilità e smoothness (discontinuità tra età adiacenti)
+------------------------------------------------------------
+Obiettivo: trovare salti anomali quando l’età cambia di uno step di griglia, tenendo raw fisso.
+Regola semplice: calcola delta_z tra età adiacenti, segnala i top outlier.
+
+```r
+# Smoothness: delta z tra età adiacenti per stesso raw
+smooth <- tab %>%
+  group_by(measure, raw) %>%
+  arrange(age_ref_m, .by_group = TRUE) %>%
+  mutate(dz = z_aligned - lag(z_aligned)) %>%
+  ungroup()
+
+# Report: quantili di |dz| per misura
+smooth_sum <- smooth %>%
+  mutate(abs_dz = abs(dz)) %>%
+  group_by(measure) %>%
+  summarise(
+    q50 = quantile(abs_dz, .50, na.rm = TRUE),
+    q90 = quantile(abs_dz, .90, na.rm = TRUE),
+    q99 = quantile(abs_dz, .99, na.rm = TRUE),
+    max = max(abs_dz, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+write_csv(smooth_sum, file.path(REL_DIR, "QA_smoothness_summary_abs_dz.csv"))
+
+# Flag: esempi peggiori per ispezione umana (non blocca automaticamente)
+top_jumps <- smooth %>%
+  filter(!is.na(dz)) %>%
+  mutate(abs_dz = abs(dz)) %>%
+  arrange(desc(abs_dz)) %>%
+  select(measure, raw, age_ref_m, dz) %>%
+  head(50)
+
+write_csv(top_jumps, file.path(REL_DIR, "QA_smoothness_top50_jumps.csv"))
+```
+
+Policy: questa sezione di solito non è “blocker” automatica, serve a scoprire:
+- overfitting locale
+- celle sparse per una certa età
+- famiglie troppo flessibili in coda
+
+------------------------------------------------------------
+8.4 Code e implausibilità (saturazioni, z oltre soglia, banding)
+------------------------------------------------------------
+
+```r
+# Saturazione ss_1_19 e code z
+tails <- tab %>%
+  group_by(measure, age_ref_m) %>%
+  summarise(
+    prop_ss1  = mean(ss_1_19 == 1,  na.rm = TRUE),
+    prop_ss19 = mean(ss_1_19 == 19, na.rm = TRUE),
+    prop_absz_gt3 = mean(abs(z_aligned) > 3, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+write_csv(tails, file.path(REL_DIR, "QA_tails_saturation_by_age.csv"))
+
+# Report compatto per misura
+tails_sum <- tails %>%
+  group_by(measure) %>%
+  summarise(
+    max_prop_ss1  = max(prop_ss1),
+    max_prop_ss19 = max(prop_ss19),
+    max_prop_absz_gt3 = max(prop_absz_gt3),
+    .groups = "drop"
+  )
+
+write_csv(tails_sum, file.path(REL_DIR, "QA_tails_saturation_summary.csv"))
+```
+
+Interpretazione pragmatica:
+- un po’ di saturazione alle età estreme è normale, ma se vedi prop_ss1 o prop_ss19 molto alta su molte età, spesso è un segnale di modello troppo rigido o di raw con floor/ceiling estremo non gestito.
+
+------------------------------------------------------------
+8.5 Cross-validation leggera (stabilità tabelle, se N consente)
+------------------------------------------------------------
+Questo è opzionale e “leggero”: non fai un CV completo del modello, controlli solo se la tabella cambia troppo sotto bootstrap o split grossolano.
+Regola minimal: split 50/50, rigenera tabelle (punto 5-6) e confronta con la release.
+Nel mega-prompt: implementazione solo se richiesto, perché costa tempo e codice.
+
+Output richiesto se eseguita:
+- QA_stability_diff_summary.csv con max|delta_z| per measure×age
+
+------------------------------------------------------------
+8.6 Audit umano (2–3 casi calcolati “a mano”)
+------------------------------------------------------------
+Checklist manuale (blocker umano):
+- prendi 2–3 righe a caso da raw_to_norm.csv, verifica:
+  (i) lookup diretto da tabella,
+  (ii) applicazione rounding a ss,
+  (iii) se età non in griglia, interpolazione lineare su z
+Confronto con score_new_cases.R, deve combaciare entro tolleranze numeriche.
+
+Output:
+- QA/manual_audit_notes.txt (breve, con esempi)
+
+------------------------------------------------------------
+Output della fase 8
+------------------------------------------------------------
+In release/<VERSION>/ almeno:
+- QA_coverage_age.csv
+- QA_coverage_raw.csv
+- QA_monotonicity_percentile.csv
+- QA_monotonicity_ss_1_19.csv
+- QA_smoothness_summary_abs_dz.csv
+- QA_smoothness_top50_jumps.csv
+- QA_tails_saturation_by_age.csv
+- QA_tails_saturation_summary.csv
+Più eventuale manual_audit_notes.txt
+
+============================================================
+
+9) GUIDA ALLE SCELTE, GIUSTIFICAZIONE ALTERNATIVE (SEZIONE “RATIONALE”)
+Scopo: trasformare scelte tecniche in decisioni auditabili, con alternative e trade-off.
+Questo è testo, non codice, ma deve essere strutturato e riutilizzabile.
+
+------------------------------------------------------------
+9.1 Perché GAMLSS qui, e quando no
+------------------------------------------------------------
+Usa GAMLSS quando:
+- vuoi modellare distribuzione condizionata all’età, non solo la media
+- ti serve gestire scale e shape che cambiano con l’età (eteroschedasticità, code)
+- il punteggio è bounded o discreto, e la normalità “osservata” è implausibile, anche se assumi normalità latente dopo conversione
+
+Evita GAMLSS (o metti come piano B) quando:
+- N per età è troppo basso o molto sbilanciato
+- la misura è quasi lineare e ben comportata, e un approccio più semplice è più stabile
+- la convergenza è fragile e richiede troppi compromessi non documentabili
+
+Regola pratica: se devi forzare molte correzioni “post hoc”, probabilmente la famiglia o lo smoothing sono sbagliati, oppure il dato è troppo sporco.
+
+------------------------------------------------------------
+9.2 Alternative pratiche (cosa scegli e perché, senza dogmi)
+------------------------------------------------------------
+A) Binning età + quantili empirici
+- Pro: semplice, robusto, facile da spiegare
+- Contro: discontinuità tra bin, necessita smoothing a valle, instabile in code con N piccolo
+Quando usarlo: prototipo rapido, o come baseline di sanity check.
+
+B) Quantile regression su età
+- Pro: lavora direttamente sui quantili, meno vincolata a una famiglia
+- Contro: più difficile ricostruire una CDF coerente e monotona su tutti i quantili, rischio crossing, governance più complessa
+Quando usarla: se l’obiettivo primario sono le curve di quantile, non una tabella completa raw->CDF.
+
+C) LMS (Box-Cox + mu/sigma) o trasformazioni + Normal
+- Pro: storico, molto usato in growth charts, stabile se l’assunzione regge
+- Contro: meno flessibile per discreti bounded e per shape complessi
+Quando usarlo: variabili quasi continue, skew moderato, focus su percentili standard.
+
+D) Modello più semplice (mean model + residui)
+- Pro: massima stabilità
+- Contro: perde informazione sulle code e sulla dispersione condizionata
+Quando usarlo: se la tabella downstream è lo scopo principale, e la complessità aggiuntiva non dà vantaggi misurabili.
+
+------------------------------------------------------------
+9.3 Trade-off espliciti (bias/varianza, stabilità, interpretabilità)
+------------------------------------------------------------
+Tre trade-off da dichiarare sempre nella Scoring Spec:
+1) Granularità età (mesi, trimestri, anni) vs stabilità
+- più fine = più preciso, ma più rumore e più rischio di celle sparse
+- più grosso = più stabile, ma più interpolazione downstream
+
+2) Flessibilità modello vs auditabilità
+- più parametri = migliore fit locale, ma più fragile e più difficile da spiegare
+- meno parametri = più stabile, ma rischi systematic bias in code
+
+3) Percentile clinico vs z per analisi
+- percentile: comunicazione, interpretazione, cut-off
+- z/SS: compositi, modelli, comparabilità numerica
+Regola: downstream deve fornire entrambi, ma chiarire che servono a scopi diversi.
+
+------------------------------------------------------------
+9.4 Pattern di fallimento e rimedi (playbook)
+------------------------------------------------------------
+Non convergenza:
+- riduci complessità (sigma costante, mu meno flessibile)
+- cambia famiglia (NB al posto di BB, Gamma al posto di Lognormal)
+- verifica outlier e spike, verifica unità e range
+
+Over-smoothing:
+- quantili troppo piatti con l’età, differenze di età schiacciate
+- rimedio: aumenta flessibilità mu (pb) o riduci penalizzazione, ma poi controlla smoothness (8.3)
+
+Under-smoothing:
+- salti grandi tra età adiacenti, top50_jumps elevati
+- rimedio: riduci flessibilità, aumenta regolarizzazione, aumenta step età
+
+Spike e discreteness:
+- molte persone sullo stesso raw, CDF a gradini ripidi
+- rimedio: accetta la discreteness (mid-P), non “jitterare” in produzione, al massimo jitter diagnostico
+
+Dati scarsi in coda:
+- percentili estremi instabili
+- rimedio: clamp esplicito, z-cap, e riduci pretese di precisione clinica alle code, lo scrivi chiaramente
+
+------------------------------------------------------------
+Output della fase 9
+------------------------------------------------------------
+Due artefatti testuali obbligatori (template):
+A) Decision Log (riutilizzabile)
+B) Rationale sintetico (per ogni misura o per gruppi di misure)
+
+Template Decision Log (da compilare sempre):
+
+```text
+DECISION LOG (versione norme: <VERSION>)
+- Misura: <measure>
+- Tipo punteggio: <discrete_bounded / continuous / time / etc.>
+- Range teorico: <min..max>
+- Confondenti modellati: <age_m> (+ altri se presenti)
+- Scelta modello: <GAMLSS family + mu/sigma formula>
+- Motivo: <2-3 righe, cosa risolve>
+- Alternative considerate: <A,B,C>
+- Rischi principali: <convergenza, code, spike, sparse cells>
+- Mitigazioni: <fallback, clamp, monotonicity enforcement, QA 8.x>
+- Esito QA: <pass/fail + link file>
+- Note release: <cambiamenti rispetto versione precedente>
+```
+
+10) ESTENSIONI (MODULARI, SOLO SE RICHIESTE)
+Scopo: offrire moduli extra senza contaminare la pipeline core. Ogni estensione deve:
+- dichiarare prerequisiti dati,
+- aggiungere output downstream specifici,
+- aggiungere QA dedicati,
+- non rompere la separazione upstream vs downstream.
+
+------------------------------------------------------------
+10.1 Più confondenti (oltre età)
+------------------------------------------------------------
+Quando serve:
+- modalità di somministrazione diversa (carta/computer),
+- centro/sito con differenze sistematiche,
+- lingua, SES, coorti, classe scolastica, forma test.
+
+Rischio principale:
+- celle sparse, interazioni non stimabili, overfitting mascherato da “aggiustamento”.
+
+Policy operativa:
+- default: additivo (niente interazioni) e con penalizzazione.
+- interazioni solo se (i) N sufficiente per copertura, (ii) effetto atteso e preregistrato, (iii) QA conferma stabilità.
+
+Implementazione upstream (pattern, non codice completo):
+- in GAMLSS: aggiungi termini a mu (e al massimo a sigma) come additivi:
+  mu: raw ~ pb(age) + conf1 + conf2
+  sigma: ~ pb(age) (o ~1)
+- se confondente continuo (es. SES), usa pb(SES) ma controlla monotonicità solo se teoricamente vincolata.
+- se confondente categorico (sesso, forma), usa fattore e controlla “shift” plausibile.
+
+Output downstream:
+- tabelle stratificate (measure × age_ref × conf_level × raw → norm)
+oppure, se vuoi evitare esplosione dimensionale:
+- una tabella “base” + una tabella “adjustment” su z (ma è più fragile, va documentata bene).
+
+QA aggiuntivo:
+- coverage per combinazioni conf_level × age_ref
+- confronto tra livelli (differenze z) per rilevare artefatti enormi non plausibili.
+
+------------------------------------------------------------
+10.2 Norme per sottogruppi (quando ha senso, quando è pericoloso)
+------------------------------------------------------------
+Quando ha senso:
+- gruppi con differenze di scala reali e stabili, e uso clinico che lo richiede.
+Quando è pericoloso:
+- gruppi piccoli, differenze instabili, rischio di “fairness theater”.
+
+Policy:
+- preferisci aggiustamento come confondente (10.1) rispetto a norme separate,
+- norme separate solo se:
+  (i) N grande e copertura buona,
+  (ii) decisione d’uso esplicita,
+  (iii) report separato con limitazioni.
+
+Output:
+- versioni parallele di raw_to_norm (es. raw_to_norm_group=F/M.csv)
+- manifest separato per gruppo.
+
+------------------------------------------------------------
+10.3 Compositi e profili (reporting)
+------------------------------------------------------------
+Problema: i profili intra-individuali possono essere interpretati male se:
+- scale con affidabilità diversa,
+- non invarianza,
+- ipsative artefacts se normalizzi “entro persona”.
+
+Policy:
+- compositi: ok se upstream lavaan ha definito pesi/struttura, e downstream resta deterministico.
+- profili: consentiti solo come descrittivi, con warning in Scoring Spec.
+
+Output downstream extra:
+- tabella composito_raw_to_norm (se composito grezzo deterministico),
+- oppure tabella “index_score” se definisci un indice da più subtest.
+
+QA:
+- verifica che il composito sia monotono rispetto ai componenti in modo ragionevole,
+- controlla saturazioni e code sul composito.
+
+------------------------------------------------------------
+10.4 Linking/equating tra forme (overview operativa)
+------------------------------------------------------------
+Quando serve:
+- forme diverse dello stesso test, o aggiornamenti item,
+- vuoi comparabilità nel tempo.
+
+Approcci:
+- anchor items + CFA/IRT linking,
+- equipercentile linking.
+
+Policy:
+- downstream deve consegnare una tabella di linking separata, versionata:
+  formB_raw -> equivalent_formA_raw (o direttamente z_aligned).
+
+QA:
+- monotonicità del linking
+- differenze massime e coerenza su range centrale.
+
+------------------------------------------------------------
+10.5 Fairness e bias (audit, cosa NON promettere)
+------------------------------------------------------------
+Regola: questo progetto NON automatizza fairness.
+Può però fare auditing:
+- differenze di conversione tra gruppi,
+- differenze di saturazione e code,
+- impatto di usare norme uniche vs stratificate.
+
+Output:
+- report “fairness audit” con confronti descrittivi,
+- nessuna raccomandazione normativa automatica.
+
+============================================================
+
+11) DOCUMENTAZIONE FINALE “SCORING SPEC” (CON TRACCIABILITÀ)
+Scopo: consegnare un documento leggibile e auditabile che definisce:
+- dominio di validità,
+- file ufficiali e checksum,
+- regole di scoring (lookup + interpolazione + clamp),
+- esempi,
+- limitazioni.
+Questo è il “contratto downstream”.
+
+Deliverable: release/<VERSION>/SCORING_SPEC.txt (o .md), più file_manifest.csv.
+
+------------------------------------------------------------
+11.1 Schede misura (metadata)
+------------------------------------------------------------
+Per ogni misura (tabella sintetica):
+- measure_id, descrizione
+- tipo punteggio (discreto bounded, continuo, tempo)
+- range teorico e step
+- direzione (higher_is_better)
+- confondenti inclusi (age_m, altri)
+- note su floor/ceiling attesi
+- output prodotti: percentile_aligned, z_aligned, ss_1_19, ss_100_15, pct_band_id
+
+------------------------------------------------------------
+11.2 Regole scoring (input, interpolazione, clamp, monotonicità)
+------------------------------------------------------------
+Regole obbligatorie da scrivere esplicitamente:
+
+A) Input validation (fail-loud)
+- measure deve esistere nella tabella
+- age_m deve essere nel range [min(age_ref_m), max(age_ref_m)]
+- raw deve essere nel range [min(raw), max(raw)] per quella misura
+- se raw è discreto: raw deve essere presente tra i valori tabellati, altrimenti stop
+- nessuna extrapolazione (né età né raw)
+
+B) Lookup
+- se age_m coincide con age_ref_m: usa la riga esatta (measure, age_ref_m, raw)
+- restituisci z_aligned da tabella
+
+C) Interpolazione su età (se age_m non in griglia ma in range)
+- trova a0 = max(age_ref_m < age_m), a1 = min(age_ref_m > age_m)
+- z0 = z_aligned a0, z1 = z_aligned a1 (stesso raw)
+- w = (age_m - a0)/(a1 - a0)
+- z = (1-w)*z0 + w*z1
+- poi deriva:
+  percentile_aligned = 100 * pnorm(z)
+  ss_100_15 = round(100 + 15*z)
+  ss_1_19 = clamp(round(10 + 3*z), 1, 19)
+
+D) Clamp code (upstream policy, ma downstream deve saperla)
+- nelle tabelle: p_mid clamp con EPS_PROB e z-cap a ±Z_CAP
+- downstream non ricalcola p_mid, usa z_aligned già “safe”
+- downstream clamp solo sui punteggi discreti (ss_1_19 in [1,19])
+
+E) Monotonicità
+- garantita in raw_to_norm.csv per ogni measure × age_ref_m:
+  raw -> percentile non decrescente
+- downstream non applica cummax, deve solo usare tabella
+
+------------------------------------------------------------
+11.3 Dominio di validità e limitazioni
+------------------------------------------------------------
+Sezione obbligatoria, senza promesse:
+- range età valido (in mesi e anni)
+- popolazione di riferimento (se nota, altrimenti “campione disponibile”)
+- norming non implica validità del test
+- accuratezza limitata in code, clamp esplicito
+- uso consigliato dei punteggi:
+  percentile per interpretazione,
+  z/SS per analisi e compositi
+
+------------------------------------------------------------
+11.4 Versioning, changelog, compatibilità retro
+------------------------------------------------------------
+- ID versione (es. vYYYYMMDD)
+- created_at
+- elenco file consegnati + checksum (da file_manifest.csv)
+- changelog rispetto alla versione precedente:
+  - dati aggiunti?
+  - modello cambiato?
+  - griglia età cambiata?
+  - policy clamp cambiata?
+Se cambia qualcosa che impatta scoring, è una nuova versione, non un hotfix.
+
+------------------------------------------------------------
+11.5 Esempi e FAQ (clinici/ricercatori)
+------------------------------------------------------------
+Esempi minimi (obbligatori):
+- caso lookup diretto (età in griglia)
+- caso interpolazione età
+- caso stop (età fuori range o raw fuori range)
+
+FAQ minime:
+- “Perché percentile e z non coincidono con percentili empirici?”,
+- “Posso usare le tabelle fuori range età?” (No),
+- “Posso calcolare punteggi senza R?” (Sì, basta lookup + interpolazione, ma rispettare manifest e versione),
+- “Perché non uso direttamente il modello?” (auditabilità e stabilità).
+
+------------------------------------------------------------
+Template pronto di SCORING_SPEC (da riempire automaticamente)
+------------------------------------------------------------
+
+```text
+SCORING SPEC
+Norms version: <VERSION>
+Created at: <YYYY-MM-DD HH:MM:SS>
+Owner / maintainer: <NOME / TEAM>
+Purpose: interpretazione comparabile dei punteggi grezzi in funzione dell’età, con scoring deterministico da tabelle.
+
+1. Files (authoritative)
+- raw_to_norm.csv (md5: <...>, rows: <...>)
+- scaled_to_raw_intervals_ss_1_19.csv (md5: <...>, rows: <...>)
+- file_manifest.csv (md5: <...>, rows: <...>)
+- QA_*.csv (vedi cartella release/<VERSION>/)
+
+2. Validity domain
+- Age range: <min_age_m>–<max_age_m> mesi (<min_y>–<max_y> anni)
+- No extrapolation beyond range.
+- Raw ranges: per misura, come in raw_to_norm.csv.
+
+3. Measures
+Per ogni measure:
+- ID: <measure>
+- Description: <...>
+- Raw type: <discrete_bounded / continuous / time>
+- Raw theoretical range: <min..max>
+- Higher-is-better: <TRUE/FALSE>
+- Outputs: percentile_aligned, z_aligned, ss_1_19, ss_100_15, band_id
+
+4. Scoring rules (deterministic)
+4.1 Input validation (fail-loud)
+- measure must exist
+- age_m in range
+- raw in range
+- if discrete: raw must be present in table
+
+4.2 Direct lookup (age in grid)
+- Select row where (measure, age_ref_m = age_m, raw)
+- z = z_aligned
+- percentile_aligned = 100 * pnorm(z)
+- ss_100_15 = round(100 + 15*z)
+- ss_1_19 = clamp(round(10 + 3*z), 1, 19)
+
+4.3 Age interpolation (age not in grid but in range)
+- a0 = max(age_ref_m < age_m), a1 = min(age_ref_m > age_m)
+- z0 = z_aligned at a0, z1 at a1 for same raw
+- w = (age_m - a0)/(a1 - a0)
+- z = (1-w)*z0 + w*z1
+- derive outputs as in 4.2
+
+4.4 Notes on tails/clamp
+- Tables were generated with explicit tail protections (EPS_PROB, z-cap ±Z_CAP).
+- Downstream does not re-fit models, and does not recompute p_mid.
+
+5. Examples
+- Example A: <...>
+- Example B: <...>
+- Example C (STOP): <...>
+
+6. Limitations
+- Norming ≠ validity, ≠ clinical calibration, ≠ automated fairness.
+- Precision decreases in extreme tails, protected by clamp and rounding.
+
+7. Changelog
+- <VERSION-1> -> <VERSION>: <...>
+```
+
+12) TEMPLATE DI OUTPUT OBBLIGATI PER L’ALTRA AI
+Scopo: impedire risposte vaghe. Ogni esecuzione della pipeline deve restituire SEMPRE questi blocchi, anche se alcune sezioni sono “N/A”.
+
+Regola: l’AI deve produrre output in 4 blocchi separati, nell’ordine:
+(1) SPEC TABLE
+(2) DECISION LOG
+(3) QA CHECKLIST
+(4) FILE MANIFEST
+Più un (5) RUN SUMMARY opzionale, massimo 10 righe.
+
+============================================================
+12.1 SPEC TABLE (righe=misure, colonne=metadata essenziali)
+============================================================
+
+Template (CSV-like, incollabile in un foglio):
+
+```text
+# SPEC_TABLE (da compilare)
+# Una riga per misura (subtest, indice, totale, tempo, accuratezza, ecc.)
+# Campi obbligatori: measure_id, raw_type, raw_min, raw_max, higher_is_better, age_unit, age_min, age_max, age_grid_step, family_hint, smoothing_mu, smoothing_sigma, downstream_outputs
+
+measure_id,measure_label,raw_col,raw_type,raw_min,raw_max,raw_step,higher_is_better,age_unit,age_min,age_max,age_grid_step,confounders,family_hint,smoothing_mu,smoothing_sigma,notes_missingness,notes_outliers,downstream_outputs,release_policy
+SP,Speed,SP_grezzo,discrete_bounded,0,36,1,TRUE,months,72,264,3,age_m,BB,pbm_up,pb,"listwise per misura","stop su raw fuori range","pct,z,ss_1_19,ss_100_15,pct_band_id","no extrapolation"
+RS,Reasoning,RS_grezzo,discrete_bounded,0,24,1,TRUE,months,72,264,3,age_m,BB,pb,const,"listwise per misura","stop su raw fuori range","pct,z,ss_1_19,ss_100_15,pct_band_id","no extrapolation"
+MR,Memory,MR_grezzo,discrete_bounded,0,24,1,FALSE,months,72,264,3,age_m,BB,pb,pb,"listwise per misura","stop su raw fuori range","pct,z,ss_1_19,ss_100_15,pct_band_id","no extrapolation"
+```
+
+Vincoli interpretativi (da rispettare sempre):
+- raw_type: discrete_bounded, discrete_unbounded, continuous, time, proportion, etc.
+- higher_is_better: deve essere coerente con l’interpretazione, se FALSE lo flip è dopo conversione (z_aligned).
+- age_grid_step: dichiarato in mesi (consigliato) o anni, ma poi deve coincidere con raw_to_norm.csv.
+
+============================================================
+12.2 DECISION LOG (scelte, alternative, rischi, mitigazioni)
+============================================================
+
+Template (una sezione per misura, oppure per “famiglia di misure” se identiche):
+
+```text
+DECISION_LOG
+Norms version: <VERSION>
+Created_at: <YYYY-MM-DD HH:MM:SS>
+
+[Misura: <measure_id>]
+- Obiettivo d’uso: <ricerca / screening / clinica>
+- Raw type e range: <...>
+- Confondenti modellati: <age_m (+ altri)>
+- Scelta modello upstream: <GAMLSS family + mu formula + sigma formula (+ eventuali shape)>
+- Motivo (2-4 righe): <perché questa scelta è adeguata ai dati e allo scopo>
+- Alternative considerate:
+  A) <...> Pro: <...> Contro: <...>
+  B) <...> Pro: <...> Contro: <...>
+- Piano B (fallback): <modello più semplice, cosa cambia>
+- Politiche code: <EPS_PROB, z-cap, rounding, ecc.>
+- Monotonicità: <test, enforcement se necessario, dove loggato>
+- Interpolazione downstream: <lineare su z_aligned per età, policy raw>
+- Rischi principali: <sparse cells, spike, non convergenza, over/under smoothing>
+- Mitigazioni: <fallback, clamp, QA 8.x, restrizione range, ecc.>
+- Esito QA (pass/fail): <con link ai file QA_*>
+- Note release: <cosa cambia rispetto versione precedente, se esiste>
+```
+
+Regola: se una scelta è stata fatta “perché altrimenti non converge”, va scritto esplicitamente, e deve esistere un file di log che lo dimostri.
+
+============================================================
+12.3 QA CHECKLIST (pass/fail + note, release blockers)
+============================================================
+
+Template (tutta la checklist deve essere compilata):
+
+```text
+QA_CHECKLIST (release blockers)
+Norms version: <VERSION>
+
+A) Preflight data (fase 2)
+- [ ] Range età plausibile e in unità corrette (PASS/FAIL) Note: <...>
+- [ ] Range raw per misura ok (PASS/FAIL) Note: <...>
+- [ ] Missingness pattern documentato (PASS/FAIL) Note: <...>
+- [ ] Outlier impossibili gestiti fail-loud (PASS/FAIL) Note: <...>
+
+B) Coverage (fase 8.1)
+- [ ] Tutte le misure presenti (PASS/FAIL) Note: <...>
+- [ ] Griglia età regolare (step costante) per misura (PASS/FAIL) File: QA_coverage_age.csv
+- [ ] n_raw costante tra età per misure discrete bounded (PASS/FAIL) File: QA_coverage_raw.csv
+- [ ] Nessun NA inatteso in p_mid/z_aligned/ss (PASS/FAIL) Note: <...>
+- [ ] Nessun percentile 0 o 100 (PASS/FAIL) Note: <...>
+
+C) Monotonicità (fase 8.2)
+- [ ] raw -> percentile non decrescente (PASS/FAIL) File: QA_monotonicity_percentile.csv
+- [ ] raw -> ss_1_19 non decrescente (PASS/FAIL) File: QA_monotonicity_ss_1_19.csv
+- [ ] Enforcement monotonicità applicato? (YES/NO) File: log_monotone_enforcement.csv Note: <...>
+
+D) Smoothness e stabilità (fase 8.3, non sempre blocker automatico)
+- [ ] Top jumps ispezionati (PASS/FAIL) File: QA_smoothness_top50_jumps.csv Note: <...>
+- [ ] Salti compatibili con copertura e smoothing (PASS/FAIL) Note: <...>
+
+E) Code e saturazioni (fase 8.4)
+- [ ] Saturazioni ss_1 o ss_19 non eccessive (PASS/FAIL) File: QA_tails_saturation_summary.csv Note: <...>
+- [ ] z oltre ±3 raro e coerente con clamp (PASS/FAIL) Note: <...>
+
+F) Audit umano (fase 8.6)
+- [ ] 2–3 casi verificati “a mano” da tabella + script (PASS/FAIL) File: manual_audit_notes.txt
+```
+
+Regola: se anche un solo item “blocker” è FAIL, la release non si fa. Si torna a 5-6, si rigenera con nuova versione.
+
+============================================================
+12.4 FILE MANIFEST (cosa consegnato, dove, versione, checksum)
+============================================================
+
+Template (deve essere generato automaticamente e incluso nella release):
+
+```text
+FILE_MANIFEST
+version,created_at,file,md5,n_rows,notes
+<VERSION>,<...>,raw_to_norm.csv,<...>,<...>,"authoritative lookup table"
+<VERSION>,<...>,scaled_to_raw_intervals_ss_1_19.csv,<...>,<...>,"inverse mapping intervals"
+<VERSION>,<...>,QA_coverage_age.csv,<...>,<...>,"coverage checks"
+<VERSION>,<...>,QA_monotonicity_percentile.csv,<...>,<...>,"monotonicity checks"
+<VERSION>,<...>,SCORING_SPEC.txt,<...>,<...>,"delivery contract"
+...
+```
+
+Regola: qualunque file usato per scoring o interpretazione deve comparire qui con checksum. Se manca, non è “ufficiale”.
+
+============================================================
+12.5 RUN SUMMARY (opzionale, max 10 righe)
+============================================================
+
+Template:
+
+```text
+RUN_SUMMARY (max 10 righe)
+- Version: <VERSION>
+- Dataset: <nome file + n righe post-cleaning>
+- Misure rilasciate: <N> (elenco breve)
+- Età: <min..max> mesi, step <...>
+- Modello upstream prevalente: <...>
+- Clamp: EPS_PROB=<...>, z-cap=<...>
+- Monotonicità: <pass / enforcement su X righe>
+- QA: blockers PASS (sì/no), note principali: <...>
+- Output: release/<VERSION>/ (vedi file_manifest.csv)
+```
+
+FINE STEP 12.
+

@@ -1,0 +1,402 @@
+PHILOSOPHY OF STANDARDIZING AND NORMING MULTI-TASK PSYCHOLOGICAL BATTERIES
+
+This document summarizes my general philosophy for standardizing and norming heterogeneous psychological tasks into a coherent battery, with a particular focus on interpretability, auditability, and responsible use. Although inspired by work on time-processing tasks, the principles described here are meant to generalize to cognitive, behavioral, or performance-based batteries more broadly.
+
+----------------------------------------------------------------------
+1) Core philosophy, why standardize at all
+----------------------------------------------------------------------
+
+Standardization is not an end in itself. Its purpose is to make results interpretable, comparable, and usable for real decisions, whether clinical, educational, or research-based.
+
+A battery typically contains tasks that differ widely in scale, distribution, difficulty, and measurement properties. Raw scores from such tasks are not directly comparable, and profiles built on raw metrics are almost always misleading. The primary goal of norming is therefore to place all tasks on a common metric, so that differences across subtests can be interpreted meaningfully within an individual and across individuals of the same age.
+
+A crucial principle is directional coherence: higher standardized scores must always indicate better performance. This holds regardless of whether the raw measure is a success score, a deviation, an error rate, or a threshold. Any system that violates this principle invites misinterpretation and profile artifacts.
+
+Equally important is transparency. A professional should be able to understand, reconstruct, and explain how a raw score becomes a standardized score. Norming procedures that rely on opaque objects or non-reproducible transformations undermine trust and make auditing impossible.
+
+Finally, the system should minimize silent errors. If something is missing, implausible, or out of range, this should be made explicit through warnings or blocked computations, rather than being quietly smoothed over.
+
+----------------------------------------------------------------------
+2) Modeling stance, how norms are obtained
+----------------------------------------------------------------------
+
+At the modeling stage, I favor flexible distributional approaches that can accommodate age-related changes in both central tendency and variability, and, when needed, skewness or kurtosis. Generalized additive models for location, scale, and shape (such as GAMLSS) are particularly well suited for this purpose.
+
+The key point, however, is that this statistical sophistication belongs upstream. End users should never need to interact with fitted models, smoothing terms, or distributional assumptions. There are several reasons for this:
+- model objects are fragile across software versions,
+- they are difficult to audit by non-specialists,
+- they encourage a black-box view of scoring.
+
+Instead, advanced modeling is used once, carefully, to generate stable, age-continuous percentile functions. These are then frozen into tabular products that become the operational definition of the norms.
+
+In other words, complex modeling is a means to produce simple, robust artifacts.
+
+----------------------------------------------------------------------
+3) User-facing norming products
+----------------------------------------------------------------------
+
+The core deliverable of the norming process is a lookup table that maps:
+- measure,
+- age,
+- raw score,
+to percentile, standardized z-score, and scaled score.
+
+This table is the primary scoring engine. It allows raw-to-standard conversion by direct lookup and interpolation, without any reference to the original statistical model.
+
+A second, equally important product is an inverted table that maps scaled scores to raw-score intervals for each age. This supports:
+- manual conversion,
+- clinical documentation,
+- sanity checks,
+- and independent verification.
+
+Interpolation is handled explicitly and conservatively. Linear interpolation between adjacent tabulated points is acceptable at the delivery stage, provided that monotonicity is enforced and clearly checked. Interpolation is a pragmatic choice, not a claim about the true functional form of development.
+
+A critical distinction is made between continuous and discrete measures:
+- For continuous measures, full coverage of the scaled-score range is usually attainable and unproblematic.
+- For discrete measures, some scaled scores may be unattainable at certain ages due to limited raw-score resolution. Leaving these scaled scores undefined is preferable to forcing ambiguous or misleading mappings.
+
+Completeness is less important than clarity.
+
+----------------------------------------------------------------------
+4) Directionality and metric alignment
+----------------------------------------------------------------------
+
+All measures are first converted from raw scores to percentiles and z-scores on the scale defined by the normative model. Directionality is handled only after this step.
+
+For measures where higher raw values indicate better performance, the standardized z-score is used as-is. For measures where lower raw values indicate better performance, the z-score is sign-flipped after conversion. This yields an aligned z-score that always has the same interpretation across tasks.
+
+Scaled scores are derived exclusively from aligned z-scores. This ensures that:
+- all profile plots are directionally coherent,
+- composite scores are meaningful,
+- and interpretation does not depend on remembering task-specific conventions.
+
+This alignment is not cosmetic. It is a prerequisite for any cross-task comparison.
+
+----------------------------------------------------------------------
+5) Scaled-score metric and reporting
+----------------------------------------------------------------------
+
+I favor a bounded, fine-grained scaled-score metric derived from z-scores and explicitly clamped at the extremes. Such a metric balances resolution with interpretability and avoids false precision at the tails.
+
+Crucially, standardized reporting should never hide the raw score. A complete report always includes:
+- the raw score,
+- the scaled score,
+- and the aligned z-score.
+
+Profile plots should be based on scaled scores only, with clear reference bands, and should emphasize interpretability over visual complexity.
+
+----------------------------------------------------------------------
+6) Philosophy of composites and total scores
+----------------------------------------------------------------------
+
+Composite scores require particular caution. A total score should only be computed if the aggregation rule is transparent, defensible, and consistent with the construct being measured.
+
+When composites are used, they should be defined on aligned z-scores, not on raw scores. Aggregation at the standardized level avoids distortion caused by differing raw-score distributions and variances.
+
+In some cases, item-level or subcomponent-level standardization followed by aggregation is preferable to aggregating raw scores first. This is especially true when components differ in reliability, scaling, or distributional form.
+
+Guardrails are essential:
+- composites should be computed only when all required components are present,
+- partial data should trigger explicit warnings,
+- and no pseudo-precision should be reported when inputs are incomplete.
+
+----------------------------------------------------------------------
+7) Practical scoring and engineering principles
+----------------------------------------------------------------------
+
+The philosophy above has concrete implications for implementation:
+- File parsing and scoring rules must mirror the experimental task logic exactly and be documented.
+- Reference implementations should exist for regression testing, even if they are not part of the active pipeline.
+- Input validation must be strict, especially for age ranges and theoretically impossible raw values.
+- Warnings should be hierarchical, with critical issues clearly separated from informational messages.
+- Computation should be event-driven and atomic, so that outputs are always internally consistent.
+
+The goal is not just correct scoring, but defensible scoring.
+
+----------------------------------------------------------------------
+8) Failure modes and how to handle them
+----------------------------------------------------------------------
+
+Several common failure modes deserve explicit attention:
+- Non-monotonic raw-to-percentile mappings, often caused by table-construction errors, must trigger immediate failure.
+- Discrete-score ties can produce ambiguous inversions; deterministic raw-to-scaled mappings with explicit gaps are preferable.
+- Reliability anomalies, such as negative internal consistency estimates, are not nuisances to be smoothed over but signals that block downstream interpretation until resolved.
+
+Norming systems should make such problems visible, not hide them.
+
+----------------------------------------------------------------------
+Final checklist: when is a battery deployable under this philosophy?
+----------------------------------------------------------------------
+
+A battery can be considered properly standardized only if:
+- higher standardized scores always mean better performance,
+- raw-to-standard conversion is fully auditable from tables,
+- discrete measures do not map the same raw score to multiple scaled scores,
+- composites are transparent and conditional on complete data,
+- and all known failure modes are either prevented or explicitly signaled.
+
+Only under these conditions does standardization serve its intended purpose: enabling meaningful, responsible interpretation.
+
+
+############################
+
+TECHNICAL ADDENDUM (FOR RESEARCHERS)
+Computational workflow for norming, exporting tables, and deploying scoring in R/Shiny
+
+This addendum describes an implementation-oriented workflow for standardizing a multi-task battery in a way that is flexible at the modeling stage, but fully table-driven at deployment. The goal is to preserve distributional sophistication upstream while guaranteeing reproducible, auditable scoring downstream.
+
+----------------------------------------------------------------------
+A) Data model and variable taxonomy
+----------------------------------------------------------------------
+
+1) Measures
+Each subtest or indicator is treated as a “measure” with a unique identifier, and an associated metadata row in a specification file (e.g., scoring/measure_specs.csv). The metadata should minimally include:
+- measure (unique string)
+- raw_type: continuous or integer
+- direction_flag: higher_better or lower_better
+- theoretical bounds:
+  - continuous: abs_min (finite) and abs_max (often Inf)
+  - integer: raw_min_theoretical and raw_max_theoretical (finite integers)
+- export grid density (raw_grid_n for continuous, optional)
+
+This spec is the single source of truth for:
+- enforcing bounds,
+- choosing inversion strategy (continuous vs integer),
+- applying direction alignment,
+- validating outputs.
+
+2) Norming grid
+Norms are represented on an age grid and a probability grid:
+- age grid: a set of age points (e.g., years with decimals, or months)
+- p grid: percentiles/quantile levels in (0,1), typically dense enough to support interpolation
+
+At the end of upstream modeling, the normative output for each measure is a matrix:
+- rows: p values (row names)
+- columns: ages (column names, e.g., age-6.0, age-6.5, etc.)
+- cells: raw value corresponding to that quantile at that age (raw = Q(p | age))
+
+This structure is ideal because it is compact, inspectable, and directly supports table export.
+
+----------------------------------------------------------------------
+B) Upstream modeling in R (distributional approach)
+----------------------------------------------------------------------
+
+1) Why distributional modeling
+Many measures show:
+- non-constant variance across age,
+- skewness/floor/ceiling effects,
+- discrete mass points (especially questionnaires),
+- non-linear developmental trends.
+
+Distributional modeling allows estimating Q(p | age) smoothly while respecting these features.
+
+2) Typical modeling outline (conceptual)
+For each measure m:
+- Choose a distribution family appropriate to the scale:
+  - continuous positive errors: e.g., Gamma, Box-Cox Cole-Green variants, or other positive-support distributions
+  - bounded questionnaire totals: e.g., Beta-Binomial or Binomial-based forms
+  - approximately normal measures: Normal or transformed normal
+- Fit with smooth age terms in location and possibly scale/shape:
+  - location: mu ~ s(age)
+  - scale:   sigma ~ s(age) or constant
+  - shape:   nu/tau terms if needed
+
+In practice, the exact family and which parameters vary with age should be chosen using:
+- diagnostic plots,
+- residual checks,
+- and pragmatic constraints (stability across ages is more important than marginal gains in fit).
+
+3) Generating quantile tables from fitted models
+For each age point a in the age grid and each p in the p grid:
+- compute raw = Q(p | age=a) from the fitted distribution parameters at age a
+- store in a matrix with rownames = p and colnames = age labels
+
+These matrices are then bundled into a single RDS object (e.g., scoring/normPercTabs_full.RDS), typically as a named list:
+tab[[measure_name]] = matrix(p x age)
+
+If a measure has subcomponents (e.g., item-level variants), they can be stored as nested lists, but they must still be reducible to matrices at export.
+
+----------------------------------------------------------------------
+C) Export stage: produce table-driven scoring artifacts
+----------------------------------------------------------------------
+
+Export scripts should generate two CSVs:
+1) norms_lookup.csv (the operational scoring table)
+2) ss_to_raw_intervals.csv (human-facing inversion table)
+
+The essential design rule is:
+- modeling complexity stays upstream,
+- exported artifacts are simple and self-contained.
+
+1) norms_lookup.csv construction
+Starting from the quantile matrix raw = Q(p|age):
+- reshape each measure’s matrix to long format with columns:
+  measure, p, age, raw
+
+Important implementation detail:
+- Do NOT rely on implicit ordering via as.vector() + expand_grid().
+- Use pivot_longer() so that each cell is correctly paired with its p and age.
+
+Then compute standardized quantities:
+- z_raw = qnorm(clamp(p, 1e-6, 1-1e-6))
+- z_aligned:
+  - if direction_flag == lower_better: z_aligned = -z_raw
+  - else: z_aligned = z_raw
+- scaled score (1–19):
+  ss_1_19 = clamp(round(10 + 3*z_aligned), 1, 19)
+
+Save one row per (measure, age, p) point, with raw from the quantile table.
+
+Recommended fail-fast checks:
+- for each (measure, age), raw must be non-decreasing in p
+- age and p grids must be strictly increasing
+- no missing columns in the spec file
+
+2) ss_to_raw_intervals.csv construction
+
+Purpose
+This table supports manual conversion and documentation. It maps:
+(measure, age, scaled score) -> raw interval [raw_min, raw_max]
+
+Continuous measures
+- Derive SS boundaries in aligned-z space using the rounding rule:
+  SS = round(10 + 3*z), clamped
+- Convert those z boundaries to p boundaries via pnorm(), taking direction_flag into account:
+  - higher_better: p = pnorm(z_aligned)
+  - lower_better:  p = pnorm(z_raw) = pnorm(-z_aligned)
+- Use the quantile function raw(p) obtained by interpolating the tabulated quantiles:
+  raw(p) = approx(p_grid, raw_grid, xout=p, rule=2)
+
+Then:
+raw_min = raw(p_lo), raw_max = raw(p_hi)
+and impose absolute bounds at extremes (abs_min / abs_max) as specified.
+
+Discrete (integer) measures
+Key principle: never allow the same integer raw to map to multiple scaled scores in the exported manual table.
+
+Recommended approach:
+- Build a deterministic mapping raw -> SS over all integers in [raw_min_theoretical, raw_max_theoretical].
+- One robust method:
+  a) Using norms_lookup, obtain points (raw, z_aligned) for that age.
+  b) Collapse duplicate raw values using a robust statistic (median z_aligned).
+  c) Enforce monotonicity in z_aligned(raw) using cummax/cummin depending on direction.
+  d) Interpolate z_aligned for every integer raw.
+  e) Convert to SS via SS = clamp(round(10 + 3*z_aligned), 1, 19).
+
+This yields a unique SS for each raw integer.
+
+Then invert raw->SS into SS intervals by grouping:
+raw_min = min(raw), raw_max = max(raw) within each SS.
+
+If a scaled score is unattainable at that age, leave raw_min/raw_max as NA. This is acceptable and more honest than forcing coverage.
+
+Recommended checks:
+- the exported table should always contain 19 rows per (measure, age)
+- for continuous measures, raw_min/raw_max must not be NA
+- for integer measures, NA rows are allowed, but raw_min <= raw_max when both present
+
+----------------------------------------------------------------------
+D) Deployment scoring (Shiny or scripts): table-driven algorithms
+----------------------------------------------------------------------
+
+The deployment layer must not require model objects. It uses the exported CSVs.
+
+1) Converting a raw score to z_aligned and SS
+Inputs: measure m, age a, raw x
+
+Algorithm:
+- Subset norms_lookup.csv for measure == m
+- Interpolate across age:
+  - either nearest neighbor age, or linear interpolation between bracketing ages
+  - preferred: linear interpolation on z_aligned or on the percentile scale, depending on design
+- Then interpolate across raw within age:
+  Because norms_lookup is tabulated over p, not raw, the most stable approach is:
+  - for the selected age slice: treat raw as a function of p, invert approximately to find p(x), then z
+  Practical inversion:
+  - ensure raw(p) is monotone (it should be),
+  - use approx(x=raw, y=p, xout=x, rule=2) after first deduplicating raw if needed,
+  - compute z_raw = qnorm(p), z_aligned using direction_flag, SS from z_aligned.
+
+This avoids storing a dense raw grid for every measure, and keeps everything auditable.
+
+2) Discrete raw values at ties (integer measures)
+Because raw is discrete and many percentiles map to identical raw values, inversion raw->p can be ambiguous.
+A pragmatic strategy is:
+- collapse duplicates in raw by taking a conservative p summary:
+  - e.g., median p among rows with that raw
+- then use approx(raw_unique, p_median, xout=x).
+
+This yields a stable and deterministic p(x), aligned with the “one raw -> one SS” philosophy.
+
+3) Task upload preprocessing, trial-level scoring, and aggregation
+Some tasks produce a trial-level output (CSV from experimental software). For these:
+- parse the file robustly,
+- compute a raw summary measure consistent with the design,
+- then standardize that raw via norms_lookup.
+
+If a task has multiple subcomponents (e.g., multiple target durations):
+- compute a raw summary per subcomponent,
+- standardize each subcomponent separately (z_aligned),
+- aggregate at the z level (mean z_aligned),
+- then convert to SS.
+
+This prevents distortions that arise when raw aggregation occurs before standardization, particularly when subcomponents differ in distribution or reliability.
+
+----------------------------------------------------------------------
+E) Reliability and CI parameters (research-only layer)
+----------------------------------------------------------------------
+
+If a composite score is reported with SEM/CI, this introduces a separate psychometric layer.
+Workflow:
+- compute aligned z indicators for all included subtests
+- define the composite as mean(z_aligned)
+- map to an IQ-like metric if desired:
+  Quotient = round(100 + 15 * z_composite)
+
+Reliability estimation:
+- compute alpha and omega on the matrix of aligned z indicators
+- treat negative alpha as a red flag (average covariance negative)
+- if reliability is extremely low, SEM and CI become essentially uninformative
+- in that case, CI parameters should not be shipped as if they were stable
+
+Pragmatic rule:
+- do not export or rely on CI parameter tables until reliability is understood and stable.
+
+----------------------------------------------------------------------
+F) Implementation details and recommended R practices
+----------------------------------------------------------------------
+
+1) Packages
+- dplyr, tidyr, readr for wrangling and I/O
+- stringr for robust naming and parsing
+- purrr for iteration across measures/ages
+- here for stable project-root paths
+- ggplot2 for diagnostic plots (modeling stage), not needed at runtime
+
+2) Fail-fast checks that should exist in export scripts
+- monotonicity: for each (measure, age), raw must be non-decreasing in p
+- spec completeness: every measure intended for export must appear in measure_specs
+- bounds: continuous measures must have finite abs_min, integer measures must have finite theoretical bounds
+- no accidental mismatches between matrix row/col names and intended grids
+
+3) Reproducibility and regression safety
+- Keep a “reference” scoring implementation in the repo for comparison.
+- Add small regression tests using example files to ensure scoring does not drift.
+
+----------------------------------------------------------------------
+End: what to replicate in a new battery
+----------------------------------------------------------------------
+
+To apply this framework to a new battery:
+1) Define measure_specs.csv with type, direction, and bounds.
+2) Fit distributional age models upstream to obtain Q(p|age) matrices.
+3) Export norms_lookup.csv and ss_to_raw_intervals.csv with strict checks.
+4) Deploy a table-driven scorer (Shiny or script) that:
+   - validates inputs,
+   - computes raw summaries deterministically,
+   - standardizes via norms_lookup,
+   - aligns directionality post-conversion,
+   - and aggregates only on aligned z when composites are needed.
+
+The key is separation of concerns: flexible modeling upstream, simple tables downstream.
+

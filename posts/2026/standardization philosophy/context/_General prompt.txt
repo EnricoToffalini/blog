@@ -1,0 +1,81 @@
+Read the documents very carefully and then do the following, write in txt code: 
+
+TASK
+Write a careful, detailed synthesis of my general philosophy for standardizing and norming mono- and multi-task psychological batteries, focusing on principled design choices and the reasoning behind them. Do not focus on the specific battery content, instead generalize.
+
+SCOPE AND AUDIENCE
+- Audience: researchers and clinicians who use standardized intelligence batteries and expect transparent, auditable scoring.
+- Tone: pragmatic, method-driven, skeptical but constructive.
+- Language: English.
+- Avoid jargon when a clearer alternative exists, but do not oversimplify.
+
+NON-NEGOTIABLE CONSTRAINTS
+- Do NOT mention “Wechsler” explicitly.
+- You MAY refer to “standardized intelligence batteries”, “scaled scores”, “age-normed scores”, “profile interpretation”, “manual conversion tables”, “auditable scoring”.
+- Do NOT present norming as purely statistical, emphasize interpretability, auditability, and responsible use.
+
+CONTENT REQUIREMENTS
+
+1) Core philosophy (the “why”)
+Explain the guiding principles behind norming:
+- Standardization is a service to interpretation and decision-making, not an end in itself.
+- Primary goal: a common metric across heterogeneous tasks so that profiles are interpretable and comparable.
+- Higher standardized score must always mean better performance (directionality alignment), regardless of whether a raw is a threshold/error or a success measure.
+- Manual auditability matters: a professional should be able to reproduce conversion from raw to standardized scores without specialized objects or black-box models.
+- Minimize opportunities for silent errors: explicit checks, warnings, and clear handling of out-of-range or invalid inputs.
+- Prefer event-driven computation and atomic updates in tools, to keep outputs coherent and reduce partial-update confusion.
+
+2) Modeling stance (the “how” at the norms level)
+Describe the statistical approach and why:
+- Use distributional modeling (e.g., GAMLSS) upstream to fit age-related changes flexibly (location, scale, shape if needed), and to generate smooth age-continuous percentile functions.
+- Emphasize that end users should not need GAMLSS objects, explain why (portability, reproducibility, clinical audit, version stability).
+- Explain the compromise: sophisticated modeling is used only to create stable, tabular conversion products, which are then frozen and distributed.
+
+3) The exported norm products (what is delivered to users)
+Explain what the user-facing norming artifacts look like and why:
+- A primary lookup grid that maps (measure × age × raw) to percentile, z, and scaled score.
+- A secondary “scaled score to raw interval” table to support manual conversion, documentation, and clinical reporting.
+- Interpolation policy: how to handle ages between grid points and raws between tabulated values, and why linear interpolation is acceptable at the delivery layer (with caveats).
+- Discrete vs continuous measures:
+  - Continuous measures can support full interval coverage naturally.
+  - Discrete measures may have unattainable scaled scores at some ages; leaving gaps (NA) is acceptable and preferable to forcing ambiguous mappings that confuse humans.
+
+4) Directionality and metric alignment
+Explain the universal alignment rule:
+- Convert raw to percentile and z on the “as-modeled” scale.
+- For threshold/error-type measures where lower raw is better, flip sign after conversion (z_aligned = -z_raw).
+- Derive scaled scores from aligned z.
+- Make it explicit that alignment is for interpretability and cross-task comparability, not to manipulate data.
+
+5) Scaled score metric and reporting choices
+Describe the rationale for:
+- Using a bounded, fine-grained scaled-score metric (1–19) derived from z and clamped.
+- Always reporting both: raw, scaled score, and aligned z (for transparency and composites).
+- Profile plots: standardized scores only, with reference bands, and an emphasis on interpretability.
+
+6) Composite philosophy (if a total score exists)
+Explain the cautious stance on composites:
+- Only compute a total score if the formula is transparent and defensible.
+- Prefer composites defined on aligned z, then mapped to an IQ-like metric (mean=100, SD=15) if needed, but only when justified.
+- Guardrails: compute only when all required subtests are present; otherwise show missingness warnings and avoid pseudo-precision.
+- Explain why item-level standardization sometimes beats raw aggregation (especially when subcomponents have different distributions or reliability).
+
+7) Practical scoring procedures and engineering choices
+Briefly cover operational decisions that support the philosophy:
+- Clear file parsing and validation rules for task uploads, with explicit outputs and messages.
+- Reproducible scoring functions mirroring the experimental task logic, with “reference implementations” for regression checks.
+- Strong input validation for age ranges and plausibility checks for raw ranges.
+- Warning hierarchy: critical warnings at top, informational messages elsewhere.
+- No hidden state: compute button triggers a full, consistent refresh.
+
+8) Failure modes and how the philosophy handles them
+Include a section on typical pitfalls and how the system prevents them:
+- Non-monotone raw↔percentile mappings caused by misalignment in table construction, and the need for fail-fast monotonicity checks.
+- Discrete-score ties causing ambiguous inversions, and the preference for deterministic raw→scaled mapping with unattainable scaled scores left blank.
+- Reliability anomalies (e.g., negative alpha) and why such findings should block interpretive add-ons (SEM/CI) until resolved.
+
+DELIVERABLE FORMAT
+Write the synthesis as a structured narrative with short section headings.
+Do not include code.
+Use concrete examples in the abstract (e.g., “error measure where lower is better”) without naming specific tasks.
+End with a short checklist summarizing “what must always be true” for a battery to be considered normed and deployable under this philosophy.

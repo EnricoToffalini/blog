@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Enrico Toffalini">
+
+<title>Filosofia del Continuous Norming: Un esempio in R con Mini-Deco (mini batteria inventata di lettura) – blog</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-dfb324f25d9b1687192fa8be62ac8f9c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+<link rel="shortcut icon" href="favicon.ico"> 
+<script data-goatcounter="https://toffeeblog.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+
+
+<link rel="stylesheet" href="../../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">blog</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Ricerca"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Attiva/disattiva la navigazione" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://enricotoffalini.github.io" target="_blank"> 
+<span class="menu-text">enricotoffalini.github.io</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://psicostat.dpss.psy.unipd.it/"> 
+<span class="menu-text"><img src="../../../images/faviconpsicostat2.png" style="height: 22px; margin-top: -4px;"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/EnricoToffalini"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Filosofia del Continuous Norming: Un esempio in R con Mini-Deco (mini batteria inventata di lettura)</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Autore/Autrice</div>
+      <div class="quarto-title-meta-contents">
+               <p>Enrico Toffalini </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Data di Pubblicazione</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">19 gennaio 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<section id="perché-questa-pipeline" class="level2">
+<h2 class="anchored" data-anchor-id="perché-questa-pipeline">Perché questa pipeline</h2>
+<p>Nella prassi psicometrica si sente spesso: “i punteggi non sono gaussiani”, vero, e allora si ripiega su percentili e punteggi non parametrici come se non ci fosse alternativa. Il problema è che i percentili sono scomodi da aggregare, e spingono verso interpretazioni a checklist di cutoff.</p>
+<p>All’opposto, a volte si usano z-score calcolati standardizzando i grezzi anche quando la distribuzione è lontana dalla normalità. Così lo z perde l’interpretazione di posizione in una distribuzione normale, e gli aggregati diventano fragili.</p>
+<p>Poi c’è il tema dell’età: si continua a dividere in fasce. Sulle code, proprio dove servono cutoff clinici, i percentili sono instabili, e discretizzare l’età peggiora. Il continuous norming esiste, serve, ed è una prassi compatibile con l’idea di tratto latente continuo.</p>
+<p>Infine, si sottovaluta l’utilità di aggregare punteggi standardizzati, si finisce a contare quanti task superano cutoff distinti. È un modo povero di trattare informazione continua, mentre l’aggregazione su standard score è prassi consolidata nella misura dell’intelligenza.</p>
+<p>Qui mostriamo una pipeline <em>table-driven</em>: upstream (modello + guardrail + tabelle), downstream (scoring deterministico da tabelle). Il dataset è <code>Mini-Deco_Sample.csv</code>. La colonna <code>lessdecTRIALS</code> è ridondante, la ignoriamo, ma assumiamo che la decisione lessicale sia su <strong>k = 60</strong> trial.</p>
+<hr>
+</section>
+<section id="setup-lettura-dati-check-e-realtà-dei-punteggi" class="level2">
+<h2 class="anchored" data-anchor-id="setup-lettura-dati-check-e-realtà-dei-punteggi">1) Setup, lettura dati, check e “realtà” dei punteggi</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gamlss)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gamlss.dist)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Mini-Deco_Sample.csv"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># teniamo solo le colonne utili, ignoriamo lessdecTRIALS (ma fissiamo k=60)</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> dat[, <span class="fu">c</span>(<span class="st">"id"</span>,<span class="st">"age"</span>,<span class="st">"syllsec"</span>,<span class="st">"lessdec"</span>)]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># range del post: 6–13 anni</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> dat[dat<span class="sc">$</span>age <span class="sc">&gt;=</span> <span class="dv">6</span> <span class="sc">&amp;</span> dat<span class="sc">$</span>age <span class="sc">&lt;=</span> <span class="dv">13</span>, ]</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># check minimi</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">all</span>(dat<span class="sc">$</span>syllsec <span class="sc">&gt;</span> <span class="dv">0</span>))</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">all</span>(dat<span class="sc">$</span>lessdec <span class="sc">&gt;=</span> <span class="dv">0</span> <span class="sc">&amp;</span> dat<span class="sc">$</span>lessdec <span class="sc">&lt;=</span> <span class="dv">60</span>))</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">60</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>age_grid <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">6</span>, <span class="dv">13</span>, <span class="at">by =</span> <span class="fl">0.25</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># guardrail numerici</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>eps <span class="ot">&lt;-</span> <span class="fl">1e-6</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>clamp_prob <span class="ot">&lt;-</span> <span class="cf">function</span>(p) <span class="fu">pmin</span>(<span class="dv">1</span> <span class="sc">-</span> eps, <span class="fu">pmax</span>(eps, p))</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>ss19 <span class="ot">&lt;-</span> <span class="cf">function</span>(z) <span class="fu">pmin</span>(<span class="dv">19</span>, <span class="fu">pmax</span>(<span class="dv">1</span>, <span class="fu">round</span>(<span class="dv">10</span> <span class="sc">+</span> <span class="dv">3</span><span class="sc">*</span>z)))</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># output sintetico: range e medie grezze per mezzi anni</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>age_bin <span class="ot">&lt;-</span> <span class="fu">floor</span>(dat<span class="sc">$</span>age <span class="sc">*</span> <span class="dv">2</span>) <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Range età:"</span>, <span class="fu">range</span>(dat<span class="sc">$</span>age), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Range età: 6.01 13 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Range syllsec:"</span>, <span class="fu">range</span>(dat<span class="sc">$</span>syllsec), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Range syllsec: 0.6 4.99 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Range lessdec:"</span>, <span class="fu">range</span>(dat<span class="sc">$</span>lessdec), <span class="st">"</span><span class="sc">\n\n</span><span class="st">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Range lessdec: 5 58 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">aggregate</span>(dat<span class="sc">$</span>syllsec, <span class="fu">list</span>(<span class="at">age_bin =</span> age_bin), mean))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   age_bin        x
+1      6.0 1.314262
+2      6.5 1.693167
+3      7.0 1.935522
+4      7.5 2.173000
+5      8.0 2.414000
+6      8.5 2.471233
+7      9.0 2.696125
+8      9.5 3.115345
+9     10.0 3.136735
+10    10.5 3.303284
+11    11.0 3.181757
+12    11.5 3.491455
+13    12.0 3.473333
+14    12.5 3.561711
+15    13.0 3.360000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">aggregate</span>(dat<span class="sc">$</span>lessdec, <span class="fu">list</span>(<span class="at">age_bin =</span> age_bin), mean))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   age_bin        x
+1      6.0 25.75410
+2      6.5 29.80000
+3      7.0 29.74627
+4      7.5 33.88333
+5      8.0 35.33846
+6      8.5 34.78082
+7      9.0 36.28750
+8      9.5 39.94828
+9     10.0 40.81633
+10    10.5 39.34328
+11    11.0 41.37838
+12    11.5 41.36364
+13    12.0 41.72222
+14    12.5 42.22368
+15    13.0 49.00000</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="guardiamo-i-grezzi-non-normalità-e-dipendenza-da-età" class="level2">
+<h2 class="anchored" data-anchor-id="guardiamo-i-grezzi-non-normalità-e-dipendenza-da-età">2) Guardiamo i grezzi: non normalità e dipendenza da età</h2>
+<p>Questa sezione serve solo a ricordare perché “standardizzare i grezzi” non è una soluzione.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Grafici: distribuzioni grezze e trend con l’età (folded)</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribuzioni marginali</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dat, <span class="fu">aes</span>(<span class="at">x =</span> syllsec)) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>) <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"syllsec (grezzo): distribuzione marginale"</span>, <span class="at">x =</span> <span class="st">"sillabe/sec"</span>, <span class="at">y =</span> <span class="st">"conteggi"</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dat, <span class="fu">aes</span>(<span class="at">x =</span> lessdec)) <span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"lessdec (grezzo): distribuzione marginale"</span>, <span class="at">x =</span> <span class="st">"corrette su 60"</span>, <span class="at">y =</span> <span class="st">"conteggi"</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p1)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Grafici: distribuzioni grezze e trend con l’età (folded)</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p2)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Grafici: distribuzioni grezze e trend con l’età (folded)</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Grezzi vs età (jitter leggero per il discreto)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dat, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> syllsec)) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"syllsec vs età"</span>, <span class="at">x =</span> <span class="st">"età"</span>, <span class="at">y =</span> <span class="st">"sillabe/sec"</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dat, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> lessdec)) <span class="sc">+</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.35</span>, <span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">height =</span> <span class="fl">0.15</span>, <span class="at">width =</span> <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"lessdec vs età"</span>, <span class="at">x =</span> <span class="st">"età"</span>, <span class="at">y =</span> <span class="st">"corrette su 60"</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p3)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Grafici: distribuzioni grezze e trend con l’età (folded)</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p4)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-2-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="upstream-continuous-norming-via-modelli-semplici-gamlss" class="level2">
+<h2 class="anchored" data-anchor-id="upstream-continuous-norming-via-modelli-semplici-gamlss">3) Upstream: continuous norming via modelli semplici (GAMLSS)</h2>
+<p>Scelte minimali ma coerenti:</p>
+<ul>
+<li><code>syllsec</code> è continuo e positivo, usiamo una <strong>lognormale</strong> (<code>LOGNO</code>) con media monotona in età e dispersione smooth.</li>
+<li><code>lessdec</code> è un conteggio 0..60 con overdispersion, usiamo una <strong>Beta-Binomiale</strong> (<code>BB</code>) con probabilità monotona in età e dispersione smooth.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fit_syll <span class="ot">&lt;-</span> <span class="fu">gamlss</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  syllsec <span class="sc">~</span> <span class="fu">pbm</span>(age, <span class="at">mono =</span> <span class="st">"up"</span>),</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">sigma.fo =</span> <span class="sc">~</span> <span class="fu">pb</span>(age),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> LOGNO,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace =</span> <span class="cn">FALSE</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>fit_less <span class="ot">&lt;-</span> <span class="fu">gamlss</span>(</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(lessdec, k <span class="sc">-</span> lessdec) <span class="sc">~</span> <span class="fu">pbm</span>(age, <span class="at">mono =</span> <span class="st">"up"</span>),</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">sigma.fo =</span> <span class="sc">~</span> <span class="fu">pb</span>(age),</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> BB,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace =</span> <span class="cn">FALSE</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"AIC syllsec:"</span>, <span class="fu">AIC</span>(fit_syll), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>AIC syllsec: 2091.986 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"AIC lessdec:"</span>, <span class="fu">AIC</span>(fit_less), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>AIC lessdec: 6662.337 </code></pre>
+</div>
+</div>
+<p>Diagnostica minima: non vogliamo fare un tutorial su GAMLSS, ma almeno guardiamo residui e un worm plot.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Diagnostica minima GAMLSS (folded)</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit_syll)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>******************************************************************
+          Summary of the Quantile Residuals
+                           mean   =  0.0001048503 
+                       variance   =  1.001112 
+               coef. of skewness  =  -0.3693264 
+               coef. of kurtosis  =  2.800697 
+Filliben correlation coefficient  =  0.9937754 
+******************************************************************</code></pre>
+</div>
+<details class="code-fold">
+<summary>Diagnostica minima GAMLSS (folded)</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit_less)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>******************************************************************
+     Summary of the Randomised Quantile Residuals
+                           mean   =  -0.0008716 
+                       variance   =  0.9937713 
+               coef. of skewness  =  -0.136323 
+               coef. of kurtosis  =  2.821541 
+Filliben correlation coefficient  =  0.9984349 
+******************************************************************</code></pre>
+</div>
+<details class="code-fold">
+<summary>Diagnostica minima GAMLSS (folded)</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># worm plot (se disponibile), utile per vedere bias in coda</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># (non sempre essenziale in un post didattico, ma è un buon promemoria)</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">try</span>(<span class="fu">wp</span>(fit_syll), <span class="at">silent =</span> <span class="cn">TRUE</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-4-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Diagnostica minima GAMLSS (folded)</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">try</span>(<span class="fu">wp</span>(fit_less), <span class="at">silent =</span> <span class="cn">TRUE</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-4-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="upstream-costruire-una-riga-di-tabella-per-capire-cosa-stiamo-facendo" class="level2">
+<h2 class="anchored" data-anchor-id="upstream-costruire-una-riga-di-tabella-per-capire-cosa-stiamo-facendo">4) Upstream: costruire una riga di tabella, per capire cosa stiamo facendo</h2>
+<p>Prima di generare “tutto”, facciamo vedere l’operazione su <strong>una età</strong> (9 anni). Qui si vede l’idea: dal modello otteniamo la CDF condizionata, da lì percentili, z, SS.</p>
+<section id="a-syllsec-a-9-anni-raw---percentile---z---ss1..19" class="level3">
+<h3 class="anchored" data-anchor-id="a-syllsec-a-9-anni-raw---percentile---z---ss1..19">4a) <code>syllsec</code> a 9 anni: raw -&gt; percentile -&gt; z -&gt; SS(1..19)</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>age_show <span class="ot">&lt;-</span> <span class="fl">9.00</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># previsione parametri a età fissa</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>pA <span class="ot">&lt;-</span> <span class="fu">predictAll</span>(fit_syll, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">age =</span> age_show))</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(pA<span class="sc">$</span>mu)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>sg <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(pA<span class="sc">$</span>sigma)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co"># griglia raw fine per syllsec</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>raw_grid_syll <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">floor</span>(<span class="fu">min</span>(dat<span class="sc">$</span>syllsec)<span class="sc">*</span><span class="dv">100</span>)<span class="sc">/</span><span class="dv">100</span>, <span class="fu">ceiling</span>(<span class="fu">max</span>(dat<span class="sc">$</span>syllsec)<span class="sc">*</span><span class="dv">100</span>)<span class="sc">/</span><span class="dv">100</span>, <span class="at">by =</span> <span class="fl">0.01</span>)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co"># percentile condizionato (CDF)</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">pLOGNO</span>(raw_grid_syll, <span class="at">mu =</span> mu, <span class="at">sigma =</span> sg)</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="co"># guardrail: monotonia grezzo-&gt;p e clamp code</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">clamp_prob</span>(<span class="fu">cummax</span>(p))</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="co"># conversioni</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>z  <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(p)</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>ss <span class="ot">&lt;-</span> <span class="fu">ss19</span>(z)</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>tab_syll_9 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">measure =</span> <span class="st">"syllsec"</span>,</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">age_grid =</span> age_show,</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">raw =</span> raw_grid_syll,</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">p =</span> p,</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">z =</span> z,</span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">ss_1_19 =</span> ss</span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a><span class="co"># mostro un estratto leggibile (non 400 righe)</span></span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(tab_syll_9[<span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(tab_syll_9), <span class="at">by =</span> <span class="dv">20</span>), ], <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> measure age_grid raw            p           z ss_1_19
+ syllsec        9 0.6 4.135395e-06 -4.45805186       1
+ syllsec        9 0.8 1.797832e-04 -3.56810946       1
+ syllsec        9 1.0 2.002190e-03 -2.87781650       1
+ syllsec        9 1.2 1.033918e-02 -2.31380608       3
+ syllsec        9 1.4 3.310922e-02 -1.83694207       4
+ syllsec        9 1.6 7.724297e-02 -1.42386368       6
+ syllsec        9 1.8 1.446854e-01 -1.05950271       7
+ syllsec        9 2.0 2.316052e-01 -0.73357072       8
+ syllsec        9 2.2 3.304288e-01 -0.43872937       9
+ syllsec        9 2.4 4.326780e-01 -0.16956030       9
+ syllsec        9 2.6 5.311064e-01  0.07805123      10
+ syllsec        9 2.8 6.206939e-01  0.30730371      11
+ syllsec        9 3.0 6.987235e-01  0.52073266      12
+ syllsec        9 3.2 7.643551e-01  0.72038210      12
+ syllsec        9 3.4 8.180408e-01  0.90792393      13
+ syllsec        9 3.6 8.609823e-01  1.08474307      13
+ syllsec        9 3.8 8.947150e-01  1.25199963      14
+ syllsec        9 4.0 9.208298e-01  1.41067506      14
+ syllsec        9 4.2 9.408097e-01  1.56160708      15
+ syllsec        9 4.4 9.559509e-01  1.70551641      15
+ syllsec        9 4.6 9.673375e-01  1.84302762      16
+ syllsec        9 4.8 9.758481e-01  1.97468548      16</code></pre>
+</div>
+</div>
+</section>
+<section id="b-lessdec-a-9-anni-mid-p-per-discreto" class="level3">
+<h3 class="anchored" data-anchor-id="b-lessdec-a-9-anni-mid-p-per-discreto">4b) <code>lessdec</code> a 9 anni: mid-P per discreto</h3>
+<p>Per un conteggio discreto, usiamo una correzione tipo <strong>mid-P</strong>: invece di prendere P(X ≤ x), prendiamo P(X &lt; x) + 0.5·P(X = x). È una scelta pragmatica per rendere i percentili meno “a scalini”, senza fingere che il punteggio sia continuo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># mid-P Beta-Binomial, operazione esplicita</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>pA <span class="ot">&lt;-</span> <span class="fu">predictAll</span>(fit_less, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">age =</span> age_show))</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(pA<span class="sc">$</span>mu)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>sg <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(pA<span class="sc">$</span>sigma)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>raw_grid_less <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span>k</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>p_le <span class="ot">&lt;-</span> <span class="fu">pBB</span>(raw_grid_less,   <span class="at">mu =</span> mu, <span class="at">sigma =</span> sg, <span class="at">bd =</span> k)      <span class="co"># P(X &lt;= x)</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>p_lt <span class="ot">&lt;-</span> <span class="fu">pBB</span>(raw_grid_less<span class="dv">-1</span>, <span class="at">mu =</span> mu, <span class="at">sigma =</span> sg, <span class="at">bd =</span> k)      <span class="co"># P(X &lt;  x)</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>p    <span class="ot">&lt;-</span> p_lt <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> <span class="fu">pmax</span>(<span class="dv">0</span>, p_le <span class="sc">-</span> p_lt)                      <span class="co"># mid-P</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="co"># guardrail monotonia + clamp</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">clamp_prob</span>(<span class="fu">cummax</span>(p))</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>z  <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(p)</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>ss <span class="ot">&lt;-</span> <span class="fu">ss19</span>(z)</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>tab_less_9 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">measure =</span> <span class="st">"lessdec"</span>,</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">age_grid =</span> age_show,</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">raw =</span> raw_grid_less,</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">p =</span> p,</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">z =</span> z,</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">ss_1_19 =</span> ss</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(tab_less_9, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> measure age_grid raw            p            z ss_1_19
+ lessdec        9   0 1.000000e-06 -4.753424309       1
+ lessdec        9   1 4.860349e-06 -4.423294737       1
+ lessdec        9   2 1.930190e-05 -4.115680995       1
+ lessdec        9   3 5.628914e-05 -3.861748830       1
+ lessdec        9   4 1.352133e-04 -3.642096562       1
+ lessdec        9   5 2.838744e-04 -3.446571299       1
+ lessdec        9   6 5.395198e-04 -3.269063845       1
+ lessdec        9   7 9.495783e-04 -3.105565328       1
+ lessdec        9   8 1.572072e-03 -2.953282194       1
+ lessdec        9   9 2.475698e-03 -2.810178966       2
+ lessdec        9  10 3.739583e-03 -2.674720127       2
+ lessdec        9  11 5.452718e-03 -2.545714431       2
+ lessdec        9  12 7.713089e-03 -2.422216005       3
+ lessdec        9  13 1.062652e-02 -2.303458849       3
+ lessdec        9  14 1.430526e-02 -2.188811942       3
+ lessdec        9  15 1.886631e-02 -2.077747555       4
+ lessdec        9  16 2.442960e-02 -1.969818322       4
+ lessdec        9  17 3.111592e-02 -1.864640278       4
+ lessdec        9  18 3.904478e-02 -1.761880077       5
+ lessdec        9  19 4.833211e-02 -1.661245175       5
+ lessdec        9  20 5.908793e-02 -1.562476175       5
+ lessdec        9  21 7.141398e-02 -1.465340769       6
+ lessdec        9  22 8.540139e-02 -1.369628867       6
+ lessdec        9  23 1.011283e-01 -1.275148631       6
+ lessdec        9  24 1.186578e-01 -1.181723194       6
+ lessdec        9  25 1.380355e-01 -1.089187901       7
+ lessdec        9  26 1.592881e-01 -0.997387962       7
+ lessdec        9  27 1.824212e-01 -0.906176410       7
+ lessdec        9  28 2.074182e-01 -0.815412289       8
+ lessdec        9  29 2.342386e-01 -0.724959028       8
+ lessdec        9  30 2.628176e-01 -0.634682916       8
+ lessdec        9  31 2.930653e-01 -0.544451675       8
+ lessdec        9  32 3.248665e-01 -0.454133050       9
+ lessdec        9  33 3.580808e-01 -0.363593407       9
+ lessdec        9  34 3.925433e-01 -0.272696282       9
+ lessdec        9  35 4.280657e-01 -0.181300848       9
+ lessdec        9  36 4.644375e-01 -0.089260247      10
+ lessdec        9  37 5.014283e-01  0.003580258      10
+ lessdec        9  38 5.387898e-01  0.097385388      10
+ lessdec        9  39 5.762590e-01  0.192332285      11
+ lessdec        9  40 6.135614e-01  0.288613377      11
+ lessdec        9  41 6.504145e-01  0.386439823      11
+ lessdec        9  42 6.865326e-01  0.486045691      11
+ lessdec        9  43 7.216309e-01  0.587693130      12
+ lessdec        9  44 7.554305e-01  0.691678849      12
+ lessdec        9  45 7.876641e-01  0.798342358      12
+ lessdec        9  46 8.180811e-01  0.908076627      13
+ lessdec        9  47 8.464538e-01  1.021342092      13
+ lessdec        9  48 8.725828e-01  1.138685419      13
+ lessdec        9  49 8.963033e-01  1.260765132      14
+ lessdec        9  50 9.174905e-01  1.388387459      14
+ lessdec        9  51 9.360653e-01  1.522557772      15
+ lessdec        9  52 9.519994e-01  1.664556735      15
+ lessdec        9  53 9.653192e-01  1.816057150      15
+ lessdec        9  54 9.761095e-01  1.979311258      16
+ lessdec        9  55 9.845154e-01  2.157467643      16
+ lessdec        9  56 9.907423e-01  2.355145482      17
+ lessdec        9  57 9.950539e-01  2.579574152      18
+ lessdec        9  58 9.977666e-01  2.843162436      19
+ lessdec        9  59 9.992392e-01  3.170548263      19
+ lessdec        9  60 9.998563e-01  3.626469843      19</code></pre>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="upstream-generare-le-tabelle-complete-auditabili-su-griglia-detà" class="level2">
+<h2 class="anchored" data-anchor-id="upstream-generare-le-tabelle-complete-auditabili-su-griglia-detà">5) Upstream: generare le tabelle complete (auditabili) su griglia d’età</h2>
+<p>Qui facciamo la parte “meccanica”: generiamo <code>raw_to_norm</code> per ogni età in griglia. Questo chunk è lungo, quindi lo teniamo folded, ma l’output lo useremo sotto.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Generazione tabelle complete raw_to_norm (folded)</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>raw_to_norm <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>raw_grid_syll <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">floor</span>(<span class="fu">min</span>(dat<span class="sc">$</span>syllsec)<span class="sc">*</span><span class="dv">100</span>)<span class="sc">/</span><span class="dv">100</span>, <span class="fu">ceiling</span>(<span class="fu">max</span>(dat<span class="sc">$</span>syllsec)<span class="sc">*</span><span class="dv">100</span>)<span class="sc">/</span><span class="dv">100</span>, <span class="at">by =</span> <span class="fl">0.01</span>)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>raw_grid_less <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span>k</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (a <span class="cf">in</span> age_grid) {</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># --- syllsec ---</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  pA <span class="ot">&lt;-</span> <span class="fu">predictAll</span>(fit_syll, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">age =</span> a))</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(pA<span class="sc">$</span>mu); sg <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(pA<span class="sc">$</span>sigma)</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  p  <span class="ot">&lt;-</span> <span class="fu">pLOGNO</span>(raw_grid_syll, <span class="at">mu =</span> mu, <span class="at">sigma =</span> sg)</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  p  <span class="ot">&lt;-</span> <span class="fu">clamp_prob</span>(<span class="fu">cummax</span>(p))</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  z  <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(p)</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>  ss <span class="ot">&lt;-</span> <span class="fu">ss19</span>(z)</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>  tmp <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">measure=</span><span class="st">"syllsec"</span>, <span class="at">age_grid=</span>a, <span class="at">raw=</span>raw_grid_syll, <span class="at">p=</span>p, <span class="at">z=</span>z, <span class="at">ss_1_19=</span>ss)</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>  raw_to_norm <span class="ot">&lt;-</span> <span class="fu">rbind</span>(raw_to_norm, tmp)</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># --- lessdec ---</span></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>  pA <span class="ot">&lt;-</span> <span class="fu">predictAll</span>(fit_less, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">age =</span> a))</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(pA<span class="sc">$</span>mu); sg <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(pA<span class="sc">$</span>sigma)</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>  p_le <span class="ot">&lt;-</span> <span class="fu">pBB</span>(raw_grid_less,   <span class="at">mu =</span> mu, <span class="at">sigma =</span> sg, <span class="at">bd =</span> k)</span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>  p_lt <span class="ot">&lt;-</span> <span class="fu">pBB</span>(raw_grid_less<span class="dv">-1</span>, <span class="at">mu =</span> mu, <span class="at">sigma =</span> sg, <span class="at">bd =</span> k)</span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>  p    <span class="ot">&lt;-</span> p_lt <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> <span class="fu">pmax</span>(<span class="dv">0</span>, p_le <span class="sc">-</span> p_lt)</span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>  p  <span class="ot">&lt;-</span> <span class="fu">clamp_prob</span>(<span class="fu">cummax</span>(p))</span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>  z  <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(p)</span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>  ss <span class="ot">&lt;-</span> <span class="fu">ss19</span>(z)</span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a>  tmp <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">measure=</span><span class="st">"lessdec"</span>, <span class="at">age_grid=</span>a, <span class="at">raw=</span>raw_grid_less, <span class="at">p=</span>p, <span class="at">z=</span>z, <span class="at">ss_1_19=</span>ss)</span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a>  raw_to_norm <span class="ot">&lt;-</span> <span class="fu">rbind</span>(raw_to_norm, tmp)</span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a><span class="co"># write.csv(raw_to_norm, "raw_to_norm.csv", row.names = FALSE)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr>
+</section>
+<section id="visualizzare-davvero-la-tabella-di-conversione-raw---standardizzato" class="level2">
+<h2 class="anchored" data-anchor-id="visualizzare-davvero-la-tabella-di-conversione-raw---standardizzato">6) Visualizzare davvero la tabella di conversione (raw -&gt; standardizzato)</h2>
+<p>Qui estraiamo un’età e mostriamo la conversione in modo leggibile.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>age_show <span class="ot">&lt;-</span> <span class="fl">9.00</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>tab9_syll <span class="ot">&lt;-</span> raw_to_norm[raw_to_norm<span class="sc">$</span>measure<span class="sc">==</span><span class="st">"syllsec"</span> <span class="sc">&amp;</span> raw_to_norm<span class="sc">$</span>age_grid<span class="sc">==</span>age_show, ]</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>tab9_less <span class="ot">&lt;-</span> raw_to_norm[raw_to_norm<span class="sc">$</span>measure<span class="sc">==</span><span class="st">"lessdec"</span> <span class="sc">&amp;</span> raw_to_norm<span class="sc">$</span>age_grid<span class="sc">==</span>age_show, ]</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># per syllsec mostro una sottogriglia per non stampare troppo</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>tab9_syll_small <span class="ot">&lt;-</span> tab9_syll[<span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(tab9_syll), <span class="at">by =</span> <span class="dv">20</span>), ]</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(tab9_syll_small, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> measure age_grid raw            p           z ss_1_19
+ syllsec        9 0.6 4.135395e-06 -4.45805186       1
+ syllsec        9 0.8 1.797832e-04 -3.56810946       1
+ syllsec        9 1.0 2.002190e-03 -2.87781650       1
+ syllsec        9 1.2 1.033918e-02 -2.31380608       3
+ syllsec        9 1.4 3.310922e-02 -1.83694207       4
+ syllsec        9 1.6 7.724297e-02 -1.42386368       6
+ syllsec        9 1.8 1.446854e-01 -1.05950271       7
+ syllsec        9 2.0 2.316052e-01 -0.73357072       8
+ syllsec        9 2.2 3.304288e-01 -0.43872937       9
+ syllsec        9 2.4 4.326780e-01 -0.16956030       9
+ syllsec        9 2.6 5.311064e-01  0.07805123      10
+ syllsec        9 2.8 6.206939e-01  0.30730371      11
+ syllsec        9 3.0 6.987235e-01  0.52073266      12
+ syllsec        9 3.2 7.643551e-01  0.72038210      12
+ syllsec        9 3.4 8.180408e-01  0.90792393      13
+ syllsec        9 3.6 8.609823e-01  1.08474307      13
+ syllsec        9 3.8 8.947150e-01  1.25199963      14
+ syllsec        9 4.0 9.208298e-01  1.41067506      14
+ syllsec        9 4.2 9.408097e-01  1.56160708      15
+ syllsec        9 4.4 9.559509e-01  1.70551641      15
+ syllsec        9 4.6 9.673375e-01  1.84302762      16
+ syllsec        9 4.8 9.758481e-01  1.97468548      16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># per lessdec ha senso vedere tutto (0..60)</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(tab9_less, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> measure age_grid raw            p            z ss_1_19
+ lessdec        9   0 1.000000e-06 -4.753424309       1
+ lessdec        9   1 4.860349e-06 -4.423294737       1
+ lessdec        9   2 1.930190e-05 -4.115680995       1
+ lessdec        9   3 5.628914e-05 -3.861748830       1
+ lessdec        9   4 1.352133e-04 -3.642096562       1
+ lessdec        9   5 2.838744e-04 -3.446571299       1
+ lessdec        9   6 5.395198e-04 -3.269063845       1
+ lessdec        9   7 9.495783e-04 -3.105565328       1
+ lessdec        9   8 1.572072e-03 -2.953282194       1
+ lessdec        9   9 2.475698e-03 -2.810178966       2
+ lessdec        9  10 3.739583e-03 -2.674720127       2
+ lessdec        9  11 5.452718e-03 -2.545714431       2
+ lessdec        9  12 7.713089e-03 -2.422216005       3
+ lessdec        9  13 1.062652e-02 -2.303458849       3
+ lessdec        9  14 1.430526e-02 -2.188811942       3
+ lessdec        9  15 1.886631e-02 -2.077747555       4
+ lessdec        9  16 2.442960e-02 -1.969818322       4
+ lessdec        9  17 3.111592e-02 -1.864640278       4
+ lessdec        9  18 3.904478e-02 -1.761880077       5
+ lessdec        9  19 4.833211e-02 -1.661245175       5
+ lessdec        9  20 5.908793e-02 -1.562476175       5
+ lessdec        9  21 7.141398e-02 -1.465340769       6
+ lessdec        9  22 8.540139e-02 -1.369628867       6
+ lessdec        9  23 1.011283e-01 -1.275148631       6
+ lessdec        9  24 1.186578e-01 -1.181723194       6
+ lessdec        9  25 1.380355e-01 -1.089187901       7
+ lessdec        9  26 1.592881e-01 -0.997387962       7
+ lessdec        9  27 1.824212e-01 -0.906176410       7
+ lessdec        9  28 2.074182e-01 -0.815412289       8
+ lessdec        9  29 2.342386e-01 -0.724959028       8
+ lessdec        9  30 2.628176e-01 -0.634682916       8
+ lessdec        9  31 2.930653e-01 -0.544451675       8
+ lessdec        9  32 3.248665e-01 -0.454133050       9
+ lessdec        9  33 3.580808e-01 -0.363593407       9
+ lessdec        9  34 3.925433e-01 -0.272696282       9
+ lessdec        9  35 4.280657e-01 -0.181300848       9
+ lessdec        9  36 4.644375e-01 -0.089260247      10
+ lessdec        9  37 5.014283e-01  0.003580258      10
+ lessdec        9  38 5.387898e-01  0.097385388      10
+ lessdec        9  39 5.762590e-01  0.192332285      11
+ lessdec        9  40 6.135614e-01  0.288613377      11
+ lessdec        9  41 6.504145e-01  0.386439823      11
+ lessdec        9  42 6.865326e-01  0.486045691      11
+ lessdec        9  43 7.216309e-01  0.587693130      12
+ lessdec        9  44 7.554305e-01  0.691678849      12
+ lessdec        9  45 7.876641e-01  0.798342358      12
+ lessdec        9  46 8.180811e-01  0.908076627      13
+ lessdec        9  47 8.464538e-01  1.021342092      13
+ lessdec        9  48 8.725828e-01  1.138685419      13
+ lessdec        9  49 8.963033e-01  1.260765132      14
+ lessdec        9  50 9.174905e-01  1.388387459      14
+ lessdec        9  51 9.360653e-01  1.522557772      15
+ lessdec        9  52 9.519994e-01  1.664556735      15
+ lessdec        9  53 9.653192e-01  1.816057150      15
+ lessdec        9  54 9.761095e-01  1.979311258      16
+ lessdec        9  55 9.845154e-01  2.157467643      16
+ lessdec        9  56 9.907423e-01  2.355145482      17
+ lessdec        9  57 9.950539e-01  2.579574152      18
+ lessdec        9  58 9.977666e-01  2.843162436      19
+ lessdec        9  59 9.992392e-01  3.170548263      19
+ lessdec        9  60 9.998563e-01  3.626469843      19</code></pre>
+</div>
+</div>
+<p>Un grafico didattico utile è raw -&gt; SS per un’età (si vede subito monotonicità e “granularità” del discreto).</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Grafici: raw -&gt; SS a età fissa (folded)</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(tab9_syll, <span class="fu">aes</span>(<span class="at">x =</span> raw, <span class="at">y =</span> ss_1_19)) <span class="sc">+</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(<span class="st">"syllsec: raw -&gt; SS (età "</span>, age_show, <span class="st">")"</span>),</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"syllsec (grezzo)"</span>, <span class="at">y =</span> <span class="st">"SS 1..19"</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(tab9_less, <span class="fu">aes</span>(<span class="at">x =</span> raw, <span class="at">y =</span> ss_1_19)) <span class="sc">+</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_step</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(<span class="st">"lessdec: raw -&gt; SS (età "</span>, age_show, <span class="st">")"</span>),</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"lessdec (grezzo, 0..60)"</span>, <span class="at">y =</span> <span class="st">"SS 1..19"</span>)</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p1)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Grafici: raw -&gt; SS a età fissa (folded)</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p2)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="tabella-inversa-ideale-ss---intervallo-di-grezzo" class="level2">
+<h2 class="anchored" data-anchor-id="tabella-inversa-ideale-ss---intervallo-di-grezzo">7) Tabella inversa “ideale”: SS -&gt; intervallo di grezzo</h2>
+<p>Per <code>syllsec</code> (continuo) usiamo gli intervalli indotti da SS = round(10 + 3z). Per <code>lessdec</code> (discreto) invertiamo la tabella raw -&gt; SS e prendiamo min/max.</p>
+<p>Chunk lungo, quindi folded.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Generazione ss_to_raw_intervals (folded)</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>SS <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">19</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>ss_to_raw_intervals <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (a <span class="cf">in</span> age_grid) {</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># --- syllsec: soglie in z, poi quantili lognormali ---</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  pA <span class="ot">&lt;-</span> <span class="fu">predictAll</span>(fit_syll, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">age =</span> a))</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(pA<span class="sc">$</span>mu); sg <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(pA<span class="sc">$</span>sigma)</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  z_lo <span class="ot">&lt;-</span> (SS <span class="sc">-</span> <span class="fl">0.5</span> <span class="sc">-</span> <span class="dv">10</span>) <span class="sc">/</span> <span class="dv">3</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>  z_hi <span class="ot">&lt;-</span> (SS <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">-</span> <span class="dv">10</span>) <span class="sc">/</span> <span class="dv">3</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>  raw_min <span class="ot">&lt;-</span> <span class="fu">qLOGNO</span>(<span class="fu">clamp_prob</span>(<span class="fu">pnorm</span>(z_lo)), <span class="at">mu =</span> mu, <span class="at">sigma =</span> sg)</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>  raw_max <span class="ot">&lt;-</span> <span class="fu">qLOGNO</span>(<span class="fu">clamp_prob</span>(<span class="fu">pnorm</span>(z_hi)), <span class="at">mu =</span> mu, <span class="at">sigma =</span> sg)</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>  raw_min[SS <span class="sc">==</span> <span class="dv">1</span>]  <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>  raw_max[SS <span class="sc">==</span> <span class="dv">19</span>] <span class="ot">&lt;-</span> <span class="cn">Inf</span></span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>  ss_to_raw_intervals <span class="ot">&lt;-</span> <span class="fu">rbind</span>(ss_to_raw_intervals,</span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.frame</span>(<span class="at">measure=</span><span class="st">"syllsec"</span>, <span class="at">age_grid=</span>a, <span class="at">ss_1_19=</span>SS, <span class="at">raw_min=</span>raw_min, <span class="at">raw_max=</span>raw_max))</span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># --- lessdec: inversione discreta ---</span></span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>  tab <span class="ot">&lt;-</span> raw_to_norm[raw_to_norm<span class="sc">$</span>measure<span class="sc">==</span><span class="st">"lessdec"</span> <span class="sc">&amp;</span> raw_to_norm<span class="sc">$</span>age_grid<span class="sc">==</span>a, ]</span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>  ss_by_raw <span class="ot">&lt;-</span> <span class="fu">cummax</span>(tab<span class="sc">$</span>ss_1_19)  <span class="co"># guardrail monotonia</span></span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>  rmin <span class="ot">&lt;-</span> rmax <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">19</span>)</span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (s <span class="cf">in</span> SS) {</span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a>    idx <span class="ot">&lt;-</span> <span class="fu">which</span>(ss_by_raw <span class="sc">==</span> s)</span>
+<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">length</span>(idx) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a>      rmin[s] <span class="ot">&lt;-</span> <span class="fu">min</span>(tab<span class="sc">$</span>raw[idx])</span>
+<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a>      rmax[s] <span class="ot">&lt;-</span> <span class="fu">max</span>(tab<span class="sc">$</span>raw[idx])</span>
+<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb36-34"><a href="#cb36-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a>  ss_to_raw_intervals <span class="ot">&lt;-</span> <span class="fu">rbind</span>(ss_to_raw_intervals,</span>
+<span id="cb36-36"><a href="#cb36-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.frame</span>(<span class="at">measure=</span><span class="st">"lessdec"</span>, <span class="at">age_grid=</span>a, <span class="at">ss_1_19=</span>SS, <span class="at">raw_min=</span>rmin, <span class="at">raw_max=</span>rmax))</span>
+<span id="cb36-37"><a href="#cb36-37" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb36-38"><a href="#cb36-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-39"><a href="#cb36-39" aria-hidden="true" tabindex="-1"></a><span class="co"># write.csv(ss_to_raw_intervals, "ss_to_raw_intervals.csv", row.names = FALSE)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Mostriamo un estratto per età 9, che è quello che tipicamente si mette in appendice o si distribuisce come CSV.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>age_show <span class="ot">&lt;-</span> <span class="fl">9.00</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>sub <span class="ot">&lt;-</span> ss_to_raw_intervals[ss_to_raw_intervals<span class="sc">$</span>age_grid<span class="sc">==</span>age_show, ]</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>sub <span class="ot">&lt;-</span> sub[<span class="fu">order</span>(sub<span class="sc">$</span>measure, sub<span class="sc">$</span>ss_1_19), ]</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(sub, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> measure age_grid ss_1_19   raw_min   raw_max
+ lessdec        9       1  0.000000  8.000000
+ lessdec        9       2  9.000000 11.000000
+ lessdec        9       3 12.000000 14.000000
+ lessdec        9       4 15.000000 17.000000
+ lessdec        9       5 18.000000 20.000000
+ lessdec        9       6 21.000000 24.000000
+ lessdec        9       7 25.000000 27.000000
+ lessdec        9       8 28.000000 31.000000
+ lessdec        9       9 32.000000 35.000000
+ lessdec        9      10 36.000000 38.000000
+ lessdec        9      11 39.000000 42.000000
+ lessdec        9      12 43.000000 45.000000
+ lessdec        9      13 46.000000 48.000000
+ lessdec        9      14 49.000000 50.000000
+ lessdec        9      15 51.000000 53.000000
+ lessdec        9      16 54.000000 55.000000
+ lessdec        9      17 56.000000 56.000000
+ lessdec        9      18 57.000000 57.000000
+ lessdec        9      19 58.000000 60.000000
+ syllsec        9       1  0.000000  1.014483
+ syllsec        9       2  1.014483  1.129904
+ syllsec        9       3  1.129904  1.258456
+ syllsec        9       4  1.258456  1.401634
+ syllsec        9       5  1.401634  1.561102
+ syllsec        9       6  1.561102  1.738713
+ syllsec        9       7  1.738713  1.936531
+ syllsec        9       8  1.936531  2.156855
+ syllsec        9       9  2.156855  2.402246
+ syllsec        9      10  2.402246  2.675556
+ syllsec        9      11  2.675556  2.979961
+ syllsec        9      12  2.979961  3.318999
+ syllsec        9      13  3.318999  3.696611
+ syllsec        9      14  3.696611  4.117184
+ syllsec        9      15  4.117184  4.585607
+ syllsec        9      16  4.585607  5.107324
+ syllsec        9      17  5.107324  5.688398
+ syllsec        9      18  5.688398  6.335582
+ syllsec        9      19  6.335582       Inf</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="quantili-per-età-loggetto-continuous-norming-p10-p50-p90" class="level2">
+<h2 class="anchored" data-anchor-id="quantili-per-età-loggetto-continuous-norming-p10-p50-p90">8) Quantili per età: l’oggetto “continuous norming” (p10, p50, p90)</h2>
+<p>Questi grafici rendono esplicita l’idea: la distribuzione condizionata cambia con l’età, senza spezzare in fasce.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Grafici: curve di quantili per età (folded)</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>probs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.10</span>, <span class="fl">0.50</span>, <span class="fl">0.90</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co"># syllsec: quantili lognormali</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>Q_syll <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (a <span class="cf">in</span> age_grid) {</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  pA <span class="ot">&lt;-</span> <span class="fu">predictAll</span>(fit_syll, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">age =</span> a))</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(pA<span class="sc">$</span>mu); sg <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(pA<span class="sc">$</span>sigma)</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  q  <span class="ot">&lt;-</span> <span class="fu">qLOGNO</span>(probs, <span class="at">mu =</span> mu, <span class="at">sigma =</span> sg)</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>  Q_syll <span class="ot">&lt;-</span> <span class="fu">rbind</span>(Q_syll, <span class="fu">data.frame</span>(<span class="at">age =</span> a, <span class="at">prob =</span> probs, <span class="at">q =</span> q))</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Q_syll, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> q, <span class="at">group =</span> prob)) <span class="sc">+</span></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">6</span>, <span class="dv">13</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"syllsec: quantili condizionati (p10, p50, p90)"</span>,</span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"età"</span>, <span class="at">y =</span> <span class="st">"syllsec"</span>)</span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p1)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Grafici: curve di quantili per età (folded)</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># lessdec: quantili beta-binomiale</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>Q_less <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (a <span class="cf">in</span> age_grid) {</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  pA <span class="ot">&lt;-</span> <span class="fu">predictAll</span>(fit_less, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">age =</span> a))</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(pA<span class="sc">$</span>mu); sg <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(pA<span class="sc">$</span>sigma)</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  q  <span class="ot">&lt;-</span> <span class="fu">qBB</span>(probs, <span class="at">mu =</span> mu, <span class="at">sigma =</span> sg, <span class="at">bd =</span> k)</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  Q_less <span class="ot">&lt;-</span> <span class="fu">rbind</span>(Q_less, <span class="fu">data.frame</span>(<span class="at">age =</span> a, <span class="at">prob =</span> probs, <span class="at">q =</span> q))</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Q_less, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> q, <span class="at">group =</span> prob)) <span class="sc">+</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">6</span>, <span class="dv">13</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"lessdec: quantili condizionati (p10, p50, p90)"</span>,</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"età"</span>, <span class="at">y =</span> <span class="st">"lessdec (0..60)"</span>)</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p2)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="downstream-scoring-di-un-caso-individuale-passo-per-passo-senza-funzioni" class="level2">
+<h2 class="anchored" data-anchor-id="downstream-scoring-di-un-caso-individuale-passo-per-passo-senza-funzioni">9) Downstream: scoring di un caso individuale, passo per passo (senza funzioni)</h2>
+<p>Scoring da tabella significa: dato (età, raw), ottenere z e SS.<br>
+Se l’età non è in griglia, interpoliamo in z tra le due età adiacenti.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># scelgo un caso vicino a 9.30 anni (riproducibile, nessun seed necessario)</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>i0 <span class="ot">&lt;-</span> <span class="fu">which.min</span>(<span class="fu">abs</span>(dat<span class="sc">$</span>age <span class="sc">-</span> <span class="fl">9.30</span>))</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>id0 <span class="ot">&lt;-</span> dat<span class="sc">$</span>id[i0]</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>age0 <span class="ot">&lt;-</span> dat<span class="sc">$</span>age[i0]</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>raw_syll <span class="ot">&lt;-</span> dat<span class="sc">$</span>syllsec[i0]</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>raw_less <span class="ot">&lt;-</span> dat<span class="sc">$</span>lessdec[i0]</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Caso:"</span>, id0, <span class="st">"età:"</span>, age0, <span class="st">"syllsec:"</span>, raw_syll, <span class="st">"lessdec:"</span>, raw_less, <span class="st">"</span><span class="sc">\n\n</span><span class="st">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Caso: 360 età: 9.3 syllsec: 1.61 lessdec: 36 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># età adiacenti in griglia</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>a0 <span class="ot">&lt;-</span> <span class="fu">max</span>(age_grid[age_grid <span class="sc">&lt;=</span> age0])</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>a1 <span class="ot">&lt;-</span> <span class="fu">min</span>(age_grid[age_grid <span class="sc">&gt;=</span> age0])</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>w  <span class="ot">&lt;-</span> <span class="cf">if</span> (a0 <span class="sc">==</span> a1) <span class="dv">0</span> <span class="cf">else</span> (age0 <span class="sc">-</span> a0)<span class="sc">/</span>(a1 <span class="sc">-</span> a0)</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="co"># --- syllsec: z da tabella via interpolazione sul raw, poi interpolazione sull’età ---</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>tab0 <span class="ot">&lt;-</span> raw_to_norm[raw_to_norm<span class="sc">$</span>measure<span class="sc">==</span><span class="st">"syllsec"</span> <span class="sc">&amp;</span> raw_to_norm<span class="sc">$</span>age_grid<span class="sc">==</span>a0, ]</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>tab1 <span class="ot">&lt;-</span> raw_to_norm[raw_to_norm<span class="sc">$</span>measure<span class="sc">==</span><span class="st">"syllsec"</span> <span class="sc">&amp;</span> raw_to_norm<span class="sc">$</span>age_grid<span class="sc">==</span>a1, ]</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>z0 <span class="ot">&lt;-</span> <span class="fu">approx</span>(tab0<span class="sc">$</span>raw, tab0<span class="sc">$</span>z, <span class="at">xout =</span> raw_syll, <span class="at">rule =</span> <span class="dv">2</span>)<span class="sc">$</span>y</span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>z1 <span class="ot">&lt;-</span> <span class="fu">approx</span>(tab1<span class="sc">$</span>raw, tab1<span class="sc">$</span>z, <span class="at">xout =</span> raw_syll, <span class="at">rule =</span> <span class="dv">2</span>)<span class="sc">$</span>y</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>z_syll <span class="ot">&lt;-</span> z0 <span class="sc">+</span> (z1 <span class="sc">-</span> z0) <span class="sc">*</span> w</span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>p_syll <span class="ot">&lt;-</span> <span class="fu">clamp_prob</span>(<span class="fu">pnorm</span>(z_syll))</span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>ss_syll <span class="ot">&lt;-</span> <span class="fu">ss19</span>(z_syll)</span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a><span class="co"># --- lessdec: z da tabella via lookup sul raw discreto, poi interpolazione sull’età ---</span></span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>tab0 <span class="ot">&lt;-</span> raw_to_norm[raw_to_norm<span class="sc">$</span>measure<span class="sc">==</span><span class="st">"lessdec"</span> <span class="sc">&amp;</span> raw_to_norm<span class="sc">$</span>age_grid<span class="sc">==</span>a0, ]</span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a>tab1 <span class="ot">&lt;-</span> raw_to_norm[raw_to_norm<span class="sc">$</span>measure<span class="sc">==</span><span class="st">"lessdec"</span> <span class="sc">&amp;</span> raw_to_norm<span class="sc">$</span>age_grid<span class="sc">==</span>a1, ]</span>
+<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a>z0 <span class="ot">&lt;-</span> tab0<span class="sc">$</span>z[tab0<span class="sc">$</span>raw <span class="sc">==</span> raw_less]</span>
+<span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a>z1 <span class="ot">&lt;-</span> tab1<span class="sc">$</span>z[tab1<span class="sc">$</span>raw <span class="sc">==</span> raw_less]</span>
+<span id="cb43-23"><a href="#cb43-23" aria-hidden="true" tabindex="-1"></a>z_less <span class="ot">&lt;-</span> z0 <span class="sc">+</span> (z1 <span class="sc">-</span> z0) <span class="sc">*</span> w</span>
+<span id="cb43-24"><a href="#cb43-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-25"><a href="#cb43-25" aria-hidden="true" tabindex="-1"></a>p_less <span class="ot">&lt;-</span> <span class="fu">clamp_prob</span>(<span class="fu">pnorm</span>(z_less))</span>
+<span id="cb43-26"><a href="#cb43-26" aria-hidden="true" tabindex="-1"></a>ss_less <span class="ot">&lt;-</span> <span class="fu">ss19</span>(z_less)</span>
+<span id="cb43-27"><a href="#cb43-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-28"><a href="#cb43-28" aria-hidden="true" tabindex="-1"></a><span class="co"># tabella risultato individuo</span></span>
+<span id="cb43-29"><a href="#cb43-29" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb43-30"><a href="#cb43-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> id0,</span>
+<span id="cb43-31"><a href="#cb43-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> age0,</span>
+<span id="cb43-32"><a href="#cb43-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">measure =</span> <span class="fu">c</span>(<span class="st">"syllsec"</span>,<span class="st">"lessdec"</span>),</span>
+<span id="cb43-33"><a href="#cb43-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">raw =</span> <span class="fu">c</span>(raw_syll, raw_less),</span>
+<span id="cb43-34"><a href="#cb43-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">percentile =</span> <span class="fu">c</span>(<span class="dv">100</span><span class="sc">*</span>p_syll, <span class="dv">100</span><span class="sc">*</span>p_less),</span>
+<span id="cb43-35"><a href="#cb43-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">z =</span> <span class="fu">c</span>(z_syll, z_less),</span>
+<span id="cb43-36"><a href="#cb43-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">ss_1_19 =</span> <span class="fu">c</span>(ss_syll, ss_less)</span>
+<span id="cb43-37"><a href="#cb43-37" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb43-38"><a href="#cb43-38" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  id age measure   raw percentile          z ss_1_19
+ 360 9.3 syllsec  1.61   5.966636 -1.5575805       5
+ 360 9.3 lessdec 36.00  43.226593 -0.1706082       9</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># composito: media degli z, poi standard score 100/15 (tipo QI)</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>z_comp <span class="ot">&lt;-</span> <span class="fu">mean</span>(out<span class="sc">$</span>z)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>SS_100_15 <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="dv">100</span> <span class="sc">+</span> <span class="dv">15</span><span class="sc">*</span>z_comp)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Composite:</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Composite:</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">data.frame</span>(<span class="at">id=</span>id0, <span class="at">age=</span>age0, <span class="at">z_comp=</span>z_comp, <span class="at">SS_100_15=</span>SS_100_15), <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  id age     z_comp SS_100_15
+ 360 9.3 -0.8640943        87</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="take-home-operativo" class="level2">
+<h2 class="anchored" data-anchor-id="take-home-operativo">Take-home (operativo)</h2>
+<ul>
+<li>I grezzi possono essere non gaussiani, e va bene, il punto è modellare una distribuzione condizionata plausibile e poi standardizzare in modo interpretabile.</li>
+<li>Il continuous norming evita “fasce di età” e riduce instabilità sulle code.</li>
+<li>Distribuire tabelle (CSV) invece del modello rende lo scoring auditabile e stabile.</li>
+<li>Una volta ottenuti z e SS coerenti, l’aggregazione diventa naturale, invece di contare cutoff indipendenti.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiato!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiato!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

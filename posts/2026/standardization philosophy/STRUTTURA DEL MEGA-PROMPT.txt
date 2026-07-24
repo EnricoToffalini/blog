@@ -1,0 +1,170 @@
+STRUTTURA DEL “MEGA-PROMPT” (machine-to-machine) PER CONTINUOUS NORMING E STANDARDIZZAZIONE
+Versione: outline esteso, da sviluppare in prompt successivi
+Obiettivo: guidare un’altra AI a condurre un umano dalla richiesta vaga alla produzione di:
+- modello upstream (con alternative motivate),
+- tabelle downstream (auditabili, versionate),
+- scoring deterministico,
+- QA + report,
+- documentazione “Scoring Spec”.
+
+0) FRONTMATTER E CONTRATTO OPERATIVO
+0.1 Ruolo dell’AI: “Norming Engineer + QA lead + documentation writer”
+0.2 Deliverable finali (obbligatori) e criteri di accettazione (release checklist)
+0.3 Confini: norming ≠ validità, norming ≠ taratura clinica, norming ≠ fairness automation
+0.4 Regole di stile: fail-loud, scelte esplicite, niente magia, preferire tabelle
+0.5 Privacy e governance: dati sensibili, versionamento, tracciabilità, riproducibilità
+
+1) INTERVISTA STRUTTURATA ALL’UMANO (RACCOLTA REQUISITI)
+1.1 Contesto d’uso e decisioni
+- scopo (screening, ricerca, clinica), unità di reporting, stakes
+1.2 Definizione costrutto e direzione
+- “più alto = meglio”, inversioni, interpretazione
+1.3 Definizione confondenti
+- età (anni/mesi), classe, sesso, lingua, SES, centro, modalità test, cohort
+- range di validità, policy su extrapolazione (di default proibita)
+1.4 Definizione misure
+- subtest, indici, totale, tempi, accuratezza, errori, compositi
+- range teorici, discreto/continuo, boundedness, unità, regole di missingness
+1.5 Dati disponibili
+- N, copertura per età, disegno campionario, pesi, cluster, quality flags
+- item-level sì/no, form multiple, adaptive rules
+1.6 Vincoli di delivery
+- tabelle per clinici? API? pacchetto R? Excel? stampabili?
+- granularità età (mesi, trimestri, anni), formato punteggi (10/3, 100/15)
+Output della fase: “Spec grezza” in forma di tabella metadata + checklist.
+
+2) PRE-FLIGHT DATA AUDIT (PRIMA DI MODELLARE)
+2.1 Sanity checks automatici (con stop espliciti)
+- range, unità, duplicati, NA patterns, outlier impossibili, age implausible
+2.2 Distribuzioni e diagnostica minima
+- istogrammi/ECDF per età, floor/ceiling, spike, discreteness
+2.3 Identificazione “failure modes” tipici
+- età mis-codificata, punteggi invertiti, tempo in ms, task non somministrato
+2.4 Decisione su trattamento outlier e missingness (documentata)
+Output: report QA preliminare + dataset pulito (o regole di esclusione).
+
+3) SCELTE DI MODELLO UPSTREAM (DECISION GUIDE + ALTERNATIVE)
+3.1 Modello concettuale
+- distribuzione condizionata a confondente: location, scale, shape (code)
+3.2 Scelte per tipo di punteggio (decision tree)
+- conteggi bounded (BB), conteggi unbounded (NB), continui skew (Gamma/Lognormal),
+  quasi-Gauss (Normal), zero-inflation, hurdle
+3.3 Continuous norming: quantili vs parametri
+- approccio quantile regression vs GAMLSS (pro/contro, stabilità, interpretabilità)
+3.4 Smoothing su età
+- splines, monotone constraints, griglie, penalizzazione, overfitting
+3.5 Gestione discreto/bounded
+- mid-P, jittering (solo diagnostico), tie handling, granularity del raw_grid
+3.6 Strategia per code
+- clamp esplicito, shrinkage, winsorization (solo se giustificata), robust families
+3.7 Invarianza e comparabilità (quando serve)
+- invariance item-level (lavaan/cfa) come upstream “facoltativo ma utile”
+- quando non farla (scopo solo norming descrittivo)
+Output: scelta motivata + “piano B” se la scelta fallisce.
+
+4) MODULO LAVAAN (OPZIONALE) PER STRUTTURA E COMPOSITI
+4.1 Quando usare CFA/SEM prima del norming
+- per indici fattoriali, per pesi, per controllare cluster/wording
+4.2 Invarianza rispetto a età o gruppi (solo quel che serve)
+- configural/metric/scalar, criteri pratici
+4.3 Derivazione punteggi latenti o fattoriali (se richiesti)
+- pro/contro vs somma grezza, auditabilità, stabilità
+4.4 Output per downstream norming
+- “score grezzo composito” deterministico o “factor score” (con warning su audit)
+Output: specifica composito e, se necessario, tabella raw→composito.
+
+5) IMPLEMENTAZIONE UPSTREAM IN R (PASSO-PASSO, MINIMO MA COMPLETO)
+5.1 Setup progetto
+- seed, sessionInfo, pacchetti, struttura cartelle (data/, R/, out/, QA/)
+5.2 Ingest e cleaning
+- import, coerzioni, validazioni, filtri, logging
+5.3 Fit per ciascuna misura
+- skeleton GAMLSS (formula per mu/sigma/nu/tau), scelta family, diagnosi residui
+- fallback: modello più semplice se non converge
+5.4 Predizione su griglia
+- age_grid, raw_grid, funzioni CDF/quantile, calcolo percentili (per clinica sono particolarmente rilevanti: il 5 per cutoff critico, il 15 per richiesta attenzione, il 50 per tendenza centrale, il 75 per livello ottimale) 
+5.5 Politiche di convergenza e stabilità
+- retry con parametri diversi, riduzione complessità, freeze del fit
+Output: oggetti di fit salvati internamente + log decisioni.
+
+6) GENERAZIONE TABELLE DI CONVERSIONE (DOWNSTREAM ARTIFACTS)
+6.1 Tabella raw_to_norm (schema fisso)
+- columns: measure, age_ref, raw, P_mid/P, percentile, z_raw, z_aligned, scaled_10_3 (da 1 a 19) e/o SS_100_15, tipo batterie intelligenza), band_id, flags
+6.2 Clamp e protezioni numeriche
+- epsilon, limiti z, gestione NA, gestione età fuori range
+6.3 Monotonicità
+- test + enforcement (cummax) solo con log delle correzioni
+6.4 Interpolazione dichiarata
+- età non in griglia: linear su z_aligned, o spline monotone in delivery
+- raw continui: interpolazione monotona (p.es. approx rule=2), documentata
+6.5 Tabelle inverse
+- scaled_to_raw_intervals, percentile_to_raw, z_to_raw (se richiesto)
+6.6 Versionamento e checksum
+- tag versione norme, hash dei CSV, data di generazione
+Output: CSV finali pronti per consegna.
+
+7) SCORING DOWNSTREAM (DETERMINISTICO, DA TABELLE)
+7.1 Regole di input
+- validazione, clamping/stop, gestione missing
+7.2 Algoritmo di scoring (step-by-step, no funzioni “magiche”)
+- lookup, interpolazione, output
+7.3 Esempi minimi
+- 3 casi: età in griglia, età fuori griglia ma in range, raw fuori range (stop)
+7.4 Export per utenti finali
+- template Excel o CSV, istruzioni operative
+Output: script “score_new_cases.R” + esempio file.
+
+8) QA E DIAGNOSTICA (RELEASE BLOCKERS)
+8.1 Coverage
+- tutte le età, tutti i raw possibili per discreti, nessun buco inatteso
+8.2 Monotonicità
+- per measure×age, per scaled×age
+8.3 Sensibilità e smoothness
+- curve quantili vs età, check discontinuità
+8.4 Code e implausibilità
+- percentili estremi, scaled saturati, z troppo spesso oltre ±3
+8.5 Cross-validation leggera (se N consente)
+- stability delle conversioni per bootstrap o split grossolano
+8.6 Audit umano
+- 2–3 casi calcolati “a mano” da tabella, confronto con script
+Output: QA report + elenco issues e come risolte.
+
+9) GUIDA ALLE SCELTE, GIUSTIFICAZIONE ALTERNATIVE (SEZIONE “RATIONALE”)
+9.1 Perché GAMLSS qui, e quando no
+9.2 Alternative pratiche
+- binning età + quantili empirici, quantile regression, LMS, trasformazioni + normal
+9.3 Trade-off espliciti
+- bias/varianza, stabilità vs granularità, interpretabilità vs complessità
+9.4 Pattern di fallimento e rimedi
+- non convergenza, eccesso smoothing, spike, dati scarsi in code
+Output: “Decision log” riutilizzabile.
+
+10) ESTENSIONI (MODULARI, SOLO SE RICHIESTE)
+10.1 Più confondenti
+- additive vs interazioni, rischio sparse cells, regularization
+10.2 Norme per sottogruppi
+- quando ha senso, quando è pericoloso
+10.3 Compositi e profili
+- profili intra-individuali, ipsative issues, reporting
+10.4 Linking/equating tra forme
+- anchor items, equipercentile, IRT linking (solo overview operativa)
+10.5 Fairness e bias
+- come fare audit, cosa NON promettere
+Output: appendici opzionali.
+
+11) DOCUMENTAZIONE FINALE “SCORING SPEC” (CON TRACCIABILITÀ)
+11.1 Schede misura (metadata)
+11.2 Regole scoring (input, interpolazione, clamp, monotonicità)
+11.3 Dominio di validità e limitazioni
+11.4 Versioning, changelog, compatibilità retro
+11.5 Esempi e FAQ (clinici/ricercatori)
+Output: documento consegnabile + riferimenti ai CSV.
+
+12) TEMPLATE DI OUTPUT OBBLIGATI PER L’ALTRA AI
+12.1 “Spec Table” da compilare (righe=misure, colonne=tipo/range/unità/direzione/etc.)
+12.2 “Decision Log” (scelta, alternativa, motivazione, rischi, mitigazione)
+12.3 “QA Checklist” (pass/fail + note)
+12.4 “File Manifest” (cosa consegnato, dove, versione, checksum)
+Questa sezione serve a impedire risposte vaghe: l’AI deve restituire sempre questi blocchi.
+
+FINE OUTLINE.
