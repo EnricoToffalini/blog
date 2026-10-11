@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Enrico Toffalini">
+
+<title>Guida rapida a Claude Code – blog</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-dfb324f25d9b1687192fa8be62ac8f9c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+<link rel="shortcut icon" href="favicon.ico"> 
+<script data-goatcounter="https://toffeeblog.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">blog</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Ricerca"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Attiva/disattiva la navigazione" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://enricotoffalini.github.io" target="_blank"> 
+<span class="menu-text">enricotoffalini.github.io</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://psicostat.dpss.psy.unipd.it/"> 
+<span class="menu-text"><img src="../../images/faviconpsicostat2.png" style="height: 22px; margin-top: -4px;"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/EnricoToffalini"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Guida rapida a Claude Code</h1>
+            <p class="subtitle lead">Parte di: Agenti AI da terminale</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Autore/Autrice</div>
+      <div class="quarto-title-meta-contents">
+               <p>Enrico Toffalini </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Data di Pubblicazione</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">11 ottobre 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>← <a href="index.html">Torna alla parte generale</a> · Vai alla <a href="codex.html">guida a Codex</a></p>
+<p>Questa guida mostra i primi passi con <a href="https://code.claude.com/docs" target="_blank">Claude Code</a> su <strong>Windows</strong> (versione usata: 2.1.296, ottobre 2026). Su macOS e Linux i passaggi sono quasi identici: cambia solo il comando di installazione. Le schermate vengono da una sessione reale, in una cartella di prova con un piccolo dataset simulato.</p>
+<section id="obiettivi-della-guida" class="level3">
+<h3 class="anchored" data-anchor-id="obiettivi-della-guida">Obiettivi della guida</h3>
+<ul>
+<li>Installare Claude Code e fare il login.</li>
+<li>Dare la prima richiesta su un progetto.</li>
+<li>Scegliere modello ed <em>effort</em>.</li>
+<li>Controllare i limiti di utilizzo residui.</li>
+<li>Capire le modalità di lavoro: <em>auto</em>, <em>manual</em>, <em>accept edits</em>, <em>plan</em>.</li>
+</ul>
+</section>
+<section id="requisiti" class="level2">
+<h2 class="anchored" data-anchor-id="requisiti">Requisiti</h2>
+<ul>
+<li>Un account Claude con piano <strong>Pro</strong>, <strong>Max</strong>, <strong>Team</strong> o <strong>Enterprise</strong>. Il piano gratuito <strong>non</strong> include Claude Code (vedi la <a href="index.html">parte generale</a> sui costi).</li>
+<li>Windows 10/11, macOS 13+ o una distribuzione Linux recente.</li>
+<li>Consigliato su Windows: <a href="https://git-scm.com/" target="_blank">Git for Windows</a> (installazione descritta nel <a href="https://enricotoffalini.github.io/blog/posts/tutorial-git-quarto/" target="_blank">tutorial su Git</a>). Non è obbligatorio, ma Claude Code lavora meglio e potete versionare tutto.</li>
+</ul>
+</section>
+<section id="installazione" class="level2">
+<h2 class="anchored" data-anchor-id="installazione">Installazione</h2>
+<p>Aprite <strong>Windows PowerShell</strong> (cercatelo tra le applicazioni, oppure tasto destro su una cartella → <em>Apri nel terminale</em>) e incollate:</p>
+<p><code>irm https://claude.ai/install.ps1 | iex</code></p>
+<p>Su <strong>macOS / Linux</strong>, nel terminale:</p>
+<p><code>curl -fsSL https://claude.ai/install.sh | bash</code></p>
+<p>L’installazione non mostra una barra di avanzamento: aspettate che finisca. Poi <strong>chiudete e riaprite</strong> il terminale e verificate:</p>
+<p><code>claude --version</code></p>
+<p>Se compare un numero di versione, è tutto a posto. Se il comando non viene riconosciuto, il comando <code>claude doctor</code> e la <a href="https://code.claude.com/docs/en/troubleshoot-install" target="_blank">pagina di troubleshooting</a> aiutano a capire il problema. Le installazioni fatte in questo modo si aggiornano da sole.</p>
+</section>
+<section id="primo-avvio" class="level2">
+<h2 class="anchored" data-anchor-id="primo-avvio">Primo avvio</h2>
+<p>Andate nella cartella del progetto su cui volete lavorare, aprite lì il terminale e scrivete:</p>
+<p><code>claude</code></p>
+<p>La prima volta si apre il browser per il <strong>login</strong> con il vostro account Claude. Fatto il login, vedrete una schermata simile a questa:</p>
+<figure class="figure">
+<img src="images/claude-01-avvio.png" alt="avvio di Claude Code" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
+<figcaption>
+Claude Code appena avviato: in alto versione, modello, effort, piano e cartella di lavoro; in basso la riga dove scrivere e la modalità attiva
+</figcaption>
+</figure>
+<p>In alto trovate le informazioni principali: <strong>modello</strong> (qui Opus 5.5), <strong>effort</strong> (<em>medium</em>), <strong>piano</strong> (Pro) e <strong>cartella</strong> di lavoro. Claude Code lavora su quella cartella e sulle sue sottocartelle: è importante lanciarlo nel posto giusto.</p>
+</section>
+<section id="la-prima-richiesta" class="level2">
+<h2 class="anchored" data-anchor-id="la-prima-richiesta">La prima richiesta</h2>
+<p>Si scrive in linguaggio naturale, in italiano, come in chat. La cartella di prova contiene solo un file <code>dati_esame.csv</code>. La richiesta:</p>
+<blockquote class="blockquote">
+<p><em>In questa cartella c’è dati_esame.csv. Dai un’occhiata ai dati, poi scrivi uno script R chiamato analisi.R che stima una regressione del voto su ore_studio, ansia e gruppo, eseguilo e spiegami i risultati in poche righe.</em></p>
+</blockquote>
+<figure class="figure">
+<img src="images/claude-02-analisi.png" alt="Claude Code esegue l'analisi" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
+<figcaption>
+Claude Code ha esplorato i dati, scritto <code>analisi.R</code>, lo ha eseguito con Rscript e ha riassunto i risultati
+</figcaption>
+</figure>
+<p>In 23 secondi Claude Code ha letto il CSV, controllato i valori mancanti e un caso estremo, scritto lo script, lo ha eseguito e ha riassunto i risultati. Ha anche segnalato un limite non richiesto: con voti compresi tra 18 e 30, vicino al tetto la regressione lineare può sottostimare gli effetti. Lo script <code>analisi.R</code> ora esiste nella cartella e potete aprirlo in RStudio come qualsiasi altro script.</p>
+<p>Si può continuare la conversazione: ogni nuova richiesta parte da tutto quello che è già successo nella sessione. Per <strong>interrompere</strong> l’agente mentre lavora si preme <code>Esc</code>.</p>
+</section>
+<section id="scegliere-modello-ed-effort" class="level2">
+<h2 class="anchored" data-anchor-id="scegliere-modello-ed-effort">Scegliere modello ed effort</h2>
+<p>Il comando <code>/model</code> apre il selettore dei modelli:</p>
+<figure class="figure">
+<img src="images/claude-03-model.png" alt="comando /model" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
+<figcaption>
+Il selettore dei modelli: con le frecce su/giù si sceglie il modello, con le frecce sinistra/destra il livello di effort
+</figcaption>
+</figure>
+<p>In breve:</p>
+<ul>
+<li><strong>Opus</strong>: il default, adatto alla maggior parte del lavoro, anche complesso.</li>
+<li><strong>Sonnet</strong>: più economico, va bene per compiti semplici e consuma meno i limiti.</li>
+<li><strong>Fable</strong>: il più potente, per i problemi più difficili, ma consuma i limiti più in fretta.</li>
+<li><strong>Haiku</strong>: molto veloce, per domande rapide.</li>
+</ul>
+<p>L’<strong>effort</strong> regola quanto il modello ragiona prima di agire: <code>low</code>, <code>medium</code>, <code>high</code>, <code>xhigh</code>, <code>max</code>. Più effort significa risposte più accurate su problemi difficili, ma più lente e più costose in termini di limiti. Si cambia con le frecce sinistra/destra nel selettore, oppure direttamente:</p>
+<p><code>/effort high</code></p>
+<p>Il modello scelto con <code>Invio</code> diventa il default per le sessioni successive; premendo <code>s</code> vale solo per la sessione corrente. Si possono anche impostare all’avvio:</p>
+<p><code>claude --model sonnet --effort low</code></p>
+<p>Un consiglio pratico: partite con il default (Opus, effort medio). Alzate l’effort quando un compito è difficile o l’agente sbaglia. Usate Sonnet per lavori ripetitivi e semplici.</p>
+</section>
+<section id="controllare-lutilizzo-residuo" class="level2">
+<h2 class="anchored" data-anchor-id="controllare-lutilizzo-residuo">Controllare l’utilizzo residuo</h2>
+<p>Il comando <code>/usage</code> mostra quanto avete consumato:</p>
+<figure class="figure">
+<img src="images/claude-04-usage.png" alt="comando /usage" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
+<figcaption>
+Il pannello <code>/usage</code>: costo stimato della sessione, e soprattutto la percentuale di limite usata nella sessione corrente (finestra di 5 ore) e nella settimana
+</figcaption>
+</figure>
+<p>Le voci più importanti sono <strong>Current session</strong> (il limite sulla finestra di 5 ore) e <strong>Current week</strong> (il limite settimanale), con l’orario in cui si azzerano. Le percentuali si riferiscono a tutto l’uso del vostro account (anche da altre sessioni o da claude.ai), non solo alla conversazione aperta. Il “Total cost” in dollari è solo indicativo: con un abbonamento non pagate per singola richiesta, ma consumate i limiti del piano.</p>
+<p>Il pannello dà anche suggerimenti utili: ad esempio, le conversazioni molto lunghe costano di più. Quando cambiate argomento conviene ripartire con <code>/clear</code>; a metà di un lavoro lungo si può usare <code>/compact</code>, che riassume la conversazione e libera spazio.</p>
+</section>
+<section id="le-modalità-di-lavoro" class="level2">
+<h2 class="anchored" data-anchor-id="le-modalità-di-lavoro">Le modalità di lavoro</h2>
+<p>Con <code>Shift+Tab</code> si passa ciclicamente tra le modalità di lavoro. La modalità attiva è indicata in basso:</p>
+<figure class="figure">
+<img src="images/claude-05-modalita.png" alt="modalità di lavoro" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
+<figcaption>
+Premendo <code>Shift+Tab</code> si passa da <em>auto</em> a <em>manual</em>, <em>accept edits</em> e <em>plan</em>
+</figcaption>
+</figure>
+<ul>
+<li><strong>auto</strong> (il default nelle versioni recenti): Claude Code agisce senza chiedere, ma un secondo modello controlla in background ogni azione e blocca quelle potenzialmente pericolose. È la modalità più comoda per lavori lunghi.</li>
+<li><strong>manual</strong>: chiede il permesso prima di quasi ogni azione (modificare file, eseguire comandi, accedere alla rete). Lenta, ma è utile all’inizio per capire come lavora, o su materiale delicato.</li>
+<li><strong>accept edits</strong>: modifica i file senza chiedere, ma chiede prima di eseguire comandi.</li>
+<li><strong>plan</strong>: legge ed esplora, ma <strong>non modifica nulla</strong>. Prima propone un piano; solo se lo approvate passa all’esecuzione.</li>
+</ul>
+<p>La modalità <em>plan</em> è la più sottovalutata. Per qualsiasi compito non banale conviene chiedere prima un piano. Nell’esempio ho chiesto, in modalità <em>plan</em>:</p>
+<blockquote class="blockquote">
+<p><em>Vorrei trasformare questa analisi in un breve report Quarto in HTML, con un grafico e una tabella dei coefficienti. Prima di toccare qualsiasi file, proponimi un piano.</em></p>
+</blockquote>
+<figure class="figure">
+<img src="images/claude-06-plan.png" alt="piano proposto" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
+<figcaption>
+Il piano proposto: contesto, approccio, file da creare. In fondo si sceglie se procedere (in modalità auto o con approvazione manuale) o chiedere modifiche
+</figcaption>
+</figure>
+<p>Il piano dice esattamente cosa verrà creato e cosa resterà invariato. Prima di approvarlo, potete correggerlo (opzione 3) o modificarlo a mano (<code>Ctrl+G</code>). Approvato il piano, Claude Code ha creato <code>report.qmd</code>, lo ha renderizzato con Quarto e ha controllato il grafico prodotto:</p>
+<figure class="figure">
+<img src="images/claude-07-report.png" alt="report completato" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
+<figcaption>
+Fine del lavoro: riepilogo di cosa contiene il report e di come rigenerarlo
+</figcaption>
+</figure>
+<p>Il report finale è mostrato nella <a href="index.html#un-esempio-concreto-stesso-compito-due-agenti">parte generale</a>.</p>
+</section>
+<section id="altri-comandi-utili" class="level2">
+<h2 class="anchored" data-anchor-id="altri-comandi-utili">Altri comandi utili</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Comando</th>
+<th>A cosa serve</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>/init</code></td>
+<td>Crea un file <code>CLAUDE.md</code> con una descrizione del progetto, che Claude Code legge a ogni avvio. Potete aggiungervi convenzioni e istruzioni.</td>
+</tr>
+<tr class="even">
+<td><code>claude -c</code></td>
+<td>Riprende l’ultima conversazione in quella cartella. <code>/resume</code> permette di scegliere tra quelle passate.</td>
+</tr>
+<tr class="odd">
+<td><code>/clear</code></td>
+<td>Nuova conversazione, contesto vuoto.</td>
+</tr>
+<tr class="even">
+<td><code>/compact</code></td>
+<td>Riassume la conversazione per liberare spazio, senza perderne il filo.</td>
+</tr>
+<tr class="odd">
+<td><code>/context</code></td>
+<td>Mostra quanto spazio di contesto è occupato.</td>
+</tr>
+<tr class="even">
+<td><code>/rewind</code></td>
+<td>Torna a un punto precedente della conversazione e, se volete, anche del codice.</td>
+</tr>
+<tr class="odd">
+<td><code>/status</code></td>
+<td>Versione, modello, account.</td>
+</tr>
+<tr class="even">
+<td><code>/mcp</code>, <code>/skills</code></td>
+<td>Mostrano connettori e skill disponibili.</td>
+</tr>
+<tr class="odd">
+<td><code>!comando</code></td>
+<td>Esegue direttamente un comando del terminale (es. <code>!git status</code>).</td>
+</tr>
+<tr class="even">
+<td><code>/exit</code></td>
+<td>Chiude Claude Code.</td>
+</tr>
+</tbody>
+</table>
+<p>Digitando <code>/</code> compare l’elenco completo dei comandi.</p>
+</section>
+<section id="connettori-e-browser" class="level2">
+<h2 class="anchored" data-anchor-id="connettori-e-browser">Connettori e browser</h2>
+<p>Se sul vostro account <a href="https://claude.ai" target="_blank">claude.ai</a> avete attivato dei connettori (Gmail, Google Calendar, Google Drive, ecc.), con lo stesso login sono disponibili anche in Claude Code. Per far usare il browser all’agente serve l’estensione <a href="https://chromewebstore.google.com/detail/claude/fcoeoabgfenejglbffodgkkbkcdhcgfn" target="_blank">Claude in Chrome</a> (funziona anche con Edge). Poi si avvia Claude Code con <code>claude --chrome</code>; il comando <code>/chrome</code> mostra lo stato della connessione e permette di abilitarla di default. L’agente apre le proprie schede, ma usa i login del vostro browser: può quindi agire su qualsiasi sito in cui siete già autenticati. Per questo i permessi per ciascun sito si gestiscono dall’estensione, e conviene concederli con giudizio.</p>
+<hr>
+<p>← <a href="index.html">Torna alla parte generale</a> · Vai alla <a href="codex.html">guida a Codex</a></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiato!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiato!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

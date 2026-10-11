@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Enrico Toffalini">
+
+<title>Agents AI da terminale: Primi passi con Codex e Claude Code e come vi cambiano il lavoro (anche in ricerca) – blog</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-dfb324f25d9b1687192fa8be62ac8f9c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+<link rel="shortcut icon" href="favicon.ico"> 
+<script data-goatcounter="https://toffeeblog.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">blog</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Ricerca"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Attiva/disattiva la navigazione" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://enricotoffalini.github.io" target="_blank"> 
+<span class="menu-text">enricotoffalini.github.io</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://psicostat.dpss.psy.unipd.it/"> 
+<span class="menu-text"><img src="../../images/faviconpsicostat2.png" style="height: 22px; margin-top: -4px;"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/EnricoToffalini"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Agents AI da terminale: Primi passi con Codex e Claude Code e come vi cambiano il lavoro (anche in ricerca)</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Autore/Autrice</div>
+      <div class="quarto-title-meta-contents">
+               <p>Enrico Toffalini </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Data di Pubblicazione</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">11 ottobre 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>Chi usa l’AI solo dalla chat nel browser ne sta usando una frazione. Gli <strong>agenti da terminale</strong> (<em>command line interface</em>, CLI), come <a href="https://code.claude.com/docs" target="_blank"><strong>Claude Code</strong></a> di Anthropic e <a href="https://github.com/openai/codex" target="_blank"><strong>Codex</strong></a> di OpenAI, lavorano direttamente sui file del vostro computer: leggono una cartella di progetto, scrivono e modificano script, li eseguono, guardano gli errori, correggono, rieseguono. Non vi restituiscono un pezzo di codice da copiare e incollare: fanno il lavoro nella cartella e vi dicono cosa hanno fatto.</p>
+<p>Questo post ha tre parti:</p>
+<ul>
+<li>una parte generale su cosa cambia rispetto alla chat nel browser (questa pagina);</li>
+<li>una <a href="claude-code.html"><strong>guida passo-passo a Claude Code</strong></a>;</li>
+<li>una <a href="codex.html"><strong>guida passo-passo a Codex</strong></a>.</li>
+</ul>
+<p>Le due guide mostrano installazione, primo utilizzo, scelta del modello e dello sforzo di ragionamento (<em>effort</em>), controllo dei limiti di utilizzo e modalità di lavoro (automatica, con approvazione, <em>plan</em>). Non sono guide esaustive. Coprono le cose che servono per partire.</p>
+<figure class="figure">
+<img src="images/claude-02-analisi.png" alt="Claude Code al lavoro su un'analisi in R" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
+<figcaption>
+Claude Code ha letto un dataset, scritto ed eseguito uno script R e riassunto i risultati, in 23 secondi, da una sola richiesta in italiano
+</figcaption>
+</figure>
+<section id="cosa-cambia-rispetto-alla-chat-nel-browser" class="level2">
+<h2 class="anchored" data-anchor-id="cosa-cambia-rispetto-alla-chat-nel-browser">Cosa cambia rispetto alla chat nel browser</h2>
+<section id="lagente-lavora-sui-vostri-file-non-su-copie-incollate" class="level4">
+<h4 class="anchored" data-anchor-id="lagente-lavora-sui-vostri-file-non-su-copie-incollate">1. L’agente lavora sui vostri file, non su copie incollate</h4>
+<p>Nella chat si carica un file, si riceve una risposta, si copia il codice in RStudio, si lancia, si incolla l’errore nella chat, e così via. Con un agente da terminale questo ciclo sparisce. Lo lanciate dentro una cartella e lui vede tutto quello che c’è: dati, script, documenti Quarto, bibliografie, configurazioni. Può creare file nuovi, modificare quelli esistenti, eseguire R, Python, Quarto, Git, e qualsiasi altro programma installato.</p>
+<p>La differenza pratica è enorme quando il progetto non è un singolo script ma una <strong>repository</strong> con decine di file che dipendono l’uno dall’altro: un articolo con analisi, figure e supplementari; un sito; un pacchetto R; una app.</p>
+</section>
+<section id="il-contesto-è-ricco-e-non-va-aggiornato-a-mano" class="level4">
+<h4 class="anchored" data-anchor-id="il-contesto-è-ricco-e-non-va-aggiornato-a-mano">2. Il contesto è ricco e non va aggiornato a mano</h4>
+<p>In chat il contesto è quello che incollate voi, e va ricostruito a ogni nuova conversazione. L’agente invece ricostruisce il contesto leggendo il progetto stesso: la struttura delle cartelle, il codice, la cronologia Git, i file di istruzioni del progetto (<code>CLAUDE.md</code> per Claude Code, <code>AGENTS.md</code> per Codex), che possono contenere convenzioni, obiettivi, cose da non toccare. Se il progetto cambia, il contesto cambia con lui, senza che dobbiate ricaricare nulla.</p>
+<p>A questo si aggiungono le <strong>skill</strong>: file di istruzioni riutilizzabili su come fare certe cose (ad esempio come scrivo codice, come imposto un report, come scrivo una email). L’agente le carica quando servono. Le mie sono pubbliche <a href="https://github.com/EnricoToffalini/ai-skills" target="_blank">qui</a>. Nella demo della <a href="codex.html">guida a Codex</a> si vede Codex che, prima di proporre un report, va a leggersi da solo la mia skill sullo stile dei report scientifici.</p>
+</section>
+<section id="molto-più-controllo-sul-processo" class="level4">
+<h4 class="anchored" data-anchor-id="molto-più-controllo-sul-processo">3. Molto più controllo sul processo</h4>
+<p>Sembra un paradosso, ma l’agente che “fa da solo” dà più controllo della chat, non meno:</p>
+<ul>
+<li>vedete <strong>ogni comando</strong> che esegue e <strong>ogni modifica</strong> ai file, riga per riga;</li>
+<li>decidete il livello di autonomia: approvare ogni azione, approvare solo quelle rischiose, oppure chiedere prima un <strong>piano</strong> e solo dopo l’esecuzione;</li>
+<li>se il progetto è sotto <strong>Git</strong> (vivamente consigliato: vedi il <a href="https://enricotoffalini.github.io/blog/posts/tutorial-git-quarto/" target="_blank">tutorial su Git e GitHub</a>), ogni modifica è tracciata e reversibile;</li>
+<li>i risultati sono script e file veri, eseguibili e riproducibili, non testo in una chat.</li>
+</ul>
+</section>
+<section id="può-agire-anche-fuori-dal-computer-tramite-connettori" class="level4">
+<h4 class="anchored" data-anchor-id="può-agire-anche-fuori-dal-computer-tramite-connettori">4. Può agire anche fuori dal computer, tramite connettori</h4>
+<p>Attraverso i <strong>connettori</strong> (tecnicamente server <em>MCP</em>) e l’estensione per il browser, un agente può leggere la posta, inserire impegni nel calendario, lavorare su Google Drive, navigare siti web, compilare moduli. Questo va abilitato esplicitamente e richiede cautela, ma apre possibilità notevoli. Qualche esempio dal mio uso reale:</p>
+<ul>
+<li>far rivedere a Claude <strong>l’intera struttura di un corso Moodle</strong>, inclusi forum e quiz, segnalando problemi, incoerenze e contraddizioni tra le varie parti;</li>
+<li>farmi assistere in una pratica online, nello specifico <strong>la richiesta di assegnazione del medico di base</strong>, navigando il sito e compilando i campi per mio conto;</li>
+<li>una <a href="https://github.com/EnricoToffalini/ai-skills" target="_blank">skill</a> che legge le mail recenti e <strong>inserisce automaticamente riunioni, scadenze e impegni nel calendario giusto</strong>, secondo le mie categorie e convenzioni sui nomi, e poi mi riporta cosa ha fatto per la verifica.</li>
+</ul>
+<p>Una nota pratica: in questo momento Codex con l’account <strong>ChatGPT Edu</strong> fornito dall’ateneo non può usare il browser, perché questa funzione è disattivata per scelta dell’ateneo. Claude Code con l’estensione per Chrome invece funziona.</p>
+</section>
+<section id="soprattutto-progetti-interi-in-locale-con-molta-potenza" class="level4">
+<h4 class="anchored" data-anchor-id="soprattutto-progetti-interi-in-locale-con-molta-potenza">5. Soprattutto: progetti interi, in locale, con molta potenza</h4>
+<p>Il punto di forza principale resta però la creazione e gestione di <strong>progetti complessi</strong>. Qualche esempio di cose che ho sviluppato negli ultimi mesi lavorando con questi agenti:</p>
+<ul>
+<li><strong>progetti di ricerca</strong> con revisione della letteratura e simulazioni (es. <a href="https://enricotoffalini.github.io/Most_interactions_are_wrong/" target="_blank">Most interactions are wrong</a>; <a href="https://github.com/EnricoToffalini/Taxometrics-Neurodevelopmental-Disorders" target="_blank">Taxometrics in neurodevelopmental disorders</a>);</li>
+<li><strong>siti didattici</strong> articolati (es. <a href="https://enricotoffalini.github.io/psicologia-intelligenza/" target="_blank">Psicologia dell’intelligenza</a>);</li>
+<li><strong>app interattive</strong> (es. <a href="https://github.com/EnricoToffalini/Dimensioni-Diagnosi-App" target="_blank">un laboratorio su dimensioni continue e categorie diagnostiche</a>) e perfino un <a href="https://github.com/EnricoToffalini/mahabharata-game" target="_blank">videogioco</a> in Godot;</li>
+<li><strong>siti statici ed edizioni web</strong> di testi, con originale, traduzione e glossario (es. <a href="https://enricotoffalini.github.io/Bhagavad-Gita/" target="_blank">Bhagavad Gita</a>, <a href="https://enricotoffalini.github.io/Epitteto-Diatribe/" target="_blank">Epitteto</a>, <a href="https://enricotoffalini.github.io/Weil-Condizione-Operaia/" target="_blank">Simone Weil</a>);</li>
+<li><strong>raccolte documentali</strong> (es. <a href="https://enricotoffalini.github.io/trasparenza-dati-normativi/" target="_blank">trasparenza e dati normativi</a>).</li>
+</ul>
+<p>Molte di queste cose richiederebbero competenze di sviluppo web o software che chi fa ricerca in psicologia di solito non ha. Con un agente si possono fare, purché si sappia cosa si vuole e si controlli quello che viene prodotto.</p>
+</section>
+</section>
+<section id="un-esempio-concreto-stesso-compito-due-agenti" class="level2">
+<h2 class="anchored" data-anchor-id="un-esempio-concreto-stesso-compito-due-agenti">Un esempio concreto: stesso compito, due agenti</h2>
+<p>Per le guide ho dato a entrambi gli agenti lo stesso compito, nella stessa cartella con lo stesso dataset simulato (240 studenti, ore di studio, ansia, gruppo triennale/magistrale, voto d’esame):</p>
+<blockquote class="blockquote">
+<p><em>In questa cartella c’è dati_esame.csv. Dai un’occhiata ai dati, poi scrivi uno script R chiamato analisi.R che stima una regressione del voto su ore_studio, ansia e gruppo, eseguilo e spiegami i risultati in poche righe.</em></p>
+</blockquote>
+<p>Entrambi hanno impiegato circa 25 secondi e ottenuto gli stessi coefficienti. Poi ho chiesto, in modalità <em>plan</em>, di trasformare l’analisi in un breve report Quarto con un grafico e una tabella. Questi sono i due report prodotti, senza alcun ritocco:</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<figure class="figure">
+<img src="images/report-claude.png" alt="report di Claude Code" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
+<figcaption>
+Report prodotto da Claude Code
+</figcaption>
+</figure>
+</div><div class="column" style="width:50%;">
+<figure class="figure">
+<img src="images/report-codex.png" alt="report di Codex" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
+<figcaption>
+Report prodotto da Codex
+</figcaption>
+</figure>
+</div>
+</div>
+<p>Due dettagli istruttivi. Primo: i due agenti hanno fatto <strong>scelte diverse ma entrambe legittime</strong> (gruppo di riferimento opposto, grafico diverso, tabella con o senza coefficienti standardizzati). Claude ha anche segnalato spontaneamente un limite reale dei dati: il voto ha un tetto a 30, quindi la regressione lineare può sottostimare gli effetti. Secondo: nessuno dei due vi esonera dal <strong>leggere quello che hanno fatto</strong>. Sono strumenti molto capaci, non arbitri della correttezza.</p>
+</section>
+<section id="cose-da-sapere-prima-di-cominciare" class="level2">
+<h2 class="anchored" data-anchor-id="cose-da-sapere-prima-di-cominciare">Cose da sapere prima di cominciare</h2>
+<section id="bisogna-investire-qualcosa" class="level4">
+<h4 class="anchored" data-anchor-id="bisogna-investire-qualcosa">Bisogna investire qualcosa</h4>
+<p>Siamo onesti: <strong>servono piani a pagamento</strong>. I piani gratuiti non includono Claude Code, e per Codex offrono al massimo un assaggio molto limitato. I listini sono in dollari e <strong>IVA esclusa</strong>: in Italia all’importo si aggiunge l’IVA al 22%. Indicativamente, a ottobre 2026:</p>
+<ul>
+<li><strong>Claude Code</strong>: richiede almeno il piano <strong>Pro</strong>, che in Italia costa di fatto circa <strong>22 € al mese</strong> IVA inclusa (un po’ meno con pagamento annuale). Per un uso intenso servono i piani <strong>Max</strong>, che partono da 100 $ al mese più IVA, quindi oltre 100 € al mese.</li>
+<li><strong>Codex</strong>: è incluso nei piani ChatGPT <strong>Plus</strong> (20 $ al mese più IVA, quindi anche qui poco più di 20 € al mese), <strong>Pro</strong>, <strong>Business</strong>, <strong>Edu</strong> ed <strong>Enterprise</strong>.</li>
+</ul>
+<p>I prezzi cambiano spesso; verificate sulle pagine ufficiali (<a href="https://claude.com/pricing" target="_blank">Claude</a>, <a href="https://chatgpt.com/pricing" target="_blank">ChatGPT</a>). Con i piani base i <strong>limiti di utilizzo</strong> (calcolati su finestre di 5 ore e su base settimanale) si raggiungono abbastanza in fretta se si lavora su progetti grandi o con i modelli più potenti. Nelle guide mostro come controllarli.</p>
+<p>Se la vostra <strong>università fornisce già un piano</strong> (ad esempio ChatGPT Edu), tanto meglio: partite da quello. Se dovete pagare di tasca vostra, poco più di 20 euro al mese sono una spesa che, per come la vedo io, si ripaga rapidamente in tempo risparmiato.</p>
+</section>
+<section id="il-terminale-non-deve-spaventare" class="level4">
+<h4 class="anchored" data-anchor-id="il-terminale-non-deve-spaventare">Il terminale non deve spaventare</h4>
+<p>Il terminale sembra ostile, ma qui serve pochissimo: aprirlo nella cartella giusta (tasto destro → <em>Apri nel terminale</em>) e scrivere <code>claude</code> oppure <code>codex</code>. Da lì in poi si parla in italiano. Le guide mostrano ogni passaggio con screenshot. Esistono anche app desktop ed estensioni per VS Code e simili, ma il terminale resta il modo più diretto e quello con più controllo.</p>
+</section>
+<section id="precauzioni" class="level4">
+<h4 class="anchored" data-anchor-id="precauzioni">Precauzioni</h4>
+<ul>
+<li><strong>Usate Git</strong>, o almeno lavorate su copie. Un agente può modificare o cancellare file: con Git ogni modifica è reversibile.</li>
+<li><strong>Dati sensibili</strong>: non fate lavorare un agente su dati personali di partecipanti senza essere sicuri che sia consentito dalle regole del vostro ente e dalla normativa sulla protezione dei dati. I file che l’agente legge vengono inviati ai server del fornitore.</li>
+<li><strong>Autonomia graduale</strong>: all’inizio lasciate che l’agente chieda il permesso prima di agire, oppure chiedete prima un piano. Passate alle modalità più autonome quando avete capito come si comporta.</li>
+<li><strong>Responsabilità</strong>: l’agente scrive codice che gira e produce numeri plausibili. Che i numeri siano anche giusti, e che l’analisi sia quella appropriata, resta compito vostro.</li>
+</ul>
+</section>
+</section>
+<section id="le-guide" class="level2">
+<h2 class="anchored" data-anchor-id="le-guide">Le guide</h2>
+<ul>
+<li>→ <a href="claude-code.html"><strong>Guida a Claude Code</strong></a>: installazione, primo progetto, <code>/model</code>, <code>/effort</code>, <code>/usage</code>, modalità <em>auto</em>, <em>manual</em>, <em>accept edits</em>, <em>plan</em>.</li>
+<li>→ <a href="codex.html"><strong>Guida a Codex</strong></a>: installazione, primo progetto, <code>/model</code>, livello di ragionamento, <code>/status</code>, <code>/permissions</code>, <em>plan mode</em>.</li>
+</ul>
+<hr>
+<blockquote class="blockquote">
+<p><em>Nota sul metodo.</em> Le schermate delle due guide sono state prodotte da Claude Code stesso: ha aperto le finestre del terminale, lanciato Claude Code e Codex, digitato le richieste, catturato gli screenshot, aperto i report in Chrome e infine scritto la bozza di queste pagine, poi rivista da me.</p>
+</blockquote>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiato!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiato!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

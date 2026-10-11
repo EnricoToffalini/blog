@@ -1,7 +1,10 @@
 ---
 title: "toffeeblog"
 listing:
-  contents: posts
+  contents:
+    - posts
+    - "!posts/agenti-cli/claude-code.qmd"
+    - "!posts/agenti-cli/codex.qmd"
   sort: "date desc"
   type: default
   categories: true
