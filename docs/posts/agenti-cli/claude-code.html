@@ -244,7 +244,7 @@ Il selettore dei modelli: con le frecce su/giù si sceglie il modello, con le fr
 Il pannello <code>/usage</code>: costo stimato della sessione, e soprattutto la percentuale di limite usata nella sessione corrente (finestra di 5 ore) e nella settimana
 </figcaption>
 </figure>
-<p>Le voci più importanti sono <strong>Current session</strong> (il limite sulla finestra di 5 ore) e <strong>Current week</strong> (il limite settimanale), con l’orario in cui si azzerano. Le percentuali si riferiscono a tutto l’uso del vostro account (anche da altre sessioni o da claude.ai), non solo alla conversazione aperta. Il “Total cost” in dollari è solo indicativo: con un abbonamento non pagate per singola richiesta, ma consumate i limiti del piano.</p>
+<p>Le voci più importanti sono <strong>Current session</strong> (il limite sulla finestra di 5 ore) e <strong>Current week</strong> (il limite settimanale), con l’orario in cui si azzerano. Le percentuali si riferiscono a tutto l’uso del vostro account (anche da altre sessioni o da claude.ai), non solo alla conversazione aperta. Il “Total cost” in dollari è solo indicativo: con un abbonamento non pagate per singola richiesta, ma consumate i limiti del piano. Raggiunto un limite, Claude Code si ferma fino all’azzeramento, salvo che abbiate attivato il pagamento a consumo (vedi la <a href="index.html">parte generale</a>).</p>
 <p>Il pannello dà anche suggerimenti utili: ad esempio, le conversazioni molto lunghe costano di più. Quando cambiate argomento conviene ripartire con <code>/clear</code>; a metà di un lavoro lungo si può usare <code>/compact</code>, che riassume la conversazione e libera spazio.</p>
 </section>
 <section id="le-modalità-di-lavoro" class="level2">
@@ -280,6 +280,13 @@ Fine del lavoro: riepilogo di cosa contiene il report e di come rigenerarlo
 </figcaption>
 </figure>
 <p>Il report finale è mostrato nella <a href="index.html#un-esempio-concreto-stesso-compito-due-agenti">parte generale</a>.</p>
+</section>
+<section id="riprendere-una-conversazione" class="level2">
+<h2 class="anchored" data-anchor-id="riprendere-una-conversazione">Riprendere una conversazione</h2>
+<p>Le conversazioni restano salvate sul vostro computer, legate alla cartella in cui le avete aperte. Se chiudete il terminale per sbaglio, o se il lavoro si è interrotto per un limite di utilizzo, potete riprendere da dove eravate, con tutto il contesto. Dalla stessa cartella:</p>
+<pre><code>claude -c          # riprende l'ultima conversazione
+claude -r          # mostra l'elenco delle conversazioni passate e ne fa scegliere una</code></pre>
+<p>Dentro una sessione già aperta, <code>/resume</code> mostra lo stesso elenco.</p>
 </section>
 <section id="altri-comandi-utili" class="level2">
 <h2 class="anchored" data-anchor-id="altri-comandi-utili">Altri comandi utili</h2>

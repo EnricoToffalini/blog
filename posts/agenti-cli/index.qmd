@@ -96,6 +96,8 @@ Siamo onesti: **servono piani a pagamento**. I piani gratuiti non includono Clau
 
 I prezzi cambiano spesso; verificate sulle pagine ufficiali (<a href="https://claude.com/pricing" target="_blank">Claude</a>, <a href="https://chatgpt.com/pricing" target="_blank">ChatGPT</a>). Con i piani base i **limiti di utilizzo** (calcolati su finestre di 5 ore e su base settimanale) si raggiungono abbastanza in fretta se si lavora su progetti grandi o con i modelli più potenti. Nelle guide mostro come controllarli.
 
+In breve: quando un limite si esaurisce, l'agente si ferma fino all'azzeramento. Il consumo dipende dalla quantità di lavoro più che dal numero di messaggi: modelli più potenti, *effort* più alto e conversazioni lunghe consumano di più. A differenza dell'uso via API, dove si paga per token, nei piani in abbonamento non è definito con precisione quanto lavoro stia in una finestra; ci si regola con un po' di esperienza. Nella mia esperienza, se non si sviluppa software o progetti molto articolati, una finestra di 5 ore basta per numerosi compiti, anche con ragionamento elevato e modelli medio-avanzati, sia con Claude Code sia con Codex. Chi ha bisogno di più può passare a un piano superiore o, se il piano lo prevede, pagare a consumo oltre i limiti (*extra usage* su Claude, crediti su Codex); queste opzioni vanno attivate esplicitamente.
+
 Se la vostra **università fornisce già un piano** (ad esempio ChatGPT Edu), tanto meglio: partite da quello. Se dovete pagare di tasca vostra, poco più di 20 euro al mese sono una spesa che, per come la vedo io, si ripaga rapidamente in tempo risparmiato.
 
 #### Il terminale non deve spaventare

@@ -245,7 +245,7 @@ Il livello di ragionamento: da <em>Low</em> a <em>Extra high</em>, più i livell
 <code>/status</code>: modello, permessi, tipo di account (qui Edu), contesto usato e, in fondo, i limiti sulla finestra di 5 ore e settimanale
 </figcaption>
 </figure>
-<p>Le ultime tre righe sono le più utili. <strong>Context window</strong> indica quanto della “memoria di lavoro” della conversazione è occupato. <strong>5h limit</strong> e <strong>Weekly limit</strong> indicano quanto resta dei limiti del vostro piano e quando si azzerano. Il dettaglio aggiornato, inclusi eventuali crediti, è sulla pagina <a href="https://chatgpt.com/codex/settings/usage" target="_blank">chatgpt.com/codex/settings/usage</a>.</p>
+<p>Le ultime tre righe sono le più utili. <strong>Context window</strong> indica quanto della “memoria di lavoro” della conversazione è occupato. <strong>5h limit</strong> e <strong>Weekly limit</strong> indicano quanto resta dei limiti del vostro piano e quando si azzerano. Il dettaglio aggiornato, inclusi eventuali crediti, è sulla pagina <a href="https://chatgpt.com/codex/settings/usage" target="_blank">chatgpt.com/codex/settings/usage</a>. I limiti valgono per tutte le interfacce di Codex, non solo per il terminale. Raggiunto un limite, Codex si ferma fino all’azzeramento, salvo che il piano preveda crediti aggiuntivi (vedi la <a href="index.html">parte generale</a>; con un account Edu dipende dall’ateneo).</p>
 </section>
 <section id="permessi" class="level2">
 <h2 class="anchored" data-anchor-id="permessi">Permessi</h2>
@@ -291,6 +291,13 @@ La parte finale del piano e la richiesta di conferma: implementare, implementare
 </figcaption>
 </figure>
 <p>Il report risultante è mostrato nella <a href="index.html#un-esempio-concreto-stesso-compito-due-agenti">parte generale</a>, accanto a quello di Claude Code.</p>
+</section>
+<section id="riprendere-una-conversazione" class="level2">
+<h2 class="anchored" data-anchor-id="riprendere-una-conversazione">Riprendere una conversazione</h2>
+<p>Le conversazioni restano salvate sul vostro computer. Se chiudete il terminale per sbaglio, o se il lavoro si è interrotto per un limite di utilizzo, potete riprendere da dove eravate, con tutto il contesto. Dalla stessa cartella:</p>
+<pre><code>codex resume --last   # riprende l'ultima conversazione
+codex resume          # mostra l'elenco delle conversazioni passate e ne fa scegliere una</code></pre>
+<p>Dentro una sessione già aperta, <code>/resume</code> mostra lo stesso elenco.</p>
 </section>
 <section id="altri-comandi-utili" class="level2">
 <h2 class="anchored" data-anchor-id="altri-comandi-utili">Altri comandi utili</h2>

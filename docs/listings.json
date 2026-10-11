@@ -3,6 +3,7 @@
     "listing": "/index.html",
     "items": [
       "/posts/agenti-cli/index.html",
+      "/posts/gpt-edu/index.html",
       "/posts/controllare-per-latente/index.html",
       "/posts/tutorial-git-quarto/index.html",
       "/posts/dottorato-open-source/index.html",
