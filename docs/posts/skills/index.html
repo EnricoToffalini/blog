@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Claude (Anthropic)">
+<meta name="author" content="Enrico Toffalini">
+
+<title>Skill: come personalizzare l’AI (e condensare un’expertise) – blog</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-dfb324f25d9b1687192fa8be62ac8f9c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+<link rel="shortcut icon" href="favicon.ico"> 
+<script data-goatcounter="https://toffeeblog.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">blog</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Ricerca"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Attiva/disattiva la navigazione" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://enricotoffalini.github.io" target="_blank"> 
+<span class="menu-text">enricotoffalini.github.io</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://psicostat.dpss.psy.unipd.it/"> 
+<span class="menu-text"><img src="../../images/faviconpsicostat2.png" style="height: 22px; margin-top: -4px;"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/EnricoToffalini"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Skill: come personalizzare l’AI (e condensare un’expertise)</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Autori</div>
+      <div class="quarto-title-meta-contents">
+               <p>Claude (Anthropic) </p>
+               <p>Enrico Toffalini </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Data di Pubblicazione</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">12 ottobre 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<blockquote class="blockquote">
+<p><strong>Chi ha scritto questo post.</strong> Di fatto, l’ha scritto <strong>Claude</strong> (Anthropic), lavorando come agente in Claude Code, e ha catturato anche parte delle schermate. Io ho fornito i materiali, l’esperienza e le indicazioni, e ho supervisionato e rivisto il risultato. La prima persona nel testo resta la mia, perché esperienze e opinioni sono mie. Lo dico per onestà, ma anche perché è un esempio concreto di quello che questa serie racconta: un agente AI, personalizzato con le mie skill, può svolgere gran parte di un lavoro come questo, purché riceva buone indicazioni e qualcuno controlli quello che fa.</p>
+</blockquote>
+<p>Questo è il terzo post di una piccola serie. Nel primo ho parlato degli <a href="../agenti-cli/index.html"><strong>agenti AI da terminale</strong></a> (Claude Code e Codex), nel secondo di <a href="../gpt-edu/index.html"><strong>ChatGPT Edu</strong></a>. In entrambi ho accennato alle <strong>skill</strong>, rimandando a un post dedicato. Eccolo.</p>
+<p>Il punto di partenza è un’esperienza comune. Si chiede all’AI uno script R, e arriva con il tidyverse anche se non lo usate. Si chiede un report, e arriva in R Markdown, o in Word, anche se lavorate in Quarto. Si chiede una email, e arriva con tre righe di convenevoli che non scrivereste mai. Si corregge, e la volta dopo si ricomincia da capo. Il modello non è sbagliato: produce la risposta “media”, quella che andrebbe bene per chiunque. Ma chi fa ricerca lavora quasi sempre con <strong>convenzioni precise</strong>: sul codice, sulla scrittura, sul reporting, su certe analisi, su certe procedure. Le skill sono lo strumento per insegnarle all’AI una volta sola.</p>
+<blockquote class="blockquote">
+<p><strong>In breve.</strong> Una skill è un file di istruzioni (più eventuali materiali di supporto) che descrive <em>come</em> svolgere un certo tipo di compito. L’AI la carica da sola quando il compito lo richiede. Funziona allo stesso modo in chat e negli agenti da terminale, con Claude e con ChatGPT/Codex.</p>
+</blockquote>
+<section id="cosè-una-skill" class="level2">
+<h2 class="anchored" data-anchor-id="cosè-una-skill">1. Cos’è una skill</h2>
+<p>Tecnicamente, una skill è una <strong>cartella</strong> che contiene un file <code>SKILL.md</code>. Il file ha una breve intestazione con <strong>nome</strong> e <strong>descrizione</strong>, seguita da istruzioni in testo libero (Markdown). Accanto possono esserci altri file: documenti di riferimento più dettagliati (<code>references/</code>), modelli, script, esempi.</p>
+<figure class="figure">
+<img src="images/01-skill-md.png" alt="struttura di una skill su GitHub" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
+<figcaption>
+Una delle mie skill su GitHub: a sinistra la cartella con <code>SKILL.md</code> e i materiali di supporto, a destra l’inizio del file, con nome, descrizione e le prime regole
+</figcaption>
+</figure>
+<p>Il meccanismo che rende le skill utili è il <strong>caricamento progressivo</strong>:</p>
+<ol type="1">
+<li>all’inizio di ogni conversazione l’AI vede solo <strong>nome e descrizione</strong> di tutte le skill disponibili (poche righe ciascuna);</li>
+<li>quando una richiesta corrisponde alla descrizione, legge il <code>SKILL.md</code> completo;</li>
+<li>i file di riferimento li apre solo se servono per quel compito specifico.</li>
+</ol>
+<p>Questo significa che si possono avere molte skill, anche lunghe, senza appesantire ogni conversazione. E significa che la <strong>descrizione</strong> è la parte più importante: è quella che decide se la skill verrà usata.</p>
+<p>Il formato è uno <a href="https://agentskills.io" target="_blank">standard aperto</a>, nato da Anthropic e adottato anche da OpenAI e da altri strumenti. In pratica, la stessa cartella funziona in Claude (chat e Claude Code) e in ChatGPT (chat e Codex). Le skill sono file di testo vostri: non vi legano a un fornitore, si possono tenere sotto Git, condividere, migliorare nel tempo.</p>
+</section>
+<section id="skill-istruzioni-progetti-memoria-cosa-cambia" class="level2">
+<h2 class="anchored" data-anchor-id="skill-istruzioni-progetti-memoria-cosa-cambia">2. Skill, istruzioni, progetti, memoria: cosa cambia</h2>
+<p>Esistono già altri modi per personalizzare l’AI. Le skill non li sostituiscono, ma coprono un caso che gli altri coprono male.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Strumento</th>
+<th>Vale per</th>
+<th>Limite</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Istruzioni personalizzate</strong> (nelle impostazioni)</td>
+<td>tutte le conversazioni</td>
+<td>devono restare brevi e generiche; sono sempre attive, anche quando non servono</td>
+</tr>
+<tr class="even">
+<td><strong>Istruzioni di progetto</strong> (progetti in chat, <code>CLAUDE.md</code>, <code>AGENTS.md</code>)</td>
+<td>un progetto</td>
+<td>vanno riscritte o copiate per ogni progetto</td>
+</tr>
+<tr class="odd">
+<td><strong>Memoria</strong> automatica</td>
+<td>tutte le conversazioni</td>
+<td>decide l’AI cosa ricordare; poco controllabile e poco precisa</td>
+</tr>
+<tr class="even">
+<td><strong>Skill</strong></td>
+<td>un <em>tipo di compito</em>, in qualsiasi progetto</td>
+<td>vanno scritte con cura (vedi sotto)</td>
+</tr>
+</tbody>
+</table>
+<p>La differenza chiave è che una skill è legata a <strong>cosa</strong> si sta facendo, non a <strong>dove</strong>. La skill sul codice R si attiva quando si scrive codice R, in qualsiasi progetto e con qualsiasi strumento. Quella sulle email si attiva quando si scrive una email. Le altre restano dormienti.</p>
+</section>
+<section id="perché-sono-così-utili-in-ambito-accademico" class="level2">
+<h2 class="anchored" data-anchor-id="perché-sono-così-utili-in-ambito-accademico">3. Perché sono così utili in ambito accademico</h2>
+<p>Chi fa ricerca accumula convenzioni, spesso senza accorgersene. Qualche esempio, dal mio caso ma credo generalizzabile:</p>
+<ul>
+<li><strong>Scrittura</strong>: registro diverso per email a studenti, a colleghi, a editor; nella prosa scientifica frasi brevi, niente enfasi, cautela specifica e non generica, certe formule da usare e altre da evitare.</li>
+<li><strong>Codice</strong>: R di default e non Python; base R più pacchetti mirati, <code>ggplot2</code> per i grafici ma non il resto del tidyverse; nomi brevi e ordinari per gli oggetti; codice che si legge dall’alto in basso, senza astrazioni inutili; modifiche chirurgiche al codice esistente.</li>
+<li><strong>Reporting</strong>: Quarto come scelta predefinita per report, siti, materiali supplementari; certe convenzioni grafiche; tabelle che non si accavallano; struttura delle cartelle semplice.</li>
+<li><strong>Procedure operative</strong>: quale calendario usare per quale tipo di impegno (con i relativi identificativi), come nominare gli eventi, cosa l’AI può fare da sola e cosa deve solo proporre.</li>
+</ul>
+<p>Ciascuna di queste cose, presa da sola, è banale. Il problema è che sono decine, e ripeterle a ogni richiesta è impossibile. Senza skill si finisce per accettare la risposta “media” o per correggerla a mano ogni volta. Con le skill succedono tre cose:</p>
+<ul>
+<li><strong>si accelera</strong>: meno correzioni, meno spiegazioni, meno avanti e indietro;</li>
+<li><strong>si personalizza</strong>: i risultati assomigliano molto di più a quello che avreste fatto voi;</li>
+<li><strong>si standardizza</strong>: progetti diversi, fatti a mesi di distanza o con strumenti diversi, seguono le stesse convenzioni. Questo vale ancora di più se le skill sono condivise in un gruppo di ricerca.</li>
+</ul>
+<p>Le mie skill sono pubbliche <a href="https://github.com/EnricoToffalini/ai-skills" target="_blank">qui</a>. Sono personali e non vanno copiate così come sono, ma possono servire come modello.</p>
+</section>
+<section id="oltre-lo-stile-condensare-unexpertise" class="level2">
+<h2 class="anchored" data-anchor-id="oltre-lo-stile-condensare-unexpertise">4. Oltre lo stile: condensare un’expertise</h2>
+<p>Finora ho parlato di preferenze. Ma l’uso più interessante delle skill, secondo me, è un altro: <strong>mettere per iscritto una competenza</strong>, in modo che l’AI la applichi in modo coerente.</p>
+<p>Molta della conoscenza di un ricercatore è tacita: come si fa <em>davvero</em> una certa analisi, quali controlli non vanno mai saltati, quali errori fanno tipicamente gli studenti, quali scelte sono difendibili e quali no. Una skill obbliga a esplicitarla, e una volta esplicitata diventa riutilizzabile. Qualche esempio di skill che un ricercatore o un gruppo potrebbe scrivere:</p>
+<ul>
+<li><strong>una pipeline di analisi</strong>: ad esempio analisi fattoriale confermativa e invarianza di misura, con le scelte di stima appropriate al tipo di dati, i controlli da fare, gli indici da riportare e come interpretarli;</li>
+<li><strong>simulazioni per l’analisi della potenza</strong>, secondo un certo schema (parametri espliciti, numero di iterazioni, come riportare l’incertezza);</li>
+<li><strong>lo scoring di uno strumento</strong>: come calcolare i punteggi di un test, come gestire i dati mancanti, come convertirli in punteggi standardizzati secondo le norme;</li>
+<li><strong>meta-analisi</strong>: dalla codifica degli studi al calcolo degli effect size, al modello, ai grafici e al diagramma di flusso;</li>
+<li><strong>revisione di manoscritti</strong> secondo una checklist (es. standard di reporting della propria disciplina), con un formato fisso per i commenti;</li>
+<li><strong>materiali didattici</strong>: domande d’esame con un certo formato e livello di difficoltà, quiz importabili su Moodle, esercizi con soluzione commentata;</li>
+<li><strong>procedure del corso di studi o del dipartimento</strong>: tesi, tirocini, richieste ricorrenti degli studenti, con i riferimenti al regolamento.</li>
+</ul>
+<p>Un gruppo di ricerca potrebbe tenere le proprie skill in una repository comune: una specie di <strong>manuale di laboratorio</strong> che però, oltre a essere letto dalle persone, viene applicato dall’AI. Un dottorando nuovo che usa un agente con quelle skill lavora da subito secondo le convenzioni del gruppo.</p>
+<p>Due cautele. Una skill <strong>non trasforma il modello in un esperto</strong>: gli trasmette quello che sapete voi, né più né meno. Se la competenza descritta è approssimativa, l’AI applicherà con grande coerenza una procedura approssimativa. E il risultato va comunque <strong>controllato</strong>: le skill riducono gli errori di stile e di procedura, non vi esonerano dal verificare l’analisi.</p>
+<p>Per dare un’idea concreta, questo è uno scheletro (semplificato) di una skill del primo tipo:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">name:</span><span class="co"> cfa-lavaan</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> Run and report confirmatory factor analysis and measurement</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">  invariance in R with lavaan. Use when the user asks to fit, compare, or</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">  report CFA models, test invariance across groups, or check the factor</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">  structure of a questionnaire.</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu"># CFA with lavaan</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## Before fitting</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Inspect item distributions and missing data; report both.</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Ordinal items with few categories (&lt; 5): use WLSMV with ordered = TRUE.</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  Otherwise use MLR and FIML for missing data.</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">## Fitting and reporting</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Report chi-square, CFI, TLI, RMSEA with 90% CI, SRMR.</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Do not treat fit cutoffs as rigid pass/fail rules; discuss local misfit</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  (residual correlations, modification indices) before changing the model.</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Never add residual covariances only to improve fit without a substantive</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  justification; state each one explicitly.</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">## Invariance</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Test configural, metric, scalar models in this order. ...</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>For reporting tables and wording, read references/reporting.md.</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>La descrizione dice <strong>cosa</strong> fa e <strong>quando</strong> usarla. Il corpo contiene regole concrete, comprese quelle su cosa <em>non</em> fare. I dettagli più lunghi stanno in un file a parte, letto solo se serve.</p>
+</section>
+<section id="dove-si-usano-chat-e-agenti" class="level2">
+<h2 class="anchored" data-anchor-id="dove-si-usano-chat-e-agenti">5. Dove si usano: chat e agenti</h2>
+<p>Le skill funzionano sia nelle interfacce in chat sia negli agenti da terminale. Cambia solo dove le si carica.</p>
+<p><strong>Claude, in chat (web e app desktop).</strong> Si caricano da <em>Personalizzazione</em> → <em>Competenze</em> (in inglese <em>Customize</em> → <em>Skills</em>), con il pulsante <em>Aggiungi</em>. Lì compaiono anche le skill fornite da Anthropic (documenti Word, PDF, presentazioni, ecc.), che si possono attivare o disattivare.</p>
+<figure class="figure">
+<img src="images/02-claude-skills.png" alt="pagina delle skill in Claude" style="width: 100%; max-width: 800px; height: auto; border: 2px solid #444444;" class="figure-img">
+<figcaption>
+Le skill in Claude: in alto quelle create da me, sotto quelle fornite da Anthropic
+</figcaption>
+</figure>
+<p><strong>ChatGPT, in chat.</strong> Si caricano dalla pagina <em>Skills</em>, e si possono richiamare anche esplicitamente con **<span class="citation" data-cites="*">@*</span>* (vedi il <a href="../gpt-edu/index.html">post su ChatGPT Edu</a>).</p>
+<figure class="figure">
+<img src="images/03-chatgpt-skills.png" alt="pagina delle skill in ChatGPT" style="width: 100%; max-width: 750px; height: auto; border: 2px solid #444444;" class="figure-img">
+<figcaption>
+Le stesse skill caricate in ChatGPT Edu
+</figcaption>
+</figure>
+<p><strong>Claude Code e Codex, da terminale.</strong> Basta mettere le cartelle delle skill in una posizione nota: <code>~/.claude/skills/</code> per Claude Code e <code>~/.codex/skills/</code> per Codex (dove <code>~</code> è la vostra cartella utente). Così valgono per tutti i progetti. Si possono anche mettere dentro un singolo progetto (ad esempio in <code>.claude/skills/</code>), se riguardano solo quello: in questo caso viaggiano con la repository e le trova chiunque ci lavori. In Claude Code il comando <code>/skills</code> mostra quelle disponibili, e una skill si può richiamare esplicitamente con <code>/nome-della-skill</code>.</p>
+<p>Nella pratica, la maggior parte delle volte non serve richiamarle: l’agente le riconosce da solo. Nella <a href="../agenti-cli/codex.html">guida a Codex</a>, ad esempio, avevo chiesto soltanto di trasformare un’analisi in un report Quarto. Codex, prima di proporre il piano, è andato a leggersi la mia skill sui report:</p>
+<figure class="figure">
+<img src="images/04-codex-skill.png" alt="Codex legge una skill" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
+<figcaption>
+Codex legge da solo <code>reporting-style-enrico/SKILL.md</code> (riga <em>Ran Get-Content …</em>) prima di pianificare il report
+</figcaption>
+</figure>
+<p>Negli agenti da terminale le skill rendono di più, perché l’agente può anche <strong>eseguire</strong> quello che la skill descrive: lanciare gli script di supporto, renderizzare il documento, controllare il risultato rispetto a una checklist.</p>
+<p>Un dettaglio pratico: se volete usare la stessa skill in ambienti diversi, scrivetela in modo <strong>indipendente dallo strumento</strong>. Ad esempio, invece di “usa lo strumento X per leggere la mail”, “leggi la mail con gli strumenti disponibili”. Dove le differenze sono inevitabili (i connettori hanno nomi e opzioni diversi in Claude e in ChatGPT), basta una breve sezione che le elenca.</p>
+</section>
+<section id="come-scriverne-una" class="level2">
+<h2 class="anchored" data-anchor-id="come-scriverne-una">6. Come scriverne una</h2>
+<p>Qualche indicazione, frutto più di errori che di teoria.</p>
+<ul>
+<li><strong>Partite da una frustrazione ricorrente.</strong> Se avete corretto la stessa cosa tre volte, è materiale per una skill. Non serve partire con un documento completo.</li>
+<li><strong>Curate la descrizione.</strong> Deve dire cosa fa la skill e <strong>quando</strong> usarla, con le parole che usereste nelle richieste. Una descrizione vaga produce una skill che non si attiva, o che si attiva a sproposito.</li>
+<li><strong>Siate concreti e prescrittivi.</strong> “Scrivi codice chiaro” non serve a niente: il modello pensa già di farlo. “Usa <code>=</code> per l’assegnazione”, “non usare <code>dplyr</code> se non è già nel progetto”, “nelle email agli studenti metti prima la valutazione complessiva, poi la correzione principale” funzionano.</li>
+<li><strong>Date un ordine di priorità.</strong> Quando due regole sono in conflitto (ad esempio compattezza contro leggibilità), l’AI deve sapere quale prevale.</li>
+<li><strong>Dite anche cosa <em>non</em> fare.</strong> Sono spesso le regole più utili, soprattutto nelle skill che compiono azioni (es. “non cancellare mai eventi”, “non creare file di pianificazione nel progetto senza chiedere”).</li>
+<li><strong>Tenete corto il <code>SKILL.md</code>.</strong> Spostate i dettagli in file di riferimento separati e indicate quando leggerli.</li>
+<li><strong>Una skill per ambito.</strong> Meglio skill separate per scrittura, codice e reporting, che si combinano, che una sola skill enorme con tutto dentro.</li>
+<li><strong>Fatevi aiutare dall’AI.</strong> Esiste una skill apposita, <em>skill-creator</em> (disponibile in Claude), che guida nella scrittura. In alternativa: date a un agente una cartella con il vostro codice, o una serie di vostre email, e chiedetegli di ricavarne le convenzioni; oppure chiedetegli di intervistarvi. Poi rileggete e correggete a mano: la prima bozza tende a essere generica.</li>
+<li><strong>Usatele e rivedetele.</strong> Ogni volta che l’AI sbaglia qualcosa nonostante la skill, chiedetevi se la regola mancava o era scritta male. Tenetele sotto Git: è utile vedere come cambiano.</li>
+</ul>
+</section>
+<section id="precauzioni" class="level2">
+<h2 class="anchored" data-anchor-id="precauzioni">7. Precauzioni</h2>
+<ul>
+<li><strong>Una skill non è una garanzia.</strong> Il modello può ignorarla, applicarla male, o non riconoscere che serve. Se una skill è importante per un compito, richiamatela esplicitamente.</li>
+<li><strong>Le skill altrui vanno lette prima di installarle.</strong> Una skill contiene istruzioni, e a volte script, che l’AI eseguirà con i vostri permessi. Usate solo skill di fonti affidabili, e leggetele.</li>
+<li><strong>Niente password o token nelle skill</strong>, soprattutto se le condividete.</li>
+<li><strong>Meno è meglio.</strong> Molte skill sovrapposte o contraddittorie confondono il modello. Ogni tanto conviene fare pulizia.</li>
+<li><strong>La responsabilità resta vostra</strong>, come sempre: la skill decide come viene fatto un lavoro, non se è giusto.</li>
+</ul>
+</section>
+<section id="in-sintesi" class="level2">
+<h2 class="anchored" data-anchor-id="in-sintesi">In sintesi</h2>
+<ul>
+<li>Le skill sono cartelle con un file <code>SKILL.md</code>: nome, descrizione e istruzioni su <strong>come</strong> fare un certo tipo di compito.</li>
+<li>L’AI le carica da sola quando servono; funzionano in chat e negli agenti da terminale, con Claude e con ChatGPT/Codex.</li>
+<li>Servono a <strong>personalizzare</strong> (convenzioni di scrittura, codice, reporting, procedure) e a <strong>condensare un’expertise</strong> (pipeline di analisi, materiali, flussi di lavoro), rendendola riutilizzabile e condivisibile.</li>
+<li>Scrivetele partendo da problemi reali, con regole concrete e una descrizione precisa, e rivedetele nel tempo.</li>
+</ul>
+<p>Le mie sono <a href="https://github.com/EnricoToffalini/ai-skills" target="_blank">qui</a>.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiato!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiato!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

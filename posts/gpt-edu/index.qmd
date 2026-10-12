@@ -1,10 +1,14 @@
 ---
 title: "ChatGPT Edu: istruzioni per l'uso (e per non sprecarlo)"
-author: "Enrico Toffalini"
+author:
+  - "Claude (Anthropic)"
+  - "Enrico Toffalini"
 date: "2026-10-11"
 image: images/01-work.png
 format: html
 ---
+
+> **Chi ha scritto questo post.** Di fatto, l'ha scritto **Claude** (Anthropic), lavorando come agente in Claude Code. Io ho fornito i materiali, l'esperienza e le indicazioni, e ho supervisionato e rivisto il risultato. La prima persona nel testo resta la mia, perché esperienze e opinioni sono mie. Lo dico per onestà, ma anche perché è un esempio concreto di quello che questa serie racconta: un agente AI, personalizzato con le mie skill (vedi il <a href="../skills/index.html">post sulle skill</a>), può svolgere gran parte di un lavoro come questo, purché riceva buone indicazioni e qualcuno controlli quello che fa.
 
 L'Università di Padova offre al personale **ChatGPT Edu**, attualmente a **7 € al mese più IVA**: circa 8,6 € effettivi al mese, cioè intorno ai **100 € all'anno**, pagabili con fondi di ricerca. Per quello che offre è un'ottima occasione: a un privato una potenza simile costerebbe probabilmente molto di più, forse fino a un piano da 100 € al mese (confronto indicativo, non verificato nel dettaglio, ma plausibile guardando i listini).
 
@@ -139,7 +143,7 @@ Le cose sopra sono quelle fondamentali. Queste sono funzioni ulteriori, meno con
 
 **Skill.** Sono file di istruzioni riutilizzabili su *come* fare certe cose: come scrivo il codice, come imposto un report, come scrivo una email, come inserisco gli impegni nel calendario. Si caricano dalla pagina *Skills* (icona **@** → *Skills*) e ChatGPT le usa quando servono, oppure le richiamate con **@**. Sono le stesse che si usano con Codex e Claude Code: scritte una volta, valgono ovunque.
 
-Per me sono il modo migliore per **personalizzare** davvero ChatGPT, Codex e gli agenti in generale. Invece di ripetere ogni volta "scrivi il codice R così", "nei report fai così", "nelle email usa questo tono", lo scrivete una volta sola e con cura. Da lì in poi i risultati vi somigliano molto di più. Il formato è uno standard aperto (un file `SKILL.md` in una cartella), quindi le skill non vi legano a un fornitore. Ci tornerò in un post dedicato. Le mie sono pubbliche <a href="https://github.com/EnricoToffalini/ai-skills" target="_blank">qui</a>, e potete usarle come modello per le vostre (c'è anche una skill, *skill-creator*, che aiuta a scriverle).
+Per me sono il modo migliore per **personalizzare** davvero ChatGPT, Codex e gli agenti in generale. Invece di ripetere ogni volta "scrivi il codice R così", "nei report fai così", "nelle email usa questo tono", lo scrivete una volta sola e con cura. Da lì in poi i risultati vi somigliano molto di più. Il formato è uno standard aperto (un file `SKILL.md` in una cartella), quindi le skill non vi legano a un fornitore. Ne parlo in dettaglio nel <a href="../skills/index.html">post dedicato alle skill</a>. Le mie sono pubbliche <a href="https://github.com/EnricoToffalini/ai-skills" target="_blank">qui</a>, e potete usarle come modello per le vostre (c'è anche una skill, *skill-creator*, che aiuta a scriverle).
 
 <figure><img src="images/12-skills.png" alt="pagina Skills" style="width: 100%; max-width: 750px; height: auto; border: 2px solid #444444;"><figcaption>Le mie skill caricate in ChatGPT Edu</figcaption></figure>
 

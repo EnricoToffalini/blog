@@ -1,10 +1,14 @@
 ---
 title: "Agents AI da terminale: Primi passi con Codex e Claude Code e come vi cambiano il lavoro (anche in ricerca)"
-author: "Enrico Toffalini"
+author:
+  - "Claude (Anthropic)"
+  - "Enrico Toffalini"
 date: "2026-10-11"
 image: images/claude-02-analisi.png
 format: html
 ---
+
+> **Chi ha scritto questo post.** Di fatto, l'ha scritto **Claude** (Anthropic), lavorando come agente in Claude Code, e ha prodotto anche le schermate delle guide, pilotando da sé Claude Code e Codex. Io ho fornito i materiali, l'esperienza e le indicazioni, e ho supervisionato e rivisto il risultato. La prima persona nel testo resta la mia, perché esperienze e opinioni sono mie. Lo dico per onestà, ma anche perché è un esempio concreto di quello che questa serie racconta: un agente AI, personalizzato con le mie skill (vedi il <a href="../skills/index.html">post sulle skill</a>), può svolgere gran parte di un lavoro come questo, purché riceva buone indicazioni e qualcuno controlli quello che fa.
 
 Chi usa l'AI solo dalla chat nel browser ne sta usando una frazione. Gli **agenti da terminale** (*command line interface*, CLI), come <a href="https://code.claude.com/docs" target="_blank">**Claude Code**</a> di Anthropic e <a href="https://github.com/openai/codex" target="_blank">**Codex**</a> di OpenAI, lavorano direttamente sui file del vostro computer: leggono una cartella di progetto, scrivono e modificano script, li eseguono, guardano gli errori, correggono, rieseguono. Non vi restituiscono un pezzo di codice da copiare e incollare: fanno il lavoro nella cartella e vi dicono cosa hanno fatto.
 
@@ -31,7 +35,7 @@ La differenza pratica è enorme quando il progetto non è un singolo script ma u
 
 In chat il contesto è quello che incollate voi, e va ricostruito a ogni nuova conversazione. L'agente invece ricostruisce il contesto leggendo il progetto stesso: la struttura delle cartelle, il codice, la cronologia Git, i file di istruzioni del progetto (`CLAUDE.md` per Claude Code, `AGENTS.md` per Codex), che possono contenere convenzioni, obiettivi, cose da non toccare. Se il progetto cambia, il contesto cambia con lui, senza che dobbiate ricaricare nulla.
 
-A questo si aggiungono le **skill**: file di istruzioni riutilizzabili su come fare certe cose (ad esempio come scrivo codice, come imposto un report, come scrivo una email). L'agente le carica quando servono. Le mie sono pubbliche <a href="https://github.com/EnricoToffalini/ai-skills" target="_blank">qui</a>. Nella demo della <a href="codex.html">guida a Codex</a> si vede Codex che, prima di proporre un report, va a leggersi da solo la mia skill sullo stile dei report scientifici.
+A questo si aggiungono le **skill**: file di istruzioni riutilizzabili su come fare certe cose (ad esempio come scrivo codice, come imposto un report, come scrivo una email). L'agente le carica quando servono. Le mie sono pubbliche <a href="https://github.com/EnricoToffalini/ai-skills" target="_blank">qui</a>. Nella demo della <a href="codex.html">guida a Codex</a> si vede Codex che, prima di proporre un report, va a leggersi da solo la mia skill sullo stile dei report scientifici. Ne parlo in dettaglio nel <a href="../skills/index.html">post dedicato alle skill</a>.
 
 #### 3. Molto più controllo sul processo
 
