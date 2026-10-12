@@ -10,8 +10,6 @@ format: html
 
 ← <a href="index.html">Torna alla parte generale</a> · Vai alla <a href="codex.html">guida a Codex</a>
 
-> **Chi ha scritto questo post.** Di fatto, l'ha scritto **Claude** (Anthropic), lavorando come agente in Claude Code, e ha prodotto anche le schermate, pilotando da sé Claude Code in un'altra finestra. Io ho fornito i materiali, l'esperienza e le indicazioni, e ho supervisionato e rivisto il risultato. La prima persona nel testo resta la mia, perché esperienze e opinioni sono mie. Lo dico per onestà, ma anche perché è un esempio concreto di quello che questa serie racconta: un agente AI, personalizzato con le mie skill (vedi il <a href="../skills/index.html">post sulle skill</a>), può svolgere gran parte di un lavoro come questo, purché riceva buone indicazioni e qualcuno controlli quello che fa.
-
 Questa guida mostra i primi passi con <a href="https://code.claude.com/docs" target="_blank">Claude Code</a> su **Windows** (versione usata: 2.1.296, ottobre 2026). Su macOS e Linux i passaggi sono quasi identici: cambia solo il comando di installazione. Le schermate vengono da una sessione reale, in una cartella di prova con un piccolo dataset simulato.
 
 ### Obiettivi della guida
@@ -169,3 +167,8 @@ Se sul vostro account <a href="https://claude.ai" target="_blank">claude.ai</a> 
 ---
 
 ← <a href="index.html">Torna alla parte generale</a> · Vai alla <a href="codex.html">guida a Codex</a>
+
+
+::: {.callout-note appearance="simple" icon="false"}
+**Chi ha scritto questo post.** Di fatto, l'ha scritto **Claude** (Anthropic), lavorando come agente in Claude Code, e ha prodotto anche le schermate, pilotando da sé Claude Code in un'altra finestra. Io ho fornito i materiali, l'esperienza e le indicazioni, e ho supervisionato e rivisto il risultato. La prima persona nel testo resta la mia, perché esperienze e opinioni sono mie. Lo dico per onestà, ma anche perché è un esempio concreto di quello che questa serie racconta: un agente AI, personalizzato con le mie skill (vedi il <a href="../skills/index.html">post sulle skill</a>), può svolgere gran parte di un lavoro come questo, purché riceva buone indicazioni e qualcuno controlli quello che fa.
+:::

@@ -8,8 +8,6 @@ image: images/02-claude-skills.png
 format: html
 ---
 
-> **Chi ha scritto questo post.** Di fatto, l'ha scritto **Claude** (Anthropic), lavorando come agente in Claude Code, e ha catturato anche parte delle schermate. Io ho fornito i materiali, l'esperienza e le indicazioni, e ho supervisionato e rivisto il risultato. La prima persona nel testo resta la mia, perché esperienze e opinioni sono mie. Lo dico per onestà, ma anche perché è un esempio concreto di quello che questa serie racconta: un agente AI, personalizzato con le mie skill, può svolgere gran parte di un lavoro come questo, purché riceva buone indicazioni e qualcuno controlli quello che fa.
-
 Questo è il terzo post di una piccola serie. Nel primo ho parlato degli <a href="../agenti-cli/index.html">**agenti AI da terminale**</a> (Claude Code e Codex), nel secondo di <a href="../gpt-edu/index.html">**ChatGPT Edu**</a>. In entrambi ho accennato alle **skill**, rimandando a un post dedicato. Eccolo.
 
 Il punto di partenza è un'esperienza comune. Si chiede all'AI uno script R, e arriva con il tidyverse anche se non lo usate. Si chiede un report, e arriva in R Markdown, o in Word, anche se lavorate in Quarto. Si chiede una email, e arriva con tre righe di convenevoli che non scrivereste mai. Si corregge, e la volta dopo si ricomincia da capo. Il modello non è sbagliato: produce la risposta "media", quella che andrebbe bene per chiunque. Ma chi fa ricerca lavora quasi sempre con **convenzioni precise**: sul codice, sulla scrittura, sul reporting, su certe analisi, su certe procedure. Le skill sono lo strumento per insegnarle all'AI una volta sola.
@@ -173,3 +171,8 @@ Qualche indicazione, frutto più di errori che di teoria.
 - Scrivetele partendo da problemi reali, con regole concrete e una descrizione precisa, e rivedetele nel tempo.
 
 Le mie sono <a href="https://github.com/EnricoToffalini/ai-skills" target="_blank">qui</a>.
+
+
+::: {.callout-note appearance="simple" icon="false"}
+**Chi ha scritto questo post.** Di fatto, l'ha scritto **Claude** (Anthropic), lavorando come agente in Claude Code, e ha catturato anche parte delle schermate. Io ho fornito i materiali, l'esperienza e le indicazioni, e ho supervisionato e rivisto il risultato. La prima persona nel testo resta la mia, perché esperienze e opinioni sono mie. Lo dico per onestà, ma anche perché è un esempio concreto di quello che questa serie racconta: un agente AI, personalizzato con le mie skill, può svolgere gran parte di un lavoro come questo, purché riceva buone indicazioni e qualcuno controlli quello che fa.
+:::

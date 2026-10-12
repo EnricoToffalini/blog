@@ -8,8 +8,6 @@ image: images/claude-02-analisi.png
 format: html
 ---
 
-> **Chi ha scritto questo post.** Di fatto, l'ha scritto **Claude** (Anthropic), lavorando come agente in Claude Code, e ha prodotto anche le schermate delle guide, pilotando da sé Claude Code e Codex. Io ho fornito i materiali, l'esperienza e le indicazioni, e ho supervisionato e rivisto il risultato. La prima persona nel testo resta la mia, perché esperienze e opinioni sono mie. Lo dico per onestà, ma anche perché è un esempio concreto di quello che questa serie racconta: un agente AI, personalizzato con le mie skill (vedi il <a href="../skills/index.html">post sulle skill</a>), può svolgere gran parte di un lavoro come questo, purché riceva buone indicazioni e qualcuno controlli quello che fa.
-
 Chi usa l'AI solo dalla chat nel browser ne sta usando una frazione. Gli **agenti da terminale** (*command line interface*, CLI), come <a href="https://code.claude.com/docs" target="_blank">**Claude Code**</a> di Anthropic e <a href="https://github.com/openai/codex" target="_blank">**Codex**</a> di OpenAI, lavorano direttamente sui file del vostro computer: leggono una cartella di progetto, scrivono e modificano script, li eseguono, guardano gli errori, correggono, rieseguono. Non vi restituiscono un pezzo di codice da copiare e incollare: fanno il lavoro nella cartella e vi dicono cosa hanno fatto.
 
 Questo post ha tre parti:
@@ -123,4 +121,6 @@ Il terminale sembra ostile, ma qui serve pochissimo: aprirlo nella cartella gius
 
 ---
 
-> *Nota sul metodo.* Le schermate delle due guide sono state prodotte da Claude Code stesso: ha aperto le finestre del terminale, lanciato Claude Code e Codex, digitato le richieste, catturato gli screenshot, aperto i report in Chrome e infine scritto la bozza di queste pagine, poi rivista da me.
+::: {.callout-note appearance="simple" icon="false"}
+**Chi ha scritto questo post.** Di fatto, l'ha scritto **Claude** (Anthropic), lavorando come agente in Claude Code, e ha prodotto anche le schermate delle guide: ha aperto le finestre del terminale, lanciato Claude Code e Codex, digitato le richieste, catturato gli screenshot e aperto i report in Chrome. Io ho fornito i materiali, l'esperienza e le indicazioni, e ho supervisionato e rivisto il risultato. La prima persona nel testo resta la mia, perché esperienze e opinioni sono mie. Lo dico per onestà, ma anche perché è un esempio concreto di quello che questa serie racconta: un agente AI, personalizzato con le mie skill (vedi il <a href="../skills/index.html">post sulle skill</a>), può svolgere gran parte di un lavoro come questo, purché riceva buone indicazioni e qualcuno controlli quello che fa.
+:::
