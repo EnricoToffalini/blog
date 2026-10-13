@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/serie-ai/index.html",
       "/posts/skills/index.html",
       "/posts/agenti-cli/index.html",
       "/posts/gpt-edu/index.html",

@@ -1,0 +1,25 @@
+---
+title: "Tre dritte sull'AI" 
+subtitle: "agents cli, gpt edu, skills"
+author:
+  - "Claude (Anthropic)"
+  - "Enrico Toffalini"
+date: "2026-10-13"
+image: images/anteprima.png
+format: html
+---
+
+Codex, Claude Code, GPT Edu, Skill: qualche dritta per iniziare a usarli. 
+
+1. → <a href="../agenti-cli/index.html">**Agenti AI da terminale**</a>. Claude Code e Codex (gpt) lavorano direttamente sui file del vostro computer: leggono progetti, lavorano su cartelle e documenti, scrivono ed eseguono codice, revisionano. Con guide passo-passo a <a href="../agenti-cli/claude-code.html">Claude Code</a> e a <a href="../agenti-cli/codex.html">Codex (gpt)</a>.
+
+2. → <a href="../gpt-edu/index.html">**ChatGPT Edu**</a>. Come usarlo bene: Chat/work, livelli di ragionamento, connettori, progetti, gestione credito. 
+
+3. → <a href="../skills/index.html">**Skill**</a>. File di istruzioni riutilizzabili che insegnano all'AI le vostre preferenze e convenzioni (codice, report, scrittura) o una vostra competenza, una volta per tutte. 
+
+
+## Chi non ha ChatGPT Edu
+
+Il post su ChatGPT Edu è per chi ce l'ha **fornito dall'università** (Padova o altro ente). Chi paga di tasca propria, secondo me, fa meglio a prendere **Claude Pro** (circa 22 € al mese IVA inclusa).
+
+La logica simile ma non identica: non c'è la distinzione Chat/Work, e tutto l'utilizzo (chat, Claude Code, ecc.) attinge a un **unico budget** con limiti su 5 ore e sulla settimana. Conviene sempre usarlo in modo mirato. Se avete capito e apprezzato la logica degli agenti, il modo migliore di spenderlo, a parer mio, è quasi sempre **Claude Code da terminale** (vedi la <a href="../agenti-cli/claude-code.html">guida</a>).

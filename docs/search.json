@@ -270,7 +270,7 @@
     "href": "index.html",
     "title": "toffeeblog",
     "section": "",
-    "text": "Skill: come personalizzare l’AI (e condensare un’expertise)\n\n\n\n\n\n\n\n\n12 ott 2026\n\n\nClaude (Anthropic), Enrico Toffalini\n\n\n\n\n\n\n\n\n\n\n\n\nAgents AI da terminale: Primi passi con Codex e Claude Code e come vi cambiano il lavoro (anche in ricerca)\n\n\n\n\n\n\n\n\n11 ott 2026\n\n\nClaude (Anthropic), Enrico Toffalini\n\n\n\n\n\n\n\n\n\n\n\n\nChatGPT Edu: istruzioni per l’uso (e per non sprecarlo)\n\n\n\n\n\n\n\n\n11 ott 2026\n\n\nClaude (Anthropic), Enrico Toffalini\n\n\n\n\n\n\n\n\n\n\n\n\n“Controllare per” ma dimenticare le cause comuni (i.e., “latenti”)\n\n\n\n\n\n\n\n\n9 dic 2025\n\n\nEnrico Toffalini\n\n\n\n\n\n\n\n\n\n\n\n\nCreare Pagine Online: Tutorial base su Git, GitHub, GitHub pages, Quarto\n\n\n\n\n\n\n\n\n5 dic 2025\n\n\nEnrico Toffalini\n\n\n\n\n\n\n\n\n\n\n\n\nOpen Source per l’Università: Dottorati, corsi di laurea e docenti abbandonino software proprietario se c’è alternativa\n\n\n\n\n\n\n\n\n1 dic 2025\n\n\nEnrico Toffalini\n\n\n\n\n\n\n\n\n\n\n\n\nL’Open Science è Terza Missione?\n\n\n\n\n\n\n\n\n25 nov 2025\n\n\nEnrico Toffalini\n\n\n\n\n\n\n\n\n\n\n\n\nL’Illusione della Soddisfazione: “Opinioni di Studentesse e Studenti” NON Misurano la Qualità Didattica\n\n\n\n\n\n\n\n\n22 nov 2025\n\n\nEnrico Toffalini\n\n\n\n\n\n\n\n\n\n\n\n\nFilosofia del Continuous Norming: Un esempio in R con Mini-Deco (mini batteria inventata di lettura)\n\n\n\n\n\n\n\n\n19 gen 2025\n\n\nEnrico Toffalini\n\n\n\n\n\nNessun risultato"
+    "text": "Tre dritte sull’AI\n\n\nagents cli, gpt edu, skills\n\n\n\n\n\n\n\n\n13 ott 2026\n\n\nClaude (Anthropic), Enrico Toffalini\n\n\n\n\n\n\n\n\n\n\n\n\nSkill: come personalizzare l’AI (e condensare un’expertise)\n\n\n\n\n\n\n\n\n\n\n\n12 ott 2026\n\n\nClaude (Anthropic), Enrico Toffalini\n\n\n\n\n\n\n\n\n\n\n\n\nAgents AI da terminale: Primi passi con Codex e Claude Code e come vi cambiano il lavoro (anche in ricerca)\n\n\n\n\n\n\n\n\n\n\n\n11 ott 2026\n\n\nClaude (Anthropic), Enrico Toffalini\n\n\n\n\n\n\n\n\n\n\n\n\nChatGPT Edu: istruzioni per l’uso (e per non sprecarlo)\n\n\n\n\n\n\n\n\n\n\n\n11 ott 2026\n\n\nClaude (Anthropic), Enrico Toffalini\n\n\n\n\n\n\n\n\n\n\n\n\n“Controllare per” ma dimenticare le cause comuni (i.e., “latenti”)\n\n\n\n\n\n\n\n\n\n\n\n9 dic 2025\n\n\nEnrico Toffalini\n\n\n\n\n\n\n\n\n\n\n\n\nCreare Pagine Online: Tutorial base su Git, GitHub, GitHub pages, Quarto\n\n\n\n\n\n\n\n\n\n\n\n5 dic 2025\n\n\nEnrico Toffalini\n\n\n\n\n\n\n\n\n\n\n\n\nOpen Source per l’Università: Dottorati, corsi di laurea e docenti abbandonino software proprietario se c’è alternativa\n\n\n\n\n\n\n\n\n\n\n\n1 dic 2025\n\n\nEnrico Toffalini\n\n\n\n\n\n\n\n\n\n\n\n\nL’Open Science è Terza Missione?\n\n\n\n\n\n\n\n\n\n\n\n25 nov 2025\n\n\nEnrico Toffalini\n\n\n\n\n\n\n\n\n\n\n\n\nL’Illusione della Soddisfazione: “Opinioni di Studentesse e Studenti” NON Misurano la Qualità Didattica\n\n\n\n\n\n\n\n\n\n\n\n22 nov 2025\n\n\nEnrico Toffalini\n\n\n\n\n\n\n\n\n\n\n\n\nFilosofia del Continuous Norming: Un esempio in R con Mini-Deco (mini batteria inventata di lettura)\n\n\n\n\n\n\n\n\n\n\n\n19 gen 2025\n\n\nEnrico Toffalini\n\n\n\n\n\nNessun risultato"
   },
   {
     "objectID": "posts/agenti-cli/claude-code.html",
@@ -600,5 +600,19 @@
     "title": "Skill: come personalizzare l’AI (e condensare un’expertise)",
     "section": "In sintesi",
     "text": "In sintesi\n\nLe skill sono cartelle con un file SKILL.md: nome, descrizione e istruzioni su come fare un certo tipo di compito.\nL’AI le carica da sola quando servono; funzionano in chat e negli agenti da terminale, con Claude e con ChatGPT/Codex.\nServono a personalizzare (convenzioni di scrittura, codice, reporting, procedure) e a condensare un’expertise (pipeline di analisi, materiali, flussi di lavoro), rendendola riutilizzabile e condivisibile.\nScrivetele partendo da problemi reali, con regole concrete e una descrizione precisa, e rivedetele nel tempo.\n\nLe mie sono qui.\n\n\n\n\n\n\nChi ha scritto questo post. Di fatto, l’ha scritto Claude (Anthropic), lavorando come agente in Claude Code, e ha catturato anche parte delle schermate. Io ho fornito i materiali, l’esperienza e le indicazioni, e ho supervisionato e rivisto il risultato. La prima persona nel testo resta la mia, perché esperienze e opinioni sono mie. Lo dico per onestà, ma anche perché è un esempio concreto di quello che questa serie racconta: un agente AI, personalizzato con le mie skill, può svolgere gran parte di un lavoro come questo, purché riceva buone indicazioni e qualcuno controlli quello che fa."
+  },
+  {
+    "objectID": "posts/serie-ai/index.html",
+    "href": "posts/serie-ai/index.html",
+    "title": "Tre dritte sull’AI",
+    "section": "",
+    "text": "Codex, Claude Code, GPT Edu, Skill: qualche dritta per iniziare a usarli."
+  },
+  {
+    "objectID": "posts/serie-ai/index.html#chi-non-ha-chatgpt-edu",
+    "href": "posts/serie-ai/index.html#chi-non-ha-chatgpt-edu",
+    "title": "Tre dritte sull’AI",
+    "section": "Chi non ha ChatGPT Edu",
+    "text": "Chi non ha ChatGPT Edu\nIl post su ChatGPT Edu è per chi ce l’ha fornito dall’università (Padova o altro ente). Chi paga di tasca propria, secondo me, fa meglio a prendere Claude Pro (circa 22 € al mese IVA inclusa).\nLa logica simile ma non identica: non c’è la distinzione Chat/Work, e tutto l’utilizzo (chat, Claude Code, ecc.) attinge a un unico budget con limiti su 5 ore e sulla settimana. Conviene sempre usarlo in modo mirato. Se avete capito e apprezzato la logica degli agenti, il modo migliore di spenderlo, a parer mio, è quasi sempre Claude Code da terminale (vedi la guida)."
   }
 ]
