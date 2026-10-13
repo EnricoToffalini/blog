@@ -10,7 +10,7 @@ format: html
 
 Questo è il terzo post di una piccola serie. Nel primo ho parlato degli <a href="../agenti-cli/index.html">**agenti AI da terminale**</a> (Claude Code e Codex), nel secondo di <a href="../gpt-edu/index.html">**ChatGPT Edu**</a>. In entrambi ho accennato alle **skill**, rimandando a un post dedicato. Eccolo.
 
-Il punto di partenza è un'esperienza comune. Si chiede all'AI uno script R, e arriva con il tidyverse anche se non lo usate. Si chiede un report, e arriva in R Markdown, o in Word, anche se lavorate in Quarto. Si chiede una email, e arriva con tre righe di convenevoli che non scrivereste mai. Si corregge, e la volta dopo si ricomincia da capo. Il modello non è sbagliato: produce la risposta "media", quella che andrebbe bene per chiunque. Ma chi fa ricerca lavora quasi sempre con **convenzioni precise**: sul codice, sulla scrittura, sul reporting, su certe analisi, su certe procedure. Le skill sono lo strumento per insegnarle all'AI una volta sola.
+Partiamo da un'esperienza comune. Chiedete all'AI uno script R, e quello se ne esce con cinque pacchetti tidyverse anche se a voi tidyverse non è mai piaciuto e non l'avreste usato. Chiedete un report, e lui vi produce un html o un pdf pure bellissimo, ma l'editabile è in un formato sconosciuto mentre voi l'avreste voluto in Quarto ma vi siete dimenticati di specificarlo. Chiedete di abbozzare una email per comunicare cordialmente un singolo punto breve e conciso e quello inizia con tre righe di convenevoli che voi non scrivereste mai. Si corregge... ma la volta dopo si ricomincia da capo. Il modello non è sbagliato: produce la risposta "media", ma non quella che fa per voi. Ma chi fa ricerca, comunque, lavora quasi sempre con **convenzioni precise**: sul codice, sulla scrittura, sul reporting, su certe analisi, su certe procedure. E oltre a questo, ciascuno di noi ha le proprie personalissime convenzioni, alle quali non vuole rinunciare. Le skill offrono uno strumento abbastanza semplice per "insegnarle" al vostro AI una volta per tutte.
 
 > **In breve.** Una skill è un file di istruzioni (più eventuali materiali di supporto) che descrive *come* svolgere un certo tipo di compito. L'AI la carica da sola quando il compito lo richiede. Funziona allo stesso modo in chat e negli agenti da terminale, con Claude e con ChatGPT/Codex.
 
@@ -50,25 +50,25 @@ La differenza chiave è che una skill è legata a **cosa** si sta facendo, non a
 
 Chi fa ricerca accumula convenzioni, spesso senza accorgersene. Qualche esempio, dal mio caso ma credo generalizzabile:
 
-- **Scrittura**: registro diverso per email a studenti, a colleghi, a editor; nella prosa scientifica frasi brevi, niente enfasi, cautela specifica e non generica, certe formule da usare e altre da evitare.
-- **Codice**: R di default e non Python; base R più pacchetti mirati, `ggplot2` per i grafici ma non il resto del tidyverse; nomi brevi e ordinari per gli oggetti; codice che si legge dall'alto in basso, senza astrazioni inutili; modifiche chirurgiche al codice esistente.
-- **Reporting**: Quarto come scelta predefinita per report, siti, materiali supplementari; certe convenzioni grafiche; tabelle che non si accavallano; struttura delle cartelle semplice.
-- **Procedure operative**: quale calendario usare per quale tipo di impegno (con i relativi identificativi), come nominare gli eventi, cosa l'AI può fare da sola e cosa deve solo proporre.
+- **Codice**: R di default, Python dove necessario; R base più pacchetti mirati, `ggplot2` per i grafici ma non il resto del tidyverse (a me non piace molto, ma qualche funzione è davvero utile); nomi brevi e ordinari per gli oggetti, con certe convenzioni ricorrenti; codice che si legge dall'alto in basso senza astrazioni inutili; poco wrapping dentro funzioni; modifiche chirurgiche al codice esistente (non è come lo farebbe un ingegnere, ma è come lo farei io). 
+- **Reporting**: Quarto come scelta predefinita per report, siti, materiali supplementari; certe convenzioni grafiche; tabelle che non si accavallano; struttura delle cartelle semplice. 
+- **Scrittura**: registro diverso per revisione email a colleghi, collaboratori, amici, studenti, editor; per aiuto nella prosa scientifica sempre frasi brevi, niente enfasi, cautela specifica e non generica, certe formule da preferire, altre da evitare. 
+- **Procedure operative specifiche**: quale calendario usare per quale tipo di impegno (con i relativi identificativi), come nominare gli eventi, cosa l'AI può fare anche da sola e cosa deve solo proporre.
 
-Ciascuna di queste cose, presa da sola, è banale. Il problema è che sono decine, e ripeterle a ogni richiesta è impossibile. Senza skill si finisce per accettare la risposta "media" o per correggerla a mano ogni volta. Con le skill succedono tre cose:
+Ciascuna di queste cose, presa da sola, è banale. Il problema è che sono decine, e ripeterle a ogni richiesta diventa fastidioso Senza skill si finisce per accettare di default la risposta "media" o correggerla a mano ogni volta. Con le skill succedono tre cose:
 
-- **si accelera**: meno correzioni, meno spiegazioni, meno avanti e indietro;
-- **si personalizza**: i risultati assomigliano molto di più a quello che avreste fatto voi;
-- **si standardizza**: progetti diversi, fatti a mesi di distanza o con strumenti diversi, seguono le stesse convenzioni. Questo vale ancora di più se le skill sono condivise in un gruppo di ricerca.
+- **si accelera**: meno correzioni, meno spiegazioni, meno avanti e indietro; 
+- **si personalizza**: i risultati assomigliano a quello che avreste fatto voi; 
+- **si standardizza**: progetti diversi, fatti a mesi di distanza o con strumenti diversi, seguono le stesse convenzioni. Questo vale ancora di più se le skill sono condivise in un gruppo di ricerca. 
 
-Le mie skill sono pubbliche <a href="https://github.com/EnricoToffalini/ai-skills" target="_blank">qui</a>. Sono personali e non vanno copiate così come sono, ma possono servire come modello.
+Le mie skill sono pubbliche <a href="https://github.com/EnricoToffalini/ai-skills" target="_blank">qui</a>. Dato che sono personali (alcune personalissime, come quelle con gli ID dei calendar) non vanno copiate così come sono, ma possono servire da base
 
 
 ## 4. Oltre lo stile: condensare un'expertise
 
-Finora ho parlato di preferenze. Ma l'uso più interessante delle skill, secondo me, è un altro: **mettere per iscritto una competenza**, in modo che l'AI la applichi in modo coerente.
+Prima ho parlato di preferenze. Ma l'uso più interessante delle skill secondo me è un altro: **mettere per iscritto una competenza**, in modo che l'AI la applichi in modo coerente.
 
-Molta della conoscenza di un ricercatore è tacita: come si fa *davvero* una certa analisi, quali controlli non vanno mai saltati, quali errori fanno tipicamente gli studenti, quali scelte sono difendibili e quali no. Una skill obbliga a esplicitarla, e una volta esplicitata diventa riutilizzabile. Qualche esempio di skill che un ricercatore o un gruppo potrebbe scrivere:
+Molta della conoscenza di un ricercatore è tacita: come si fa *davvero* una certa analisi quando si è davvero esperti, quali controlli non vanno mai saltati e quali magari consideriamo secondari, quali errori fanno tipicamente gli studenti, quali scelte sono difendibili e quali no. Una skill obbliga a esplicitarla, e una volta esplicitata diventa riutilizzabile, e anzi più che riutilizzabile: per il vostro AI diventa il default. Qualche esempio di skill che un ricercatore o un gruppo potrebbe scrivere:
 
 - **una pipeline di analisi**: ad esempio analisi fattoriale confermativa e invarianza di misura, con le scelte di stima appropriate al tipo di dati, i controlli da fare, gli indici da riportare e come interpretarli;
 - **simulazioni per l'analisi della potenza**, secondo un certo schema (parametri espliciti, numero di iterazioni, come riportare l'incertezza);
