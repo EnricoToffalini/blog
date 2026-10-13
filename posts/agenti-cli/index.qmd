@@ -60,7 +60,7 @@ Il punto di forza principale resta però la creazione e gestione di **progetti c
 
 - **progetti di ricerca** con revisione della letteratura e simulazioni (es. <a href="https://enricotoffalini.github.io/Most_interactions_are_wrong/" target="_blank">Most interactions are wrong</a>; <a href="https://github.com/EnricoToffalini/Taxometrics-Neurodevelopmental-Disorders" target="_blank">Taxometrics in neurodevelopmental disorders</a>);
 - **siti didattici** articolati (es. <a href="https://enricotoffalini.github.io/psicologia-intelligenza/" target="_blank">Psicologia dell'intelligenza</a>);
-- **app interattive** (es. <a href="https://github.com/EnricoToffalini/Dimensioni-Diagnosi-App" target="_blank">un laboratorio su dimensioni continue e categorie diagnostiche</a>) e perfino una demo di <a href="https://github.com/EnricoToffalini/mahabharata-game" target="_blank">videogioco</a> in Godot;
+- **app interattive** (es. <a href="https://github.com/EnricoToffalini/Dimensioni-Diagnosi-App" target="_blank">un laboratorio su dimensioni continue e categorie diagnostiche</a> e perfino una demo di <a href="https://github.com/EnricoToffalini/mahabharata-game" target="_blank">videogioco</a> in Godot);
 - **siti statici ed edizioni web** di testi, con originale, traduzione e glossario (es. questo piccolo <a href="https://enricotoffalini.github.io/IDS-2-estensioni/" target="_blank">sito informativo sugli indici IDS-2</a>, o godetevi queste <a href="https://enricotoffalini.github.io/Epitteto-Diatribe/" target="_blank">Diatribe di Epitteto</a>);
 - **raccolte documentali** (es. <a href="https://enricotoffalini.github.io/trasparenza-dati-normativi/" target="_blank">trasparenza e dati normativi</a>).
 
