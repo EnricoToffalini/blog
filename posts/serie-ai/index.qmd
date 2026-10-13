@@ -1,5 +1,5 @@
 ---
-title: "Tre dritte sull'AI" 
+title: "Tre cose sull'AI" 
 subtitle: "agents cli, gpt edu, skills"
 author:
   - "Claude (Anthropic)"
@@ -9,9 +9,9 @@ image: images/anteprima.png
 format: html
 ---
 
-Codex, Claude Code, GPT Edu, Skill: qualche dritta per iniziare a usarli. 
+Codex e Claude Code, GPT Edu, Skills: qualche dritta per mettersi a usarli. 
 
-1. → <a href="../agenti-cli/index.html">**Agenti AI da terminale**</a>. Claude Code e Codex (gpt) lavorano direttamente sui file del vostro computer: leggono progetti, lavorano su cartelle e documenti, scrivono ed eseguono codice, revisionano. Con guide passo-passo a <a href="../agenti-cli/claude-code.html">Claude Code</a> e a <a href="../agenti-cli/codex.html">Codex (gpt)</a>.
+1. → <a href="../agenti-cli/index.html">**Agenti AI da terminale**</a>. Claude Code e Codex (gpt) lavorano direttamente sui file del vostro computer e sono la vera 💣. Leggono progetti, lavorano su cartelle e documenti, scrivono ed eseguono codice, revisionano, prendono il controllo del browser, installano software. Con guide passo-passo a <a href="../agenti-cli/claude-code.html">Claude Code</a> e a <a href="../agenti-cli/codex.html">Codex (gpt)</a>.
 
 2. → <a href="../gpt-edu/index.html">**ChatGPT Edu**</a>. Come usarlo bene: Chat/work, livelli di ragionamento, connettori, progetti, gestione credito. 
 
@@ -20,6 +20,6 @@ Codex, Claude Code, GPT Edu, Skill: qualche dritta per iniziare a usarli.
 
 ## Chi non ha ChatGPT Edu
 
-Il post su ChatGPT Edu è per chi ce l'ha **fornito dall'università** (Padova o altro ente). Chi paga di tasca propria, secondo me, fa meglio a prendere **Claude Pro** (circa 22 € al mese IVA inclusa).
+Il post su ChatGPT Edu è per chi ce l'ha **fornito dall'università** (Padova o altro ente). Chi paga di tasca propria, secondo me, fa meglio a prendere **Claude Pro** (circa 22 € al mese IVA inclusa) – tranne nel caso abbia bisogno di creazione grafica (*claude*, per ora, non ha un generatore nativo di immagini come *gpt*).
 
-La logica simile ma non identica: non c'è la distinzione Chat/Work, e tutto l'utilizzo (chat, Claude Code, ecc.) attinge a un **unico budget** con limiti su 5 ore e sulla settimana. Conviene sempre usarlo in modo mirato. Se avete capito e apprezzato la logica degli agenti, il modo migliore di spenderlo, a parer mio, è quasi sempre **Claude Code da terminale** (vedi la <a href="../agenti-cli/claude-code.html">guida</a>).
+La logica è simile ma non identica: non c'è la distinzione Chat/Work, e tutto l'utilizzo (chat, Claude Code, ecc.) attinge a un **unico budget** con limiti su 5 ore e sulla settimana. Conviene sempre usarlo in modo mirato. Se avete capito e apprezzato la logica degli agenti, il modo migliore di spenderlo, a parer mio, è quasi sempre **Claude Code da terminale** (vedi la <a href="../agenti-cli/claude-code.html">guida</a>).
