@@ -1,5 +1,5 @@
 ---
-title: "Breve serie sull'AI" 
+title: "Tre cose sull'AI" 
 subtitle: "agents cli, gpt edu, skills"
 author:
   - "Claude (Anthropic)"
