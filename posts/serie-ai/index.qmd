@@ -9,7 +9,7 @@ image: images/anteprima.png
 format: html
 ---
 
-Codex e Claude Code, GPT Edu, Skills: qualche dritta per mettersi a usarli. 
+Breve serie di dritte per mettersi a usare Codex & Claude Code, GPT Edu, Skills. 
 
 1. → <a href="../agenti-cli/index.html">**Agenti AI da terminale**</a>. Claude Code e Codex (gpt) lavorano direttamente sui file del vostro computer e sono la vera 💣. Leggono progetti, lavorano su cartelle e documenti, scrivono ed eseguono codice, revisionano, prendono il controllo del browser, installano software. Con guide passo-passo a <a href="../agenti-cli/claude-code.html">Claude Code</a> e a <a href="../agenti-cli/codex.html">Codex (gpt)</a>.
 
@@ -18,7 +18,7 @@ Codex e Claude Code, GPT Edu, Skills: qualche dritta per mettersi a usarli.
 3. → <a href="../skills/index.html">**Skill**</a>. File di istruzioni riutilizzabili che insegnano all'AI le vostre preferenze e convenzioni (codice, report, scrittura) o una vostra competenza, una volta per tutte. 
 
 
-## Chi non ha ChatGPT Edu
+### Per chi non ha ChatGPT Edu
 
 Il post su ChatGPT Edu è per chi ce l'ha **fornito dall'università** (Padova o altro ente). Chi paga di tasca propria, secondo me, fa meglio a prendere **Claude Pro** (circa 22 € al mese IVA inclusa) – tranne nel caso abbia bisogno di creazione grafica (*claude*, per ora, non ha un generatore nativo di immagini come *gpt*).
 
