@@ -1,6 +1,6 @@
 ---
 title: "Guida rapida a Claude Code"
-subtitle: "Parte di: Agenti AI da terminale"
+subtitle: "Parte di: Agenti AI in locale"
 author:
   - "Claude (Anthropic)"
   - "Enrico Toffalini"
@@ -8,9 +8,11 @@ date: "2026-10-11"
 format: html
 ---
 
-← <a href="index.html">Torna alla parte generale</a> · Vai alla <a href="codex.html">guida a Codex</a>
+← <a href="index.html">Torna alla parte generale</a> · Vai alla <a href="codex.html">guida a Codex</a> · <a href="app-desktop.html">Guida alle app desktop</a>
 
-Questa guida mostra i primi passi con <a href="https://code.claude.com/docs" target="_blank">Claude Code</a> su **Windows** (versione usata: 2.1.296, ottobre 2026). Su macOS e Linux i passaggi sono quasi identici: cambia solo il comando di installazione. Le schermate vengono da una sessione reale, in una cartella di prova con un piccolo dataset simulato.
+Questa guida mostra i primi passi con <a href="https://code.claude.com/docs" target="_blank">Claude Code</a> su **Windows** (versione usata: 2.1.296, ottobre 2026). Su macOS e Linux i passaggi sono quasi identici: cambia solo il comando di installazione. Le schermate vengono da una sessione reale, in una cartella di prova con un piccolo dataset simulato (un esempio giocattolo inventato da Claude, senza alcun legame con dati o ricerche reali: vedi la <a href="index.html#un-esempio-concreto-stesso-compito-due-agenti">nota nella parte generale</a>).
+
+Qui si usa il terminale. Se preferite evitarlo, le stesse cose si fanno dalla scheda *Code* dell'app desktop di Claude: vedi la <a href="app-desktop.html">**guida alle app desktop**</a>, che ripete lo stesso esempio.
 
 ### Obiettivi della guida
 
@@ -166,7 +168,7 @@ Se sul vostro account <a href="https://claude.ai" target="_blank">claude.ai</a> 
 
 ---
 
-← <a href="index.html">Torna alla parte generale</a> · Vai alla <a href="codex.html">guida a Codex</a>
+← <a href="index.html">Torna alla parte generale</a> · Vai alla <a href="codex.html">guida a Codex</a> · <a href="app-desktop.html">Guida alle app desktop</a>
 
 
 ::: {.callout-note appearance="simple" icon="false"}

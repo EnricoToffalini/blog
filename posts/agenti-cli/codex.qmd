@@ -1,6 +1,6 @@
 ---
 title: "Guida rapida a Codex"
-subtitle: "Parte di: Agenti AI da terminale"
+subtitle: "Parte di: Agenti AI in locale"
 author:
   - "Claude (Anthropic)"
   - "Enrico Toffalini"
@@ -8,9 +8,11 @@ date: "2026-10-11"
 format: html
 ---
 
-← <a href="index.html">Torna alla parte generale</a> · Vai alla <a href="claude-code.html">guida a Claude Code</a>
+← <a href="index.html">Torna alla parte generale</a> · Vai alla <a href="claude-code.html">guida a Claude Code</a> · <a href="app-desktop.html">Guida alle app desktop</a>
 
-Questa guida mostra i primi passi con <a href="https://github.com/openai/codex" target="_blank">Codex CLI</a> di OpenAI su **Windows** (versione usata: 0.159.0, ottobre 2026), con un account **ChatGPT Edu** fornito dall'ateneo. Su macOS e Linux cambia solo il comando di installazione. Le schermate vengono da una sessione reale, nella stessa cartella di prova usata per la <a href="claude-code.html">guida a Claude Code</a>.
+Questa guida mostra i primi passi con <a href="https://github.com/openai/codex" target="_blank">Codex CLI</a> di OpenAI su **Windows** (versione usata: 0.159.0, ottobre 2026), con un account **ChatGPT Edu** fornito dall'ateneo. Su macOS e Linux cambia solo il comando di installazione. Le schermate vengono da una sessione reale, nella stessa cartella di prova usata per la <a href="claude-code.html">guida a Claude Code</a>, con lo stesso dataset simulato (un esempio giocattolo inventato da Claude, senza alcun legame con dati o ricerche reali: vedi la <a href="index.html#un-esempio-concreto-stesso-compito-due-agenti">nota nella parte generale</a>).
+
+Qui si usa il terminale. Se preferite evitarlo, le stesse cose si fanno dall'app desktop di ChatGPT, nella sezione *Codex*: vedi la <a href="app-desktop.html">**guida alle app desktop**</a>, che ripete lo stesso esempio.
 
 ### Obiettivi della guida
 
@@ -160,7 +162,7 @@ Con l'account Edu di ateneo Codex funziona bene per tutto il lavoro in locale mo
 
 ---
 
-← <a href="index.html">Torna alla parte generale</a> · Vai alla <a href="claude-code.html">guida a Claude Code</a>
+← <a href="index.html">Torna alla parte generale</a> · Vai alla <a href="claude-code.html">guida a Claude Code</a> · <a href="app-desktop.html">Guida alle app desktop</a>
 
 
 ::: {.callout-note appearance="simple" icon="false"}

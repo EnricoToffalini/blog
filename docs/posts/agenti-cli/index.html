@@ -9,7 +9,7 @@
 <meta name="author" content="Claude (Anthropic)">
 <meta name="author" content="Enrico Toffalini">
 
-<title>Agents AI da terminale: Primi passi con Codex e Claude Code e come vi cambiano il lavoro (anche in ricerca) – blog</title>
+<title>Agenti AI in locale, da terminale o da app: Primi passi con Codex e Claude Code e come vi cambiano il lavoro (anche in ricerca) – blog</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -119,7 +119,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Agents AI da terminale: Primi passi con Codex e Claude Code e come vi cambiano il lavoro (anche in ricerca)</h1>
+      <h1 class="title">Agenti AI in locale, da terminale o da app: Primi passi con Codex e Claude Code e come vi cambiano il lavoro (anche in ricerca)</h1>
                       </div>
   </div>
     
@@ -156,14 +156,15 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p>Chi usa l’AI solo dalla chat nel browser ne sta usando una frazione. Gli <strong>agenti da terminale</strong> (<em>command line interface</em>, CLI), come <a href="https://code.claude.com/docs" target="_blank"><strong>Claude Code</strong></a> di Anthropic e <a href="https://github.com/openai/codex" target="_blank"><strong>Codex</strong></a> di OpenAI, lavorano direttamente sui file del vostro computer: leggono una cartella di progetto, scrivono e modificano script, li eseguono, guardano gli errori, correggono, rieseguono. Non vi restituiscono un pezzo di codice da copiare e incollare: fanno il lavoro nella cartella e vi dicono cosa hanno fatto.</p>
-<p>Questo post ha tre parti:</p>
+<p>Chi usa l’AI solo dalla chat nel browser ne sta usando una frazione. Gli <strong>agenti AI in locale</strong>, come <a href="https://code.claude.com/docs" target="_blank"><strong>Claude Code</strong></a> di Anthropic e <a href="https://github.com/openai/codex" target="_blank"><strong>Codex</strong></a> di OpenAI, lavorano direttamente sui file del vostro computer: leggono una cartella di progetto, scrivono e modificano script, li eseguono, guardano gli errori, correggono, rieseguono. Non vi restituiscono un pezzo di codice da copiare e incollare: fanno il lavoro nella cartella e vi dicono cosa hanno fatto. Si possono usare dal <strong>terminale</strong> (<em>command line interface</em>, CLI), che è il modo che preferisco, oppure da <strong>app desktop</strong>, che fanno lo stesso lavoro con menu e pannelli al posto dei comandi.</p>
+<p>Questo post ha quattro parti:</p>
 <ul>
 <li>una parte generale su cosa cambia rispetto alla chat nel browser (questa pagina);</li>
-<li>una <a href="claude-code.html"><strong>guida passo-passo a Claude Code</strong></a>;</li>
-<li>una <a href="codex.html"><strong>guida passo-passo a Codex</strong></a>.</li>
+<li>una <a href="claude-code.html"><strong>guida passo-passo a Claude Code</strong></a> da terminale;</li>
+<li>una <a href="codex.html"><strong>guida passo-passo a Codex</strong></a> da terminale;</li>
+<li>una <a href="app-desktop.html"><strong>guida alle app desktop</strong></a> di entrambi, per chi preferisce evitare il terminale.</li>
 </ul>
-<p>Le due guide mostrano installazione, primo utilizzo, scelta del modello e dello sforzo di ragionamento (<em>effort</em>), controllo dei limiti di utilizzo e modalità di lavoro (automatica, con approvazione, <em>plan</em>). Non sono guide esaustive. Coprono le cose che servono per partire.</p>
+<p>Le guide mostrano installazione, primo utilizzo, scelta del modello e dello sforzo di ragionamento (<em>effort</em>), controllo dei limiti di utilizzo e modalità di lavoro (automatica, con approvazione, <em>plan</em>). Non sono guide esaustive. Coprono le cose che servono per partire.</p>
 <figure class="figure">
 <img src="images/claude-02-analisi.png" alt="Claude Code al lavoro su un'analisi in R" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
 <figcaption>
@@ -174,7 +175,7 @@ Claude Code ha letto un dataset, scritto ed eseguito uno script R e riassunto i 
 <h2 class="anchored" data-anchor-id="cosa-cambia-rispetto-alla-chat-nel-browser">Cosa cambia rispetto alla chat nel browser</h2>
 <section id="lagente-lavora-sui-vostri-file-non-su-copie-incollate" class="level4">
 <h4 class="anchored" data-anchor-id="lagente-lavora-sui-vostri-file-non-su-copie-incollate">1. L’agente lavora sui vostri file, non su copie incollate</h4>
-<p>Nella chat si carica un file, si riceve una risposta, si copia il codice in RStudio, si lancia, si incolla l’errore nella chat, e così via. Con un agente da terminale questo ciclo sparisce. Lo lanciate dentro una cartella e lui vede tutto quello che c’è: dati, script, documenti Quarto, bibliografie, configurazioni. Può creare file nuovi, modificare quelli esistenti, eseguire R, Python, Quarto, Git, e qualsiasi altro programma installato.</p>
+<p>Nella chat si carica un file, si riceve una risposta, si copia il codice in RStudio, si lancia, si incolla l’errore nella chat, e così via. Con un agente in locale questo ciclo sparisce. Lo lanciate dentro una cartella (dal terminale, o selezionandola nell’app) e lui vede tutto quello che c’è: dati, script, documenti Quarto, bibliografie, configurazioni. Può creare file nuovi, modificare quelli esistenti, eseguire R, Python, Quarto, Git, e qualsiasi altro programma installato.</p>
 <p>La differenza pratica è enorme quando il progetto non è un singolo script ma una <strong>repository</strong> con decine di file che dipendono l’uno dall’altro: un articolo con analisi, figure e supplementari; un sito; un pacchetto R; una app.</p>
 </section>
 <section id="il-contesto-è-ricco-e-non-va-aggiornato-a-mano" class="level4">
@@ -227,7 +228,18 @@ Claude Code ha letto un dataset, scritto ed eseguito uno script R e riassunto i 
 </section>
 <section id="un-esempio-concreto-stesso-compito-due-agenti" class="level2">
 <h2 class="anchored" data-anchor-id="un-esempio-concreto-stesso-compito-due-agenti">Un esempio concreto: stesso compito, due agenti</h2>
-<p>Per le guide ho dato a entrambi gli agenti lo stesso compito, nella stessa cartella con lo stesso dataset simulato (240 studenti, ore di studio, ansia, gruppo triennale/magistrale, voto d’esame):</p>
+<p>Per le guide ho dato a entrambi gli agenti lo stesso compito, nella stessa cartella con lo stesso dataset simulato (240 studenti, ore di studio, ansia, gruppo triennale/magistrale, voto d’esame).</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Nota sui dati.</strong> Il dataset e l’analisi di regressione sono un esempio giocattolo <strong>inventato da Claude</strong>, di sua iniziativa, solo per mostrare come lavorano gli agenti. I dati sono simulati, e numeri, variabili e risultati non hanno nulla a che vedere con ricerche, dati o analisi mie, né di nessun altro.</p>
+</div>
+</div>
+</div>
+<p>La richiesta era questa:</p>
 <blockquote class="blockquote">
 <p><em>In questa cartella c’è dati_esame.csv. Dai un’occhiata ai dati, poi scrivi uno script R chiamato analisi.R che stima una regressione del voto su ore_studio, ansia e gruppo, eseguilo e spiegami i risultati in poche righe.</em></p>
 </blockquote>
@@ -264,9 +276,11 @@ Report prodotto da Codex
 <p>In breve: quando un limite si esaurisce, l’agente si ferma fino all’azzeramento. Il consumo dipende dalla quantità di lavoro più che dal numero di messaggi: modelli più potenti, <em>effort</em> più alto e conversazioni lunghe consumano di più. A differenza dell’uso via API, dove si paga per token, nei piani in abbonamento non è definito con precisione quanto lavoro stia in una finestra; ci si regola con un po’ di esperienza. Nella mia esperienza, se non si sviluppa software o progetti molto articolati, una finestra di 5 ore basta per numerosi compiti, anche con ragionamento elevato e modelli medio-avanzati, sia con Claude Code sia con Codex. Chi ha bisogno di più può passare a un piano superiore o, se il piano lo prevede, pagare a consumo oltre i limiti (<em>extra usage</em> su Claude, crediti su Codex); queste opzioni vanno attivate esplicitamente.</p>
 <p>Se la vostra <strong>università fornisce già un piano</strong> (ad esempio ChatGPT Edu), tanto meglio: partite da quello. Se dovete pagare di tasca vostra, poco più di 20 euro al mese sono una spesa che, per come la vedo io, si ripaga rapidamente in tempo risparmiato.</p>
 </section>
-<section id="il-terminale-non-deve-spaventare" class="level4">
-<h4 class="anchored" data-anchor-id="il-terminale-non-deve-spaventare">Il terminale non deve spaventare</h4>
-<p>Il terminale sembra ostile, ma qui serve pochissimo: aprirlo nella cartella giusta (tasto destro → <em>Apri nel terminale</em>) e scrivere <code>claude</code> oppure <code>codex</code>. Da lì in poi si parla in italiano. Le guide mostrano ogni passaggio con screenshot. Esistono anche app desktop ed estensioni per VS Code e simili, ma il terminale resta il modo più diretto e quello con più controllo.</p>
+<section id="terminale-o-app-desktop-la-stessa-superpotenza" class="level4">
+<h4 class="anchored" data-anchor-id="terminale-o-app-desktop-la-stessa-superpotenza">Terminale o app desktop: la stessa superpotenza</h4>
+<p>Il terminale sembra ostile, ma qui serve pochissimo: aprirlo nella cartella giusta (tasto destro → <em>Apri nel terminale</em>) e scrivere <code>claude</code> oppure <code>codex</code>. Da lì in poi si parla in italiano. Le guide mostrano ogni passaggio con screenshot.</p>
+<p>Io preferisco il terminale per come lavoro. Non apro l’app dell’AI chiedendomi “oggi cosa facciamo con l’AI?”: lavoro normalmente sulle mie cartelle e sui miei file, e quando mi accorgo che lì sarebbe utile un agente apro il terminale in quella cartella e lo chiamo. L’agente entra nel mio lavoro, non il contrario.</p>
+<p>Chi però col terminale proprio non si trova ha un’alternativa che fa <strong>lo stesso lavoro in locale</strong>: le <strong>app desktop</strong> di Claude (scheda <em>Code</em>) e di ChatGPT (sezione <em>Codex</em>). Si sceglie la cartella da un menu, e l’agente legge, scrive, esegue, usa le stesse skill. Le app aggiungono anche qualcosa: menu al posto dei comandi, pannelli con le modifiche ai file riga per riga, un terminale e un browser integrati, le sessioni ordinate per progetto. Il prezzo, secondo me, è un flusso un po’ meno fluido: ogni volta bisogna indicare all’app la cartella su cui lavorare, e in Codex la cartella diventa un “progetto” dell’app. È tutto mostrato, con screenshot, nella <a href="app-desktop.html"><strong>guida alle app desktop</strong></a>. Esistono anche estensioni per VS Code e simili.</p>
 </section>
 <section id="precauzioni" class="level4">
 <h4 class="anchored" data-anchor-id="precauzioni">Precauzioni</h4>
@@ -293,6 +307,7 @@ Report prodotto da Codex
 <ul>
 <li>→ <a href="claude-code.html"><strong>Guida a Claude Code</strong></a>: installazione, primo progetto, <code>/model</code>, <code>/effort</code>, <code>/usage</code>, modalità <em>auto</em>, <em>manual</em>, <em>accept edits</em>, <em>plan</em>.</li>
 <li>→ <a href="codex.html"><strong>Guida a Codex</strong></a>: installazione, primo progetto, <code>/model</code>, livello di ragionamento, <code>/status</code>, <code>/permissions</code>, <em>plan mode</em>.</li>
+<li>→ <a href="app-desktop.html"><strong>Guida alle app desktop</strong></a>: le stesse cose senza terminale, nell’app Claude e nell’app ChatGPT/Codex, più quello che le app aggiungono (pannelli per modifiche, file, terminale e browser).</li>
 </ul>
 <hr>
 <div class="callout callout-style-simple callout-note no-icon">

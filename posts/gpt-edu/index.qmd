@@ -123,8 +123,9 @@ ChatGPT Edu include **Codex**, l'agente che lavora direttamente sui file del vos
 
 Ne ho parlato estesamente qui:
 
-- → <a href="../agenti-cli/index.html">**Agenti AI da terminale**</a>: cosa cambia rispetto alla chat, con esempi di progetti reali;
-- → <a href="../agenti-cli/codex.html">**Guida rapida a Codex**</a>: installazione, primo progetto, modelli, ragionamento, limiti, permessi (con un account Edu).
+- → <a href="../agenti-cli/index.html">**Agenti AI in locale**</a>: cosa cambia rispetto alla chat, con esempi di progetti reali;
+- → <a href="../agenti-cli/codex.html">**Guida rapida a Codex**</a>: installazione, primo progetto, modelli, ragionamento, limiti, permessi (con un account Edu), da terminale;
+- → <a href="../agenti-cli/app-desktop.html">**Guida alle app desktop**</a>: lo stesso lavoro dall'app ChatGPT (sezione *Codex*), senza terminale.
 
 
 ## In sintesi

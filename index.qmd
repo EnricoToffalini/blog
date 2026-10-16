@@ -5,6 +5,7 @@ listing:
     - posts
     - "!posts/agenti-cli/claude-code.qmd"
     - "!posts/agenti-cli/codex.qmd"
+    - "!posts/agenti-cli/app-desktop.qmd"
   sort: "date desc"
   type: default
   categories: true

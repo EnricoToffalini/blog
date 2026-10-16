@@ -191,10 +191,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<p>Questo è il terzo post di una piccola serie. Nel primo ho parlato degli <a href="../agenti-cli/index.html"><strong>agenti AI da terminale</strong></a> (Claude Code e Codex), nel secondo di <a href="../gpt-edu/index.html"><strong>ChatGPT Edu</strong></a>. In entrambi ho accennato alle <strong>skill</strong>, rimandando a un post dedicato. Eccolo.</p>
+<p>Questo è il terzo post di una piccola serie. Nel primo ho parlato degli <a href="../agenti-cli/index.html"><strong>agenti AI in locale</strong></a> (Claude Code e Codex, da terminale o da app desktop), nel secondo di <a href="../gpt-edu/index.html"><strong>ChatGPT Edu</strong></a>. In entrambi ho accennato alle <strong>skill</strong>, rimandando a un post dedicato. Eccolo.</p>
 <p>Partiamo da un’esperienza comune. Chiedete all’AI uno script R, e quello se ne esce con cinque pacchetti tidyverse anche se a voi tidyverse non è mai piaciuto e non l’avreste usato. Chiedete un report, e lui vi produce un html o un pdf pure bellissimo, ma l’editabile è in un formato sconosciuto mentre voi l’avreste voluto in Quarto ma vi siete dimenticati di specificarlo. Chiedete di abbozzare una email per comunicare cordialmente un singolo punto breve e conciso e quello inizia con tre righe di convenevoli che voi non scrivereste mai. Si corregge… ma la volta dopo si ricomincia da capo. Il modello non è sbagliato: produce la risposta “media”, ma non quella che fa per voi. Ma chi fa ricerca, comunque, lavora quasi sempre con <strong>convenzioni precise</strong>: sul codice, sulla scrittura, sul reporting, su certe analisi, su certe procedure. E oltre a questo, ciascuno di noi ha le proprie personalissime convenzioni, alle quali non vuole rinunciare. Le skill offrono uno strumento abbastanza semplice per “insegnarle” al vostro AI una volta per tutte.</p>
 <blockquote class="blockquote">
-<p><strong>In breve.</strong> Una skill è un file di istruzioni (più eventuali materiali di supporto) che descrive <em>come</em> svolgere un certo tipo di compito. L’AI la carica da sola quando il compito lo richiede. Funziona allo stesso modo in chat e negli agenti da terminale, con Claude e con ChatGPT/Codex.</p>
+<p><strong>In breve.</strong> Una skill è un file di istruzioni (più eventuali materiali di supporto) che descrive <em>come</em> svolgere un certo tipo di compito. L’AI la carica da sola quando il compito lo richiede. Funziona allo stesso modo in chat e negli agenti in locale, con Claude e con ChatGPT/Codex.</p>
 </blockquote>
 <section id="cosè-una-skill" class="level2">
 <h2 class="anchored" data-anchor-id="cosè-una-skill">1. Cos’è una skill</h2>
@@ -318,7 +318,7 @@ Una delle mie skill su GitHub: a sinistra la cartella con <code>SKILL.md</code> 
 </section>
 <section id="dove-si-usano-chat-e-agenti" class="level2">
 <h2 class="anchored" data-anchor-id="dove-si-usano-chat-e-agenti">5. Dove si usano: chat e agenti</h2>
-<p>Le skill funzionano sia nelle interfacce in chat sia negli agenti da terminale. Cambia solo dove le si carica.</p>
+<p>Le skill funzionano sia nelle interfacce in chat sia negli agenti in locale. Cambia solo dove le si carica.</p>
 <p><strong>Claude, in chat (web e app desktop).</strong> Si caricano da <em>Personalizzazione</em> → <em>Competenze</em> (in inglese <em>Customize</em> → <em>Skills</em>), con il pulsante <em>Aggiungi</em>. Lì compaiono anche le skill fornite da Anthropic (documenti Word, PDF, presentazioni, ecc.), che si possono attivare o disattivare.</p>
 <figure class="figure">
 <img src="images/02-claude-skills.png" alt="pagina delle skill in Claude" style="width: 100%; max-width: 800px; height: auto; border: 2px solid #444444;" class="figure-img">
@@ -333,7 +333,7 @@ Le skill in Claude: in alto quelle create da me, sotto quelle fornite da Anthrop
 Le stesse skill caricate in ChatGPT Edu
 </figcaption>
 </figure>
-<p><strong>Claude Code e Codex, da terminale.</strong> Basta mettere le cartelle delle skill in una posizione nota: <code>~/.claude/skills/</code> per Claude Code e <code>~/.codex/skills/</code> per Codex (dove <code>~</code> è la vostra cartella utente). Così valgono per tutti i progetti. Si possono anche mettere dentro un singolo progetto (ad esempio in <code>.claude/skills/</code>), se riguardano solo quello: in questo caso viaggiano con la repository e le trova chiunque ci lavori. In Claude Code il comando <code>/skills</code> mostra quelle disponibili, e una skill si può richiamare esplicitamente con <code>/nome-della-skill</code>.</p>
+<p><strong>Claude Code e Codex, da terminale o da app desktop.</strong> Basta mettere le cartelle delle skill in una posizione nota: <code>~/.claude/skills/</code> per Claude Code e <code>~/.codex/skills/</code> per Codex (dove <code>~</code> è la vostra cartella utente). Così valgono per tutti i progetti. Si possono anche mettere dentro un singolo progetto (ad esempio in <code>.claude/skills/</code>), se riguardano solo quello: in questo caso viaggiano con la repository e le trova chiunque ci lavori. Le stesse cartelle valgono per le app desktop: nella <a href="../agenti-cli/app-desktop.html">guida alle app</a> si vede l’app Codex che legge la mia skill sui report da <code>~/.codex/skills/</code>, come da terminale. In Claude Code il comando <code>/skills</code> mostra quelle disponibili, e una skill si può richiamare esplicitamente con <code>/nome-della-skill</code>.</p>
 <p>Nella pratica, la maggior parte delle volte non serve richiamarle: l’agente le riconosce da solo. Nella <a href="../agenti-cli/codex.html">guida a Codex</a>, ad esempio, avevo chiesto soltanto di trasformare un’analisi in un report Quarto. Codex, prima di proporre il piano, è andato a leggersi la mia skill sui report:</p>
 <figure class="figure">
 <img src="images/04-codex-skill.png" alt="Codex legge una skill" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
@@ -341,7 +341,7 @@ Le stesse skill caricate in ChatGPT Edu
 Codex legge da solo <code>reporting-style-enrico/SKILL.md</code> (riga <em>Ran Get-Content …</em>) prima di pianificare il report
 </figcaption>
 </figure>
-<p>Negli agenti da terminale le skill rendono di più, perché l’agente può anche <strong>eseguire</strong> quello che la skill descrive: lanciare gli script di supporto, renderizzare il documento, controllare il risultato rispetto a una checklist.</p>
+<p>Negli agenti in locale le skill rendono di più, perché l’agente può anche <strong>eseguire</strong> quello che la skill descrive: lanciare gli script di supporto, renderizzare il documento, controllare il risultato rispetto a una checklist.</p>
 <p>Un dettaglio pratico: se volete usare la stessa skill in ambienti diversi, scrivetela in modo <strong>indipendente dallo strumento</strong>. Ad esempio, invece di “usa lo strumento X per leggere la mail”, “leggi la mail con gli strumenti disponibili”. Dove le differenze sono inevitabili (i connettori hanno nomi e opzioni diversi in Claude e in ChatGPT), basta una breve sezione che le elenca.</p>
 </section>
 <section id="come-scriverne-una" class="level2">
@@ -373,7 +373,7 @@ Codex legge da solo <code>reporting-style-enrico/SKILL.md</code> (riga <em>Ran G
 <h2 class="anchored" data-anchor-id="in-sintesi">In sintesi</h2>
 <ul>
 <li>Le skill sono cartelle con un file <code>SKILL.md</code>: nome, descrizione e istruzioni su <strong>come</strong> fare un certo tipo di compito.</li>
-<li>L’AI le carica da sola quando servono; funzionano in chat e negli agenti da terminale, con Claude e con ChatGPT/Codex.</li>
+<li>L’AI le carica da sola quando servono; funzionano in chat e negli agenti in locale (da terminale o app), con Claude e con ChatGPT/Codex.</li>
 <li>Servono a <strong>personalizzare</strong> (convenzioni di scrittura, codice, reporting, procedure) e a <strong>condensare un’expertise</strong> (pipeline di analisi, materiali, flussi di lavoro), rendendola riutilizzabile e condivisibile.</li>
 <li>Scrivetele partendo da problemi reali, con regole concrete e una descrizione precisa, e rivedetele nel tempo.</li>
 </ul>
