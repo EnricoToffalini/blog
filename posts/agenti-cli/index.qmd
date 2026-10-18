@@ -69,6 +69,8 @@ Molte di queste cose richiederebbero competenze di sviluppo web o software che c
 
 ::: {.callout-tip appearance="simple" icon="false"}
 **Formati aperti: un motivo in più.** Gli agenti rendono al meglio sui file di **testo semplice**: `.R`, `.py`, `.qmd`, `.md`, `.csv`, `.bib`. Li leggono direttamente, li modificano riga per riga, e ogni modifica si vede (e si annulla) con Git. Con i formati proprietari o binari (`.docx`, `.xlsx`, `.pptx`, `.sav`...) ce la fanno lo stesso, grazie alle skill e a librerie apposite, ma con un giro molto più lungo: estrarre il contenuto, modificarlo, ricomporre il file, renderizzarlo per controllare che la formattazione non sia saltata. Più tempo, più consumo dei limiti, più occasioni di errore. È lo stesso argomento dei principi <a href="https://mar-cald.github.io/fair/" target="_blank">**FAIR**</a>, da un'altra angolazione: quello che è leggibile da chiunque senza software particolari è leggibile e interoperabile meglio anche dall'AI. Se serviva una scusa per passare da Word ed Excel a Quarto e CSV+R, eccola!
+
+Detto questo, se si deve restare su Word (ad esempio per un documento condiviso con colleghi), esiste il componente aggiuntivo <a href="https://claude.com/docs/office-agents/word" target="_blank">**Claude for Word**</a> (piani a pagamento): lavora in un pannello laterale dentro Word, propone le modifiche come **revisioni** da accettare o rifiutare e risponde ai commenti. OpenAI ha l'equivalente, *ChatGPT for Word*, ma negli account di ateneo deve essere abilitato dagli amministratori.
 :::
 
 
