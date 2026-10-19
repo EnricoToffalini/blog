@@ -110,13 +110,13 @@ Il pannello dà anche suggerimenti utili: ad esempio, le conversazioni molto lun
 
 ## Le modalità di lavoro
 
-Con `Shift+Tab` si passa ciclicamente tra le modalità di lavoro. La modalità attiva è indicata in basso:
+Con `Shift+Tab` si passa da una modalità di lavoro all'altra. La modalità attiva è indicata in basso:
 
 <figure><img src="images/claude-05-modalita.png" alt="modalità di lavoro" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Premendo `Shift+Tab` si passa da *auto* a *manual*, *accept edits* e *plan*</figcaption></figure>
 
-- **auto** (il default nelle versioni recenti): Claude Code agisce senza chiedere, ma un secondo modello controlla in background ogni azione e blocca quelle potenzialmente pericolose. È la modalità più comoda per lavori lunghi.
+- **auto** (il default nelle versioni recenti): Claude Code agisce senza chiedere il permesso per ogni comando, ma un secondo modello controlla in background ogni azione e blocca quelle potenzialmente pericolose. È la modalità più comoda per lavori lunghi (però attenzione che può bloccarsi su alcuni comandi delicati e non completare realmente un task finché non si passa alla modalità *manual* per dare consenso esplicito).
 - **manual**: chiede il permesso prima di quasi ogni azione (modificare file, eseguire comandi, accedere alla rete). Lenta, ma è utile all'inizio per capire come lavora, o su materiale delicato.
-- **accept edits**: modifica i file senza chiedere, ma chiede prima di eseguire comandi.
+- **accept edits**: modifica i file senza chiedere ogni volta, ma chiede prima di eseguire altri comandi (onestamente mai usata). 
 - **plan**: legge ed esplora, ma **non modifica nulla**. Prima propone un piano; solo se lo approvate passa all'esecuzione.
 
 La modalità *plan* è la più sottovalutata. Per qualsiasi compito non banale conviene chiedere prima un piano. Nell'esempio ho chiesto, in modalità *plan*:

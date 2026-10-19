@@ -252,7 +252,7 @@ Il pannello <code>/usage</code>: costo stimato della sessione, e soprattutto la 
 </section>
 <section id="le-modalità-di-lavoro" class="level2">
 <h2 class="anchored" data-anchor-id="le-modalità-di-lavoro">Le modalità di lavoro</h2>
-<p>Con <code>Shift+Tab</code> si passa ciclicamente tra le modalità di lavoro. La modalità attiva è indicata in basso:</p>
+<p>Con <code>Shift+Tab</code> si passa da una modalità di lavoro all’altra. La modalità attiva è indicata in basso:</p>
 <figure class="figure">
 <img src="images/claude-05-modalita.png" alt="modalità di lavoro" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
 <figcaption>
@@ -260,9 +260,9 @@ Premendo <code>Shift+Tab</code> si passa da <em>auto</em> a <em>manual</em>, <em
 </figcaption>
 </figure>
 <ul>
-<li><strong>auto</strong> (il default nelle versioni recenti): Claude Code agisce senza chiedere, ma un secondo modello controlla in background ogni azione e blocca quelle potenzialmente pericolose. È la modalità più comoda per lavori lunghi.</li>
+<li><strong>auto</strong> (il default nelle versioni recenti): Claude Code agisce senza chiedere il permesso per ogni comando, ma un secondo modello controlla in background ogni azione e blocca quelle potenzialmente pericolose. È la modalità più comoda per lavori lunghi (però attenzione che può bloccarsi su alcuni comandi delicati e non completare realmente un task finché non si passa alla modalità <em>manual</em> per dare consenso esplicito).</li>
 <li><strong>manual</strong>: chiede il permesso prima di quasi ogni azione (modificare file, eseguire comandi, accedere alla rete). Lenta, ma è utile all’inizio per capire come lavora, o su materiale delicato.</li>
-<li><strong>accept edits</strong>: modifica i file senza chiedere, ma chiede prima di eseguire comandi.</li>
+<li><strong>accept edits</strong>: modifica i file senza chiedere ogni volta, ma chiede prima di eseguire altri comandi (onestamente mai usata).</li>
 <li><strong>plan</strong>: legge ed esplora, ma <strong>non modifica nulla</strong>. Prima propone un piano; solo se lo approvate passa all’esecuzione.</li>
 </ul>
 <p>La modalità <em>plan</em> è la più sottovalutata. Per qualsiasi compito non banale conviene chiedere prima un piano. Nell’esempio ho chiesto, in modalità <em>plan</em>:</p>
