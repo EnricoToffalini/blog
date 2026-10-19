@@ -22,9 +22,9 @@ In alto nella pagina c'è un selettore **Chat / Work**.
 - **Chat** è la conversazione classica: domande, testi, codice, analisi di file caricati, ricerche.
 - **Work** è la modalità "agente": in pratica è **Codex in cloud**. Stessi modelli, stessi livelli di ragionamento e soprattutto **stessi limiti d'uso** di Codex: quello che consumate in Work non lo avete più per Codex.
 
-<figure><img src="images/01-work.png" alt="modalità Work di ChatGPT" style="width: 100%; max-width: 800px; height: auto; border: 2px solid #444444;"><figcaption>La modalità Work: modello e livello di ragionamento in basso a destra, e sotto la scelta di progetto, file e plugin</figcaption></figure>
+**Raccomandazione:** usate **sempre Chat** per le richieste ordinarie, anche impegnative. Il credito Work conviene tenerlo per **Codex** in locale, che per il lavoro su progetti veri è molto più comodo e potente perché lavora direttamente sui vostri file (vedi il punto 7). **NON conviene sprecare crediti Work/Codex** per lavori anche complessi e ad alto ragionamento che possono concludersi in una **Chat** (eventualmente con qualche documento caricato in input e qualche documento scaricato come output). 
 
-**Raccomandazione:** usate **sempre Chat** per le richieste ordinarie, anche impegnative. Il credito Work conviene tenerlo per **Codex** in locale, che per il lavoro su progetti veri è molto più comodo e potente perché lavora direttamente sui vostri file (vedi il punto 7).
+<figure><img src="images/01-work.png" alt="modalità Work di ChatGPT" style="width: 100%; max-width: 800px; height: auto; border: 2px solid #444444;"><figcaption>La modalità Work: modello e livello di ragionamento in basso a destra, e sotto la scelta di progetto, file e plugin</figcaption></figure>
 
 
 ## 2. Modelli e livelli di ragionamento: la cosa più importante
