@@ -1,5 +1,5 @@
 ---
-title: "Agenti AI in locale, da terminale o da app: Primi passi con Codex e Claude Code e come vi cambiano il lavoro (anche in ricerca)"
+title: "Agenti AI in locale (da terminale o app): Primi passi con Codex e Claude Code e come vi cambiano il lavoro"
 author:
   - "Claude (Anthropic)"
   - "Enrico Toffalini"
@@ -22,21 +22,21 @@ Le guide mostrano installazione, primo utilizzo, scelta del modello e dello sfor
 <figure><img src="images/claude-02-analisi.png" alt="Claude Code al lavoro su un'analisi in R" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Claude Code ha letto un dataset, scritto ed eseguito uno script R e riassunto i risultati, in 23 secondi, da una sola richiesta in italiano</figcaption></figure>
 
 
-## Cosa cambia rispetto alla chat nel browser
+# Cosa cambia rispetto alla chat nel browser
 
-#### 1. L'agente lavora sui vostri file, non su copie incollate
+### 1. L'agente lavora sui vostri file, non su copie incollate
 
 Nella chat si carica un file, si riceve una risposta, si copia il codice in RStudio, si lancia, si incolla l'errore nella chat, e così via. Con un agente in locale questo ciclo sparisce. Lo lanciate dentro una cartella (dal terminale, o selezionandola nell'app) e lui vede tutto quello che c'è: dati, script, documenti Quarto, bibliografie, configurazioni. Può creare file nuovi, modificare quelli esistenti, eseguire R, Python, Quarto, Git, e qualsiasi altro programma installato.
 
 La differenza pratica è enorme quando il progetto non è un singolo script ma una **repository** con decine di file che dipendono l'uno dall'altro: un articolo con analisi, figure e supplementari; un sito; un pacchetto R; una app.
 
-#### 2. Il contesto è ricco e non va aggiornato a mano
+### 2. Il contesto è ricco e non va aggiornato a mano
 
 In chat il contesto è quello che incollate voi, e va ricostruito a ogni nuova conversazione. L'agente invece ricostruisce il contesto leggendo il progetto stesso: la struttura delle cartelle, il codice, la cronologia Git, i file di istruzioni del progetto (`CLAUDE.md` per Claude Code, `AGENTS.md` per Codex), che possono contenere convenzioni, obiettivi, cose da non toccare. Se il progetto cambia, il contesto cambia con lui, senza che dobbiate ricaricare nulla.
 
 A questo si aggiungono le **skill**: file di istruzioni riutilizzabili su come fare certe cose (ad esempio come scrivo codice, come imposto un report, come scrivo una email). L'agente le carica quando servono. Le mie sono pubbliche <a href="https://github.com/EnricoToffalini/ai-skills" target="_blank">qui</a>. Nella demo della <a href="codex.html">guida a Codex</a> si vede Codex che, prima di proporre un report, va a leggersi da solo la mia skill sullo stile dei report scientifici. Ne parlo in dettaglio nel <a href="../skills/index.html">post dedicato alle skill</a>.
 
-#### 3. Molto più controllo sul processo
+### 3. Molto più controllo sul processo
 
 Sembra un paradosso, ma l'agente che "fa da solo" dà più controllo della chat, non meno:
 
@@ -45,7 +45,7 @@ Sembra un paradosso, ma l'agente che "fa da solo" dà più controllo della chat,
 - se il progetto è sotto **Git** (vivamente consigliato: vedi il <a href="https://enricotoffalini.github.io/blog/posts/tutorial-git-quarto/" target="_blank">tutorial su Git e GitHub</a>), ogni modifica è tracciata e reversibile;
 - i risultati sono script e file veri, eseguibili e riproducibili, non testo in una chat.
 
-#### 4. Può agire anche fuori dal computer, tramite connettori
+### 4. Può agire anche fuori dal computer, tramite connettori
 
 Attraverso i **connettori** (tecnicamente server *MCP*) e l'estensione per il browser, un agente può leggere la posta, inserire impegni nel calendario, lavorare su Google Drive, navigare siti web, compilare moduli. Questo va abilitato esplicitamente e richiede cautela, ma apre possibilità notevoli. Qualche esempio dal mio uso reale:
 
@@ -55,7 +55,7 @@ Attraverso i **connettori** (tecnicamente server *MCP*) e l'estensione per il br
 
 Una nota pratica: in questo momento Codex con l'account **ChatGPT Edu** fornito dall'ateneo non può usare il browser, perché questa funzione è disattivata per scelta dell'ateneo. Claude Code con l'estensione per Chrome invece funziona.
 
-#### 5. Soprattutto: progetti interi, in locale, con molta potenza
+### 5. Soprattutto: progetti interi, in locale, con molta potenza
 
 Il punto di forza principale resta però la creazione e gestione di **progetti complessi**. Qualche esempio di cose che ho sviluppato negli ultimi mesi lavorando con questi agenti:
 
@@ -67,6 +67,14 @@ Il punto di forza principale resta però la creazione e gestione di **progetti c
 
 Molte di queste cose richiederebbero competenze di sviluppo web o software che chi fa ricerca in psicologia di solito non ha. Con un agente si possono fare, purché si sappia cosa si vuole e si controlli quello che viene prodotto.
 
+::: {.callout-important appearance="simple" icon="false"}
+**Il valore aggiunto: UN SOLO CENTRO DI COMANDO!** Un progetto non vive mai in un posto solo. Dati, codice e bozze stanno in una cartella; ma le decisioni stanno nelle mail e negli allegati, le versioni condivise su Drive, le scadenze nel calendario, la grafica su Canva. Il collante, finora, siamo noi: saltiamo tra finestre e piattaforme, scarichiamo allegati, trascriviamo date, ricordiamo chi ha deciso cosa. Ma questo collante è spesso la parte più fragile del lavoro. 
+
+Un agente lanciato nella cartella del progetto, con i connettori attivi, quel collante lo sopperisce bene: vede tutto nello stesso momento e (se vogliamo) può agire su tutto. Non è soltanto più veloce di noi. Ha una **visione d'insieme con un contesto cognitivo che facilmente supera il nostro**, perché nessuno tiene a mente insieme cartella, file, versioni, posta, calendario e Drive. Vale per un articolo scritto a più mani come per un convegno da organizzare. Anzi, il lavoro organizzativo, il più frammentato di tutti, è proprio quello che ci guadagna di più. Ed è esattamente ciò che manca alla chat nel browser: i connettori ce li ha, la cartella con il progetto vero no. 
+
+Non succede da solo, però: **va strutturato**. La cartella del progetto diventa il centro di comando, e il file di istruzioni del progetto (**`AGENTS.md`** [o **`CLAUDE.md`** se si lavora esclusivamente con Claude]) la mappa di tutto quello che sta fuori: quale etichetta della posta, quale cartella di Drive, quale calendario, chi sono i collaboratori. Un file di note tiene lo stato del lavoro da una sessione all'altra; le procedure ricorrenti vanno nelle <a href="../skills/index.html">skill</a>. E comunque l'agente legge tutto, suggerisce, abbozza... ma poi mail, eventi e condivisioni partono solo con il vostro click esplicito.
+:::
+
 ::: {.callout-tip appearance="simple" icon="false"}
 **Formati aperti: un motivo in più.** Gli agenti rendono al meglio sui file di **testo semplice**: `.R`, `.py`, `.qmd`, `.md`, `.csv`, `.bib`. Li leggono direttamente, li modificano riga per riga, e ogni modifica si vede (e si annulla) con Git. Con i formati proprietari o binari (`.docx`, `.xlsx`, `.pptx`, `.sav`...) ce la fanno lo stesso, grazie alle skill e a librerie apposite, ma con un giro molto più lungo: estrarre il contenuto, modificarlo, ricomporre il file, renderizzarlo per controllare che la formattazione non sia saltata. Più tempo, più consumo dei limiti, più occasioni di errore. È lo stesso argomento dei principi <a href="https://mar-cald.github.io/fair/" target="_blank">**FAIR**</a>, da un'altra angolazione: quello che è leggibile da chiunque senza software particolari è leggibile e interoperabile meglio anche dall'AI. Se serviva una scusa per passare da Word ed Excel a Quarto e CSV+R, eccola!
 
@@ -74,7 +82,7 @@ Detto questo, se si deve restare su Word (ad esempio per un documento condiviso 
 :::
 
 
-## Un esempio concreto: stesso compito, due agenti
+# Un esempio concreto: stesso compito, due agenti
 
 Per le guide ho dato a entrambi gli agenti lo stesso compito, nella stessa cartella con lo stesso dataset simulato (240 studenti, ore di studio, ansia, gruppo triennale/magistrale, voto d'esame).
 
@@ -100,9 +108,9 @@ Entrambi hanno impiegato circa 25 secondi e ottenuto gli stessi coefficienti. Po
 Due dettagli istruttivi. Primo: i due agenti hanno fatto **scelte diverse ma entrambe legittime** (gruppo di riferimento opposto, grafico diverso, tabella con o senza coefficienti standardizzati). Claude ha anche segnalato spontaneamente un limite reale dei dati: il voto ha un tetto a 30, quindi la regressione lineare può sottostimare gli effetti. Secondo: nessuno dei due vi esonera dal **leggere quello che hanno fatto**. Sono strumenti molto capaci, non arbitri della correttezza.
 
 
-## Cose da sapere prima di cominciare
+# Cose da sapere prima di cominciare
 
-#### Bisogna investire qualcosa
+### Bisogna investire qualcosa
 
 Siamo onesti: **servono piani a pagamento**. I piani gratuiti non includono Claude Code, e per Codex offrono al massimo un assaggio molto limitato. I listini sono in dollari e **IVA esclusa**: in Italia all'importo si aggiunge l'IVA al 22%. Indicativamente, a ottobre 2026:
 
@@ -115,7 +123,7 @@ In breve: quando un limite si esaurisce, l'agente si ferma fino all'azzeramento.
 
 Se la vostra **università fornisce già un piano** (ad esempio ChatGPT Edu), tanto meglio: partite da quello. Se dovete pagare di tasca vostra, poco più di 20 euro al mese sono una spesa che, per come la vedo io, si ripaga rapidamente in tempo risparmiato.
 
-#### Terminale o app desktop: la stessa superpotenza
+### Terminale o app desktop: la stessa superpotenza
 
 Il terminale sembra ostile, ma qui serve pochissimo: aprirlo nella cartella giusta (tasto destro → *Apri nel terminale*) e scrivere `claude` oppure `codex`. Da lì in poi si parla in italiano. Le guide mostrano ogni passaggio con screenshot.
 
@@ -123,7 +131,7 @@ Io preferisco il terminale per come lavoro. Non apro l'app dell'AI chiedendomi "
 
 Chi però col terminale proprio non si trova ha un'alternativa che fa **lo stesso lavoro in locale**: le **app desktop** di Claude (scheda *Code*) e di ChatGPT (sezione *Codex*). Si sceglie la cartella da un menu, e l'agente legge, scrive, esegue, usa le stesse skill. Le app aggiungono anche qualcosa: menu al posto dei comandi, pannelli con le modifiche ai file riga per riga, un terminale e un browser integrati, le sessioni ordinate per progetto. Il prezzo, secondo me, è un flusso un po' meno fluido: ogni volta bisogna indicare all'app la cartella su cui lavorare, e in Codex la cartella diventa un "progetto" dell'app. È tutto mostrato, con screenshot, nella <a href="app-desktop.html">**guida alle app desktop**</a>. Esistono anche estensioni per VS Code e simili.
 
-#### Precauzioni
+### Precauzioni
 
 - **Usate Git**, o almeno lavorate su copie. Un agente può modificare o cancellare file: con Git ogni modifica è reversibile.
 - **Dati sensibili**: non fate lavorare un agente su dati personali di partecipanti senza essere sicuri che sia consentito dalle regole del vostro ente e dalla normativa sulla protezione dei dati. I file che l'agente legge vengono inviati ai server del fornitore.
@@ -135,7 +143,7 @@ Chi però col terminale proprio non si trova ha un'alternativa che fa **lo stess
 :::
 
 
-## Le guide
+# Le guide
 
 - → <a href="claude-code.html">**Guida a Claude Code**</a>: installazione, primo progetto, `/model`, `/effort`, `/usage`, modalità *auto*, *manual*, *accept edits*, *plan*.
 - → <a href="codex.html">**Guida a Codex**</a>: installazione, primo progetto, `/model`, livello di ragionamento, `/status`, `/permissions`, *plan mode*.

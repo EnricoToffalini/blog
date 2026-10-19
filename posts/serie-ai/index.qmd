@@ -11,7 +11,7 @@ format: html
 
 Breve serie di dritte per mettersi a usare Codex & Claude Code, GPT Edu, Skills. 
 
-1. → <a href="../agenti-cli/index.html">**Agenti AI in locale**</a>. Claude Code e Codex (gpt) lavorano direttamente sui file del vostro computer e sono la vera 💣. Leggono progetti, lavorano su cartelle e documenti, scrivono ed eseguono codice, sviluppano progetti, revisionano, prendono il controllo del browser, installano software, ecc. Si usano da terminale o da app desktop. Con guide passo-passo a <a href="../agenti-cli/claude-code.html">**Claude Code**</a> e a <a href="../agenti-cli/codex.html">**Codex (gpt)**</a> da terminale, e alle <a href="../agenti-cli/app-desktop.html">**app desktop**</a> di entrambi.
+1. → <a href="../agenti-cli/index.html">**Agenti AI in locale**</a>. Claude Code e Codex (gpt) lavorano direttamente sui file del vostro computer e sono la vera 💣. Leggono progetti, lavorano su cartelle e documenti, scrivono ed eseguono codice, sviluppano progetti, revisionano, prendono il controllo del browser, installano software, ecc. E, con i connettori, tengono sott'occhio nello stesso momento la cartella del progetto e quello che sta in posta, calendario, Drive, Canva: tutto in un punto, meglio di come riusciremmo a fare noi saltando tra una piattaforma e l'altra. Si usano da terminale o da app desktop. Con guide passo-passo a <a href="../agenti-cli/claude-code.html">**Claude Code**</a> e a <a href="../agenti-cli/codex.html">**Codex (gpt)**</a> da terminale, e alle <a href="../agenti-cli/app-desktop.html">**app desktop**</a> di entrambi.
 
 2. → <a href="../gpt-edu/index.html">**ChatGPT Edu**</a>. Come usarlo bene e parsimoniosamente: Chat/Work, livelli di ragionamento, connettori, progetti, gestione credito. 
 
