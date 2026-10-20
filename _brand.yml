@@ -1,0 +1,28 @@
+# palette e font condivisi con enricotoffalini.github.io e /slides
+# (testo: Source Sans Pro di cosmo, come sulla homepage; titoli: Cormorant Garamond)
+color:
+  palette:
+    red: "#9b0014"
+    red-deep: "#5e0010"
+    gold: "#c8a26b"
+    ivory: "#fbf8f3"
+    ink: "#231c19"
+  primary: red
+  background: ivory
+  foreground: ink
+
+typography:
+  fonts:
+    - family: Cormorant Garamond
+      source: google
+      weight: [500, 600, 700]
+      style: [normal, italic]
+  base:
+    line-height: 1.65
+  headings:
+    family: Cormorant Garamond
+    weight: 600
+    color: ink
+  link:
+    color: red
+    decoration: none

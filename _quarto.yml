@@ -5,7 +5,7 @@ project:
   output-dir: docs
 
 website:
-  title: "blog"
+  title: "toffeeblog"
   navbar:
     left: 
       - href: https://enricotoffalini.github.io
@@ -16,6 +16,8 @@ website:
         text: "<img src='/images/faviconpsicostat2.png' style='height: 22px; margin-top: -4px;'>"
       - icon: github
         href: https://github.com/EnricoToffalini
+  page-footer:
+    center: "[Enrico Toffalini](https://enricotoffalini.github.io) · [Slides](https://enricotoffalini.github.io/slides/) · [Courses](https://enricotoffalini.github.io/Courses.html)"
 
 format:
   html:
