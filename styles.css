@@ -1,111 +1,435 @@
+/* toffeeblog
+   stessa palette e tipografia di enricotoffalini.github.io e /slides
+   (colori e font di base in _brand.yml) */
 
-/* GENERAL TEXT AND SETTINGS*/
+:root {
+  --red: #9b0014;
+  --red-deep: #5e0010;
+  --gold: #c8a26b;
+  --gold-light: #e7d3ae;
+  --ivory: #fbf8f3;
+  --ink: #231c19;
+  --muted: #6f625a;
+  --line: #e8e1d8;
+  --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --ease: cubic-bezier(.22, .9, .25, 1);
+}
+
+/* =========================================================
+   GENERAL TEXT AND SETTINGS
+   ========================================================= */
+
 @media (min-width: 900px) {
   body {
     margin-left: 2rem;
     margin-right: 3rem;
   }
 }
+body {
+  -webkit-font-smoothing: antialiased;
+}
 p {
-  font-size: 18px !important;
+  font-size: 18px;
 }
 a {
-  color: #9A0000 !important;
+  color: var(--red);
   text-decoration: none;
 }
 a:hover {
-  color: #555555 !important;
-  text-decoration: underline;
+  color: var(--red-deep);
 }
 ::selection {
-  background-color: #9A0000;
-  color: #ffffff;
+  background-color: var(--red);
+  color: #fff;
 }
-::-moz-selection {
-  background-color: #9A0000;
-  color: #ffffff;
-}
-.sidebar .active,
-.sidebar a.active,
-.sidebar .nav-link.active {
-  color: #9A0000 !important;
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
 }
 
+/* =========================================================
+   NAVBAR: red gradient, gold hairline, one light sweep
+   ========================================================= */
 
-/* RED BAR WITH WHITE TEXT AND ICONS */
-#quarto-header .navbar{
-  background-color: #9B0014 !important;
+#quarto-header .navbar {
+  background: linear-gradient(100deg, #7a0010 0%, var(--red) 45%, #a10d18 100%) !important;
+}
+#quarto-header .navbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 40%, rgba(255, 233, 200, .22) 50%, transparent 60%);
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  animation: sheen 1.8s ease-in-out .3s 1 both;
+  pointer-events: none;
+}
+#quarto-header .navbar::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold) 30%, var(--gold-light) 50%, var(--gold) 70%, transparent);
+  opacity: .75;
+  pointer-events: none;
 }
 #quarto-header,
 #quarto-header a,
 #quarto-header .navbar-brand,
 #quarto-header .navbar-nav .nav-link,
 #quarto-header .navbar-text {
-  color: #ffffff !important;
+  color: #fff !important;
 }
 #quarto-header svg,
 #quarto-header svg path {
-  stroke: #ffffff !important;
-  fill: #ffffff !important;
+  stroke: #fff !important;
+  fill: #fff !important;
+}
+#quarto-header .navbar-title {
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  font-weight: 600;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: .01em;
+}
+#quarto-header .navbar-nav .nav-link {
+  border-radius: 6px;
+  transition: background-color .3s ease;
+}
+#quarto-header .navbar-nav .nav-link:hover {
+  background-color: rgba(255, 255, 255, .12);
+}
+@keyframes sheen {
+  from { background-position: 100% 0; }
+  to   { background-position: 0% 0; }
 }
 
+/* reading progress bar, pure CSS (scroll-driven animation, ignored by browsers without support) */
+@supports (animation-timeline: scroll()) {
+  body::after {
+    content: "";
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 3px;
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+    box-shadow: 0 0 10px rgba(200, 162, 107, .7);
+    z-index: 2000;
+    pointer-events: none;
+    animation: progress linear both;
+    animation-timeline: scroll(root);
+  }
+}
+@keyframes progress { to { transform: scaleX(1); } }
 
-/* CALLOUTS */
-.callout {
-  border-color: #aaa !important;
-  border-left: 4px solid #9A0000 !important;
-  border-left-color: #9A0000 !important;
+/* =========================================================
+   TITLE BANNER (home and posts)
+   ========================================================= */
+
+.quarto-title-banner {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(115deg, var(--red-deep) 0%, #7a0010 35%, var(--red) 100%) !important;
+  color: #fff;
+  padding-top: 3.2rem !important;
+  padding-bottom: 2.6rem !important;
+  border-bottom: 1px solid var(--gold);
+}
+/* soft glows and paper grain, as in the home page background */
+.quarto-title-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(40rem 20rem at 85% 120%, rgba(200, 162, 107, .28), transparent 70%),
+    radial-gradient(30rem 16rem at 5% -30%, rgba(255, 255, 255, .10), transparent 70%);
+  pointer-events: none;
+}
+.quarto-title-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: .07;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  pointer-events: none;
+}
+@media (min-width: 900px) {
+  .quarto-title-banner {
+    margin-left: -2rem;
+    margin-right: -3rem;
+  }
+}
+.quarto-title-banner .quarto-title {
+  position: relative;
+  z-index: 1;
+}
+.quarto-title-banner h1.title,
+.quarto-title-banner .subtitle,
+.quarto-title-banner a {
+  color: #fff;
+}
+.quarto-title-banner h1.title {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(2.2rem, 4.6vw, 3.3rem);
+  line-height: 1.1;
+  letter-spacing: -.005em;
+  text-wrap: balance;
+  animation: rise-in .9s var(--ease) both;
+}
+.quarto-title-banner .subtitle {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.45rem;
+  opacity: .85;
+  margin-top: .4rem;
+  animation: rise-in .9s var(--ease) .12s both;
+}
+@media (max-width: 767.98px) {
+  .quarto-title-banner {
+    padding-top: 2.2rem !important;
+    padding-bottom: 1.8rem !important;
+  }
+}
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* author / date row under the banner, small caps as in /slides */
+.quarto-title-meta {
+  padding-top: .4rem;
+}
+.quarto-title-meta-heading {
+  font-size: .72rem !important;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.quarto-title-meta-contents {
+  font-size: .98rem;
+}
+
+/* =========================================================
+   POST TYPOGRAPHY
+   ========================================================= */
+
+main.content h2 {
+  font-size: clamp(1.7rem, 3vw, 2.05rem);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: .3em;
+  margin-top: 2.2em;
+}
+main.content h2::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 56px; height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--red), var(--gold));
+}
+main.content h3 {
+  font-size: 1.5rem;
+  color: var(--red-deep);
+  margin-top: 1.6em;
+}
+main.content h4 {
+  font-size: 1.25rem;
+  color: var(--red-deep);
+}
+
+/* animated underline for links in text */
+main.content p a,
+main.content li a,
+main.content td a {
+  background-image: linear-gradient(90deg, var(--red), var(--gold));
+  background-size: 0% 1.5px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  border-bottom: 1px solid rgba(155, 0, 20, .25);
+  transition: background-size .45s var(--ease), color .3s ease, border-color .3s ease;
+}
+main.content p a:hover,
+main.content li a:hover,
+main.content td a:hover {
+  background-size: 100% 1.5px;
+  border-bottom-color: transparent;
+}
+
+main.content hr {
+  border: 0;
+  height: 1px;
+  opacity: 1;
+  background: linear-gradient(90deg, transparent, rgba(155, 0, 20, .35), var(--gold), rgba(155, 0, 20, .35), transparent);
+  margin: 2.4rem 0;
+}
+
+main.content blockquote,
+main.content .blockquote {
+  border-left: 3px solid var(--gold);
+  background: rgba(255, 255, 255, .7);
+  border-radius: 0 10px 10px 0;
+  padding: .9rem 1.3rem;
+  margin: 1.6rem 0;
+  color: var(--ink);
+}
+main.content blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+main.content :not(pre) > code {
+  color: var(--red-deep);
+  background: rgba(200, 162, 107, .16);
+  border-radius: 4px;
+  padding: .1em .35em;
+}
+div.sourceCode,
+main.content pre {
   background-color: #fff;
-  border-radius: 8px;
-  border-width: 2px !important;
-  border-left-width: 6px !important;
-  padding: 1rem 1.25rem; 
-  margin: 1em 0;
-  font-size: 0.95rem;
-  line-height: 1.4; 
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+main.content pre {
+  padding: .8rem 1rem;
+}
+div.sourceCode pre,
+main.content pre code {
+  background-color: transparent;
+  border: 0;
+}
+
+main.content table {
+  font-size: .95rem;
+}
+main.content table thead th {
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1.5px solid var(--ink) !important;
+}
+
+figcaption,
+.figure-caption {
+  font-size: .9rem;
+  color: var(--muted);
+}
+
+/* =========================================================
+   CALLOUTS AND DETAILS
+   ========================================================= */
+
+.callout {
+  border: 1px solid var(--line) !important;
+  border-left: 4px solid var(--red) !important;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin: 1.4em 0;
+  font-size: .95rem;
+  line-height: 1.5;
+  box-shadow: 0 2px 10px rgba(60, 0, 8, .04);
 }
 .callout .callout-header {
-  background-color: #fff !important;
-  color: #9A0000;
+  background-color: transparent !important;
+  color: var(--red);
   font-weight: 600;
   font-size: 17px !important;
   display: flex;
-  align-items: center;  
-  gap: 0.4em;
-  padding: 0.25rem 0; 
-}
-.callout:hover {
-  background-color: #fff;
-  transition: background-color 0.2s ease-in-out;
+  align-items: center;
+  gap: .4em;
+  padding: .25rem 0;
 }
 .callout-icon::before {
-  color: #9A0000 !important;
-}
-.callout:focus-within,
-.callout:active {
-  outline: none;
-  border-left-color: #9A0000 !important;
+  color: var(--red) !important;
 }
 
+details {
+  background: rgba(255, 255, 255, .7);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--red);
+  border-radius: 10px;
+  padding: 10px 16px;
+  margin: 1rem 0;
+  transition: box-shadow .4s var(--ease), border-color .4s ease;
+}
+details:hover {
+  box-shadow: 0 10px 26px rgba(60, 0, 8, .08);
+  border-left-color: var(--gold);
+}
+details[open] {
+  background-color: #fff;
+}
+details > summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+details > summary::marker {
+  color: var(--red);
+}
 
-/* CUSTOM STYLE TYPES */
+/* =========================================================
+   CUSTOM STYLE TYPES
+   ========================================================= */
+
 .abstract {
-    font-style: italic;
-    font-size: 0.85em;
-    color: #333333;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    margin-left: 40px;     
-    margin-right: 40px; 
-    text-align: justify;
+  font-style: italic;
+  font-size: .85em;
+  color: #333;
+  margin: 20px 40px;
+  text-align: justify;
 }
 .comment {
-    font-style: italic;
-    font-size: 0.85em;
-    color: #9A0000;
-    text-align: justify;
+  font-style: italic;
+  font-size: .85em;
+  color: var(--red);
+  text-align: justify;
 }
 .sidebar-item-container {
-    margin-top: 20px;
+  margin-top: 20px;
+}
+.sidebar .active,
+.sidebar a.active,
+.sidebar .nav-link.active {
+  color: var(--red) !important;
 }
 
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.nav-footer {
+  position: relative;
+  border-top: 0;
+  font-size: .85rem;
+  color: var(--muted);
+}
+.nav-footer::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 50%;
+  width: min(260px, 60%);
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, rgba(155, 0, 20, .35), var(--gold), rgba(155, 0, 20, .35), transparent);
+}
+.nav-footer a {
+  color: var(--red);
+}
+
+/* =========================================================
+   NO ANIMATIONS FOR USERS WHO PREFER REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-delay: 0s !important;
+    transition-duration: .001ms !important;
+  }
+}

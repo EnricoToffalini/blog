@@ -1,108 +1,146 @@
+/* home page (listing of posts); general rules in styles.css */
 
-/* GENERAL TEXT AND SETTINGS*/
-@media (min-width: 900px) {
-  body {
-    margin-left: 2rem;
-    margin-right: 3rem;
-  }
-}
-p {
-  font-size: 18px !important;
-}
-a {
-  color: black !important;
-  text-decoration: none;
-}
-a:hover {
-  color: #555555 !important;
-  text-decoration: underline;
-}
-::selection {
-  background-color: #9B0014;
-  color: #ffffff;
-}
-::-moz-selection {
-  background-color: #9B0014;
-  color: #ffffff;
-}
-.sidebar .active,
-.sidebar a.active,
-.sidebar .nav-link.active {
-  color: #9B0014 !important;
+#listing-listing {
+  margin-top: -1rem;
 }
 
-/* RED BAR WITH WHITE TEXT AND ICONS */
-#quarto-header .navbar{
-  background-color: #9B0014 !important;
+/* posts as light cards, in the style of /slides */
+.quarto-listing-default .quarto-post {
+  position: relative;
+  padding: 1.6rem 1.4rem;
+  margin-bottom: .2rem;
+  border-bottom: 1px solid var(--line);
+  border-radius: 12px;
+  transition: background-color .35s ease, box-shadow .4s var(--ease), transform .4s var(--ease);
 }
-#quarto-header,
-#quarto-header a,
-#quarto-header .navbar-brand,
-#quarto-header .navbar-nav .nav-link,
-#quarto-header .navbar-text {
-  color: #ffffff !important;
+.quarto-listing-default .quarto-post::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 1.6rem; bottom: 1.6rem;
+  width: 3px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, var(--red), var(--gold));
+  opacity: 0;
+  transition: opacity .35s ease;
 }
-#quarto-header svg,
-#quarto-header svg path {
-  stroke: #ffffff !important;
-  fill: #ffffff !important;
-}
-
-/* CALLOUTS */
-.callout {
-  border-color: #aaa !important;
-  border-left: 4px solid #9B0014 !important;
-  border-left-color: #9B0014 !important;
+.quarto-listing-default .quarto-post:hover {
   background-color: #fff;
-  border-radius: 8px;
-  border-width: 2px !important;
-  border-left-width: 6px !important;
-  padding: 1rem 1.25rem; 
-  margin: 1em 0;
-  font-size: 0.95rem;
-  line-height: 1.4; 
+  border-bottom-color: transparent;
+  box-shadow: 0 14px 34px rgba(60, 0, 8, .08);
+  transform: translateY(-2px);
 }
-.callout .callout-header {
-  background-color: #fff !important;
-  color: #9B0014;
+.quarto-listing-default .quarto-post:hover::before {
+  opacity: 1;
+}
+
+/* staggered entrance */
+.quarto-listing-default .quarto-post {
+  animation: rise-in .8s var(--ease) both;
+}
+.quarto-listing-default .quarto-post:nth-child(2) { animation-delay: .06s; }
+.quarto-listing-default .quarto-post:nth-child(3) { animation-delay: .12s; }
+.quarto-listing-default .quarto-post:nth-child(4) { animation-delay: .18s; }
+.quarto-listing-default .quarto-post:nth-child(n+5) { animation-delay: .24s; }
+
+/* title, subtitle, description */
+.quarto-post .listing-title {
+  font-family: var(--serif);
   font-weight: 600;
-  font-size: 17px !important;
-  display: flex;
-  align-items: center;  
-  gap: 0.4em;
-  padding: 0.25rem 0; 
+  font-size: 1.75rem;
+  line-height: 1.2;
+  margin-bottom: .35rem;
 }
-.callout:hover {
-  background-color: #fff;
-  transition: background-color 0.2s ease-in-out;
+.quarto-post .listing-title a,
+.quarto-post .listing-description a,
+.quarto-post .listing-subtitle a {
+  color: var(--ink);
 }
-.callout-icon::before {
-  color: #9B0014 !important;
+.quarto-post .listing-title a {
+  transition: color .3s ease;
 }
-.callout:focus-within,
-.callout:active {
-  outline: none;
-  border-left-color: #9B0014 !important;
+.quarto-post:hover .listing-title a {
+  color: var(--red);
+}
+.quarto-post .listing-subtitle {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.2rem;
+  color: var(--muted);
+}
+.quarto-post .listing-description {
+  color: #3e3430;
+}
+.quarto-post .listing-description p {
+  font-size: 17px;
 }
 
+/* date and authors: small caps as in /slides */
+.quarto-post .metadata {
+  padding-top: .55rem;
+}
+.quarto-post .listing-date {
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: .35rem;
+}
+.quarto-post .listing-author {
+  font-size: .85rem;
+  color: var(--muted);
+}
 
-/* CUSTOM STYLE TYPES */
-.abstract {
-    font-style: italic;
-    font-size: 0.85em;
-    color: #333333;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    margin-left: 40px;     
-    margin-right: 40px; 
-    text-align: justify;
+/* preview image */
+.quarto-post .thumbnail img,
+.quarto-post .listing-item-img-placeholder {
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  box-shadow: 0 4px 14px rgba(60, 0, 8, .06);
+  transition: transform .5s var(--ease), box-shadow .5s var(--ease);
 }
-.comment {
-    font-style: italic;
-    font-size: 0.85em;
-    color: #9B0014;
-    text-align: justify;
+.quarto-post:hover .thumbnail img {
+  transform: scale(1.025);
+  box-shadow: 0 12px 26px rgba(60, 0, 8, .14);
 }
-.sidebar-item-container {
-    margin-top: 20px;
+
+/* categories: pills; the panel is hidden while there is only "Tutti" */
+.quarto-listing-category-title {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+}
+.quarto-listing-category .category {
+  display: inline-block;
+  margin: 0 .3rem .4rem 0;
+  padding: .2em .8em;
+  border: 1px solid rgba(155, 0, 20, .18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .7);
+  font-size: .9rem;
+  transition: border-color .3s ease, background-color .3s ease;
+}
+.quarto-listing-category .category:hover,
+.quarto-listing-category .category.active {
+  border-color: var(--gold);
+  background: #fff;
+  color: var(--red);
+}
+#quarto-margin-sidebar:not(:has(.quarto-listing-category .category + .category)) {
+  display: none;
+}
+.listing-categories .listing-category {
+  border-color: rgba(155, 0, 20, .25);
+  border-radius: 999px;
+  color: var(--red);
+}
+
+@media (max-width: 767.98px) {
+  .quarto-listing-default .quarto-post {
+    padding: 1.2rem .4rem;
+  }
+  .quarto-listing-default .quarto-post:hover {
+    transform: none;
+    box-shadow: none;
+    background-color: transparent;
+  }
 }
