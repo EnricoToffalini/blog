@@ -7,6 +7,11 @@ execute:
   echo: true
   warning: false
   message: false
+# text for link previews (WhatsApp, social networks)
+open-graph:
+  description: "Perché passare al continuous norming: punteggi standardizzati anche con distribuzioni non gaussiane, età trattata in modo continuo, punteggi aggregati. Un esempio in R con una mini batteria di lettura inventata."
+twitter-card:
+  description: "Perché passare al continuous norming: punteggi standardizzati anche con distribuzioni non gaussiane, età trattata in modo continuo, punteggi aggregati. Un esempio in R con una mini batteria di lettura inventata."
 ---
 
 ## Perché questa pipeline

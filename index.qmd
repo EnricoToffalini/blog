@@ -1,5 +1,12 @@
 ---
 title: "toffeeblog"
+image: images/social-card.jpg
+image-alt: "toffeeblog, il blog di Enrico Toffalini"
+# preview text only for link previews: a page description would be shown in the banner
+open-graph:
+  description: "Il blog di Enrico Toffalini: note su ricerca, metodi, statistica, open science e strumenti di AI per l'università."
+twitter-card:
+  description: "Il blog di Enrico Toffalini: note su ricerca, metodi, statistica, open science e strumenti di AI per l'università."
 listing:
   contents:
     - posts

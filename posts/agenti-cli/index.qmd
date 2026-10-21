@@ -6,6 +6,11 @@ author:
 date: "2026-10-11"
 image: images/claude-02-analisi.png
 format: html
+# text for link previews (WhatsApp, social networks)
+open-graph:
+  description: "Gli agenti AI in locale, come Claude Code e Codex, lavorano direttamente sui file del vostro computer: leggono un progetto, scrivono ed eseguono script, correggono. Primi passi e come cambiano il lavoro."
+twitter-card:
+  description: "Gli agenti AI in locale, come Claude Code e Codex, lavorano direttamente sui file del vostro computer: leggono un progetto, scrivono ed eseguono script, correggono. Primi passi e come cambiano il lavoro."
 ---
 
 Chi usa l'AI solo dalla chat nel browser ne sta usando una frazione. Gli **agenti AI in locale**, come <a href="https://code.claude.com/docs" target="_blank">**Claude Code**</a> di Anthropic e <a href="https://github.com/openai/codex" target="_blank">**Codex**</a> di OpenAI, lavorano direttamente sui file del vostro computer: leggono una cartella di progetto, scrivono e modificano script, li eseguono, guardano gli errori, correggono, rieseguono. Non vi restituiscono un pezzo di codice da copiare e incollare: fanno il lavoro nella cartella e vi dicono cosa hanno fatto. Si possono usare dal **terminale** (*command line interface*, CLI), che è il modo che preferisco, oppure da **app desktop**, che fanno lo stesso lavoro con menu e pannelli al posto dei comandi.

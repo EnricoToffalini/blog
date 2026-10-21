@@ -7,6 +7,11 @@ author:
 date: "2026-10-13"
 image: images/anteprima.png
 format: html
+# text for link previews (WhatsApp, social networks)
+open-graph:
+  description: "Breve serie di dritte per mettersi a usare l'AI nel lavoro universitario: agenti in locale (Codex e Claude Code), ChatGPT Edu, skill."
+twitter-card:
+  description: "Breve serie di dritte per mettersi a usare l'AI nel lavoro universitario: agenti in locale (Codex e Claude Code), ChatGPT Edu, skill."
 ---
 
 Breve serie di dritte per mettersi a usare Codex & Claude Code, GPT Edu, Skills. 
