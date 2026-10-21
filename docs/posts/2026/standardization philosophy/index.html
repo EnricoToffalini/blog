@@ -111,11 +111,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta property="og:title" content="Filosofia del Continuous Norming: Un esempio in R con Mini-Deco (mini batteria inventata di lettura) – toffeeblog">
 <meta property="og:description" content="Perché passare al continuous norming: punteggi standardizzati anche con distribuzioni non gaussiane, età trattata in modo continuo, punteggi aggregati. Un esempio in R con una mini batteria di lettura inventata.">
 <meta property="og:image" content="https://enricotoffalini.github.io/blog/images/social-card.jpg">
+<meta property="og:image:alt" content="toffeeblog, il blog di Enrico Toffalini">
 <meta property="og:site_name" content="toffeeblog">
 <meta property="og:locale" content="it_IT">
 <meta name="twitter:title" content="Filosofia del Continuous Norming: Un esempio in R con Mini-Deco (mini batteria inventata di lettura) – toffeeblog">
 <meta name="twitter:description" content="Perché passare al continuous norming: punteggi standardizzati anche con distribuzioni non gaussiane, età trattata in modo continuo, punteggi aggregati. Un esempio in R con una mini batteria di lettura inventata.">
 <meta name="twitter:image" content="https://enricotoffalini.github.io/blog/images/social-card.jpg">
+<meta name="twitter:image:alt" content="toffeeblog, il blog di Enrico Toffalini">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -143,7 +145,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="https://psicostat.dpss.psy.unipd.it/" target="_blank">
+    <a class="nav-link" href="https://psicostat.dpss.psy.unipd.it/" target="_blank"> 
 <span class="menu-text"><img src="../../../images/faviconpsicostat2.png" style="height: 22px; margin-top: -4px;"></span></a>
   </li>  
   <li class="nav-item compact">
@@ -1130,7 +1132,7 @@ Composite:</code></pre>
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/enricotoffalini\.github\.io\/blog\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

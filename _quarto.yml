@@ -3,6 +3,8 @@ lang: it
 project:
   type: website
   output-dir: docs
+  # link previews: fills empty descriptions, replaces unusable images
+  post-render: og-preview.ts
 
 website:
   title: "toffeeblog"

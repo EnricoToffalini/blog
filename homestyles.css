@@ -144,3 +144,8 @@
     background-color: transparent;
   }
 }
+
+/* the page description is only for link previews and search engines */
+.quarto-title-banner .description {
+  display: none;
+}

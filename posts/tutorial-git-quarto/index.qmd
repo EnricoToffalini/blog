@@ -4,13 +4,10 @@ author: "Enrico Toffalini"
 image: images/01-01-git.png
 date: "2025-12-05"
 format: html
-# text for link previews (WhatsApp, social networks); the blog card as image
-# because the post image is too heavy for WhatsApp previews
+# text for link previews (WhatsApp, social networks)
 open-graph:
-  image: https://enricotoffalini.github.io/blog/images/social-card.jpg
   description: "Tutorial base per creare e pubblicare online pagine, report, siti, libri e blog con Git, GitHub, GitHub Pages e Quarto: una competenza utile per giovani ricercatori e ricercatrici."
 twitter-card:
-  image: https://enricotoffalini.github.io/blog/images/social-card.jpg
   description: "Tutorial base per creare e pubblicare online pagine, report, siti, libri e blog con Git, GitHub, GitHub Pages e Quarto: una competenza utile per giovani ricercatori e ricercatrici."
 ---
 
