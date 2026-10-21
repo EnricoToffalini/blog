@@ -4,6 +4,11 @@ author: "Enrico Toffalini"
 date: "2025-12-01"
 image: rpython.png
 format: html
+# text for link previews (WhatsApp, social networks)
+open-graph:
+  description: "Molti corsi universitari si basano ancora su software commerciali a licenza onerosa, quando esistono alternative open source gratuite e mainstream come R e Python. Una proposta per abbandonarli."
+twitter-card:
+  description: "Molti corsi universitari si basano ancora su software commerciali a licenza onerosa, quando esistono alternative open source gratuite e mainstream come R e Python. Una proposta per abbandonarli."
 ---
 
 ## Ban al software proprietario negli insegnamenti universitari

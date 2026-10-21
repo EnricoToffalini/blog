@@ -6,6 +6,11 @@ author:
 date: "2026-10-12"
 image: images/02-claude-skills.png
 format: html
+# text for link previews (WhatsApp, social networks)
+open-graph:
+  description: "Le skill personalizzano l'AI con istruzioni e materiali che l'agente carica quando servono. Come funzionano, come crearle e come condensarvi un'expertise."
+twitter-card:
+  description: "Le skill personalizzano l'AI con istruzioni e materiali che l'agente carica quando servono. Come funzionano, come crearle e come condensarvi un'expertise."
 ---
 
 Questo è il terzo post di una piccola serie. Nel primo ho parlato degli <a href="../agenti-cli/index.html">**agenti AI in locale**</a> (Claude Code e Codex, da terminale o da app desktop), nel secondo di <a href="../gpt-edu/index.html">**ChatGPT Edu**</a>. In entrambi ho accennato alle **skill**, rimandando a un post dedicato. Eccolo.

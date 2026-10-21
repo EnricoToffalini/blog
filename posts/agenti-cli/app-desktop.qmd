@@ -6,6 +6,11 @@ author:
   - "Enrico Toffalini"
 date: "2026-10-16"
 format: html
+# text for link previews (WhatsApp, social networks)
+open-graph:
+  description: "Claude Code e Codex anche come app desktop, sempre in locale: quando conviene l'app e quando il terminale, la prima richiesta su una cartella, modello, permessi e pannelli."
+twitter-card:
+  description: "Claude Code e Codex anche come app desktop, sempre in locale: quando conviene l'app e quando il terminale, la prima richiesta su una cartella, modello, permessi e pannelli."
 ---
 
 ← <a href="index.html">Torna alla parte generale</a> · Guide da terminale: <a href="claude-code.html">Claude Code</a> · <a href="codex.html">Codex</a>

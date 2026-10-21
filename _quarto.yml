@@ -6,6 +6,16 @@ project:
 
 website:
   title: "toffeeblog"
+  # Link previews (WhatsApp, social networks): Open Graph/Twitter tags need
+  # an absolute image URL, hence site-url. Posts use their own image and
+  # opening paragraph; the description of the home page is in index.qmd.
+  site-url: https://enricotoffalini.github.io/blog/
+  image: images/social-card.jpg
+  image-alt: "toffeeblog, il blog di Enrico Toffalini"
+  open-graph:
+    locale: it_IT
+  twitter-card:
+    card-style: summary_large_image
   navbar:
     left: 
       - href: https://enricotoffalini.github.io

@@ -1,5 +1,8 @@
 ---
 title: "toffeeblog"
+description: "Il blog di Enrico Toffalini: note su ricerca, metodi, statistica, open science e strumenti di AI per l'università."
+image: images/social-card.jpg
+image-alt: "toffeeblog, il blog di Enrico Toffalini"
 listing:
   contents:
     - posts

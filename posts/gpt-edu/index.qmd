@@ -6,6 +6,11 @@ author:
 date: "2026-10-11"
 image: images/01-work.png
 format: html
+# text for link previews (WhatsApp, social networks)
+open-graph:
+  description: "L'Università di Padova offre al personale ChatGPT Edu a circa 100 € all'anno, pagabili con fondi di ricerca. Istruzioni per l'uso, e per non sprecarlo."
+twitter-card:
+  description: "L'Università di Padova offre al personale ChatGPT Edu a circa 100 € all'anno, pagabili con fondi di ricerca. Istruzioni per l'uso, e per non sprecarlo."
 ---
 
 L'Università di Padova offre al personale **ChatGPT Edu**, attualmente a **7 € al mese più IVA**: circa 8,6 € effettivi al mese, cioè intorno ai **100 € all'anno**, pagabili con fondi di ricerca. Per quello che offre è un'ottima occasione: a un privato una potenza simile costerebbe probabilmente molto di più, forse fino a un piano da 100 € al mese (confronto indicativo, non verificato nel dettaglio, ma plausibile guardando i listini).

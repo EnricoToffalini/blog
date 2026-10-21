@@ -6,6 +6,11 @@ author:
   - "Enrico Toffalini"
 date: "2026-10-11"
 format: html
+# text for link previews (WhatsApp, social networks)
+open-graph:
+  description: "Guida rapida a Claude Code su Windows: installazione e login, prima richiesta su un progetto, scelta di modello ed effort, controllo dei limiti di utilizzo."
+twitter-card:
+  description: "Guida rapida a Claude Code su Windows: installazione e login, prima richiesta su un progetto, scelta di modello ed effort, controllo dei limiti di utilizzo."
 ---
 
 ← <a href="index.html">Torna alla parte generale</a> · Vai alla <a href="codex.html">guida a Codex</a> · <a href="app-desktop.html">Guida alle app desktop</a>

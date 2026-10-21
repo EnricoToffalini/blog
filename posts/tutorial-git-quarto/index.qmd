@@ -4,6 +4,14 @@ author: "Enrico Toffalini"
 image: images/01-01-git.png
 date: "2025-12-05"
 format: html
+# text for link previews (WhatsApp, social networks); the blog card as image
+# because the post image is too heavy for WhatsApp previews
+open-graph:
+  image: https://enricotoffalini.github.io/blog/images/social-card.jpg
+  description: "Tutorial base per creare e pubblicare online pagine, report, siti, libri e blog con Git, GitHub, GitHub Pages e Quarto: una competenza utile per giovani ricercatori e ricercatrici."
+twitter-card:
+  image: https://enricotoffalini.github.io/blog/images/social-card.jpg
+  description: "Tutorial base per creare e pubblicare online pagine, report, siti, libri e blog con Git, GitHub, GitHub Pages e Quarto: una competenza utile per giovani ricercatori e ricercatrici."
 ---
 
 Saper creare e pubblicare pagine web online, in particolare pagine tecniche con report prodotti in R o Python, ma anche **siti web** più generali, **libri online**, **blog** o singole pagine, è una competenza fondamentale per giovani ricercatori e ricercatrici. Queste abilità permettono di condividere il proprio lavoro in ottica collaborativa, garantire riproducibilità e trasparenza secondo i principi dell’***Open Science***, e contribuire alla <a href="https://enricotoffalini.github.io/blog/posts/terza-missione-open-science/" target="_blank">***Terza Missione***</a>, nel senso di valorizzazione dei prodotti scientifici, diffusione della conoscenza e divulgazione verso utenti non-accademici (collaboratori in aziende, case editrici, professionisti, clinici, ecc.). 
