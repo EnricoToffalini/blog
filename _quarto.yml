@@ -3,7 +3,9 @@ lang: it
 project:
   type: website
   output-dir: docs
-  # link previews: fills empty descriptions, replaces unusable images
+  # link previews: one card per post (made only if missing; needs R packages
+  # webshot2 and yaml, and Chrome), then card and text set in each page
+  pre-render: _og/make-cards.R
   post-render: og-preview.ts
 
 website:

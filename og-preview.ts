@@ -1,18 +1,22 @@
-// Post-render: make link previews (WhatsApp, social networks) robust.
+// Post-render: make link previews (WhatsApp, social networks) consistent.
+// - Each post uses its own card (<name>.og.png next to the source, made by
+//   _og/make-cards.R), copied next to the page; without a card, the blog card.
 // - Empty og/twitter descriptions (Quarto 1.7 leaves them empty when the
 //   first paragraph has links or formatting) get the first paragraph.
-// - Preview images that are too heavy for WhatsApp, or whose URL contains
-//   spaces, are replaced by the blog card.
-// Descriptions and images set in the front matter are otherwise untouched.
 
 const SITE = "https://enricotoffalini.github.io/blog/";
 const CARD = SITE + "images/social-card.jpg";
 const CARD_ALT = "toffeeblog, il blog di Enrico Toffalini";
-const MAX_BYTES = 500 * 1024;
 
-const outDir = Deno.env.get("QUARTO_PROJECT_OUTPUT_DIR") ?? "docs";
+// paths relative to the project folder, with forward slashes (also on Windows)
+const cwd = Deno.cwd().replace(/\\/g, "/") + "/";
+const relative = (f: string) => {
+  f = f.replace(/\\/g, "/");
+  return f.toLowerCase().startsWith(cwd.toLowerCase()) ? f.slice(cwd.length) : f;
+};
+const outDir = relative(Deno.env.get("QUARTO_PROJECT_OUTPUT_DIR") ?? "docs").replace(/\/$/, "");
 const files = (Deno.env.get("QUARTO_PROJECT_OUTPUT_FILES") ?? "")
-  .split(/\r?\n/).filter((f) => f.endsWith(".html"));
+  .split(/\r?\n/).map(relative).filter((f) => f.startsWith(outDir + "/") && f.endsWith(".html"));
 
 const decode = (s: string) => s
   .replace(/&nbsp;/g, " ").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
@@ -37,20 +41,37 @@ function cut(s: string, n = 200): string {
   return chars.slice(0, n).join("").replace(/\s+\S*$/, "") + "…";
 }
 
-function badImage(url: string): boolean {
-  if (url.includes(" ")) return true;
-  if (!url.startsWith(SITE)) return false;
-  try {
-    return Deno.statSync(`${outDir}/${decodeURI(url.slice(SITE.length))}`).size > MAX_BYTES;
-  } catch {
-    return false;
-  }
-}
+const exists = (f: string) => { try { return Deno.statSync(f).isFile; } catch { return false; } };
 
 for (const file of files) {
+  const rel = file.slice(outDir.length + 1);
+  if (!rel.startsWith("posts/")) continue;
   let html = Deno.readTextFileSync(file);
+  if (!html.includes('<meta property="og:')) continue;
   const before = html;
 
+  // preview image: the post card, else the blog card
+  const cardRel = rel.replace(/\.html$/, ".og.png");
+  const sources = [".qmd", ".Qmd"].map((e) => rel.replace(/\.html$/, e));
+  let image = CARD, alt = CARD_ALT, size = "";
+  if (sources.some(exists) && exists(cardRel)) {
+    Deno.copyFileSync(cardRel, `${outDir}/${cardRel}`);
+    image = SITE + cardRel.split("/").map(encodeURIComponent).join("/");
+    alt = decode(html.match(/<meta property="og:title" content="([^"]*)">/)?.[1] ?? CARD_ALT);
+    size = "1200x630";
+  }
+  html = html
+    .replace(/<meta (property="og:image:|name="twitter:image[:-])(alt|width|height)" content="[^"]*">\n?/g, "")
+    .replace(/<meta (property="og|name="twitter):image" content="[^"]*">/g, (_m, attr) => {
+      const tw = attr.startsWith("name");
+      const tag = (k: string, v: string) => tw
+        ? `<meta name="twitter:image${k === "alt" ? ":" : "-"}${k}" content="${v}">`
+        : `<meta property="og:image:${k}" content="${v}">`;
+      return [`<meta ${attr}:image" content="${image}">`, tag("alt", encode(alt)),
+        ...(size ? [tag("width", "1200"), tag("height", "630")] : [])].join("\n");
+    });
+
+  // description: first paragraph when empty
   const emptyDesc = /<meta (property="og|name="twitter):description" content="">/g;
   if (emptyDesc.test(html)) {
     const text = firstParagraph(html);
@@ -58,19 +79,6 @@ for (const file of files) {
       const value = encode(cut(text));
       html = html.replace(emptyDesc, (_m, attr) => `<meta ${attr}:description" content="${value}">`);
     }
-  }
-
-  const image = html.match(/<meta property="og:image" content="([^"]*)">/);
-  if (image && badImage(decode(image[1]))) {
-    html = html
-      .replace(/<meta (property="og|name="twitter):image" content="[^"]*">/g,
-        (_m, attr) => `<meta ${attr}:image" content="${CARD}">`)
-      .replace(/<meta (property="og|name="twitter):image:alt" content="[^"]*">\n?/g, "")
-      .replace(/<meta (property="og:image:|name="twitter:image-)(width|height)" content="[^"]*">\n?/g, "")
-      .replace(/(<meta property="og:image" content="[^"]*">)/,
-        `$1\n<meta property="og:image:alt" content="${CARD_ALT}">`)
-      .replace(/(<meta name="twitter:image" content="[^"]*">)/,
-        `$1\n<meta name="twitter:image:alt" content="${CARD_ALT}">`);
   }
 
   if (html !== before) Deno.writeTextFileSync(file, html);
