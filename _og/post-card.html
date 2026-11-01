@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8">
+<!-- template of the link-preview card of a post (filled by make-cards.R) -->
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,500;1,600&family=Source+Sans+3:wght@400;600&display=block" rel="stylesheet">
+<style>
+:root{--red:#9b0014;--red-deep:#5e0010;--gold:#c8a26b;--ivory:#fbf8f3;--ink:#231c19;--muted:#6f625a}
+*{margin:0;box-sizing:border-box}
+html,body{width:1200px;height:630px;overflow:hidden}
+body{position:relative;background:var(--ivory);font-family:"Source Sans 3",sans-serif;color:var(--ink)}
+.top{position:absolute;left:0;right:0;top:0;height:450px;overflow:hidden;
+ background:linear-gradient(115deg,var(--red-deep) 0%,#7a0010 35%,var(--red) 100%);border-bottom:2px solid var(--gold)}
+.top::before{content:"";position:absolute;inset:0;background:
+ radial-gradient(640px 320px at 85% 120%,rgba(200,162,107,.28),transparent 70%),
+ radial-gradient(480px 260px at 5% -30%,rgba(255,255,255,.10),transparent 70%)}
+.nav{position:absolute;left:64px;top:22px;color:#fff;font-size:22px;display:flex;gap:28px;align-items:baseline}
+.nav b{font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:600;font-size:32px}
+.navline{position:absolute;left:0;right:0;top:80px;height:1px;background:rgba(200,162,107,.6)}
+.head{position:absolute;left:80px;right:80px;top:80px;bottom:0;display:flex;flex-direction:column;justify-content:center;color:#fff}
+h1{font-family:"Cormorant Garamond",serif;font-weight:600;line-height:1.08;letter-spacing:-.005em;font-size:76px}
+.sub{margin-top:14px;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:36px;opacity:.85}
+.meta{position:absolute;left:80px;right:80px;top:490px;display:flex;gap:80px}
+.meta div{min-width:300px}
+.lab{font-size:16px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.val{margin-top:8px;font-size:27px;line-height:1.3}
+</style></head><body>
+<div class="top">
+ <div class="nav"><b>toffeeblog</b><span>enricotoffalini.github.io</span></div>
+ <div class="navline"></div>
+ <div class="head"><div class="txt"><h1>{{title}}</h1>{{subtitle}}</div></div>
+</div>
+<div class="meta">
+ <div><div class="lab">{{authors_label}}</div><div class="val">{{authors}}</div></div>
+ <div><div class="lab">Data di pubblicazione</div><div class="val">{{date}}</div></div>
+</div>
+<script>
+// shrink long titles until title and subtitle fit in the banner
+document.fonts.ready.then(() => {
+  const h = document.querySelector("h1"), txt = document.querySelector(".txt");
+  const room = document.querySelector(".head").clientHeight - 50;
+  let size = 76;
+  while (size > 36 && txt.offsetHeight > room) h.style.fontSize = (size -= 2) + "px";
+});
+</script>
+</body></html>
