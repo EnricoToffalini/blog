@@ -64,18 +64,18 @@ La prima volta vi chiede di accedere: scegliete **Sign in with ChatGPT** e compl
 
 Rispondete sì solo per cartelle vostre o di cui conoscete il contenuto: le impostazioni di un progetto possono eseguire codice. Fatto questo si arriva alla schermata principale:
 
-<figure><img src="images/codex-02-avvio.png" alt="avvio di Codex" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Codex pronto: in basso il modello attivo (GPT-5.6-Terra), il livello di ragionamento (*medium*) e la cartella di lavoro</figcaption></figure>
+<figure><img src="images/codex-02-avvio.png" alt="avvio di Codex" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Codex pronto: in basso il modello attivo (GPT-6.1-Sol), il livello di ragionamento (*medium*) e la cartella di lavoro</figcaption></figure>
 
 
 ## La prima richiesta
 
 Stessa richiesta data a Claude Code:
 
-> *In questa cartella c'è dati_esame.csv. Dai un'occhiata ai dati, poi scrivi uno script R chiamato analisi.R che stima una regressione del voto su ore_studio, ansia e gruppo, eseguilo e spiegami i risultati in poche righe.*
+> *In questa cartella c'è bii_campione.csv, il campione simulato di una batteria d'intelligenza inventata. Dai un'occhiata ai dati, poi scrivi uno script R chiamato analisi.R che descrive come crescono con l'età i punteggi grezzi dei quattro subtest, eseguilo e spiegami i risultati in poche righe.*
 
-<figure><img src="images/codex-03-analisi.png" alt="Codex esegue l'analisi" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Codex ha creato `analisi.R` (si vedono le righe aggiunte), lo ha eseguito con Rscript e ha riassunto i risultati</figcaption></figure>
+<figure><img src="images/codex-03-analisi.png" alt="Codex esegue l'analisi" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Codex ha scritto ed eseguito `analisi.R`, ha guardato il grafico prodotto e ha riassunto i risultati</figcaption></figure>
 
-In 25 secondi Codex ha esplorato i dati, scritto lo script, lo ha eseguito e ha riassunto i risultati, identici a quelli ottenuti da Claude Code. Ogni passaggio è visibile: il file aggiunto (`Added analisi.R (+15 -0)`), il comando eseguito (`Ran Rscript --vanilla analisi.R`) e il suo output. Con `Ctrl+T` si espande il dettaglio completo. Per interrompere l'agente mentre lavora si preme `Esc`.
+In poco più di due minuti Codex ha esplorato i dati, scelto lo stesso metodo di Claude Code (curve di crescita con un GAM), scritto ed eseguito lo script, controllato il grafico prodotto e riassunto i risultati, praticamente identici a quelli di Claude Code. Ha aggiunto una precisazione importante: sono dati trasversali, quindi descrivono differenze tra persone di età diversa, non la crescita degli stessi individui. Ogni passaggio è visibile: il comando eseguito (`Ran Rscript analisi.R`) con il suo output, l'immagine controllata (`Viewed image punteggi_eta.png`). Con `Ctrl+T` si espande il dettaglio completo. Per interrompere l'agente mentre lavora si preme `Esc`.
 
 
 ## Scegliere modello e livello di ragionamento
@@ -95,7 +95,7 @@ Con `Invio` la scelta diventa il default; premendo `s` vale solo per la sessione
 
 Il comando `/status` mostra la configurazione della sessione e i limiti residui:
 
-<figure><img src="images/codex-06-status.png" alt="comando /status" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>`/status`: modello, permessi, tipo di account (qui Edu), contesto usato e, in fondo, i limiti sulla finestra di 5 ore e settimanale</figcaption></figure>
+<figure><img src="images/codex-06-status.png" alt="comando /status" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>`/status`: modello, permessi, tipo di account (qui Edu; indirizzo e identificativo oscurati), contesto usato e, in fondo, i limiti sulla finestra di 5 ore e settimanale</figcaption></figure>
 
 Le ultime tre righe sono le più utili. **Context window** indica quanto della "memoria di lavoro" della conversazione è occupato. **5h limit** e **Weekly limit** indicano quanto resta dei limiti del vostro piano e quando si azzerano. Il dettaglio aggiornato, inclusi eventuali crediti, è sulla pagina <a href="https://chatgpt.com/codex/settings/usage" target="_blank">chatgpt.com/codex/settings/usage</a>. I limiti valgono per tutte le interfacce di Codex, non solo per il terminale. Raggiunto un limite, Codex si ferma fino all'azzeramento, salvo che il piano preveda crediti aggiuntivi (vedi la <a href="index.html">parte generale</a>; con un account Edu dipende dall'ateneo).
 
@@ -111,26 +111,28 @@ Il comando `/permissions` stabilisce cosa Codex può fare senza chiedere:
 - **Approve for me**: chiede solo per le azioni giudicate potenzialmente pericolose; le altre vengono valutate e approvate automaticamente.
 - **Full Access**: nessuna richiesta, anche fuori dalla cartella e su internet. Da usare con molta cautela.
 
-Codex lavora dentro una ***sandbox***: di default può scrivere solo nella cartella del progetto. Nell'esempio si vede bene. Il rendering del report Quarto è fallito perché Quarto doveva aggiornare una propria cache fuori dalla cartella di lavoro. Codex ha riconosciuto il problema, ha richiesto l'autorizzazione (approvata automaticamente in modalità *Approve for me*) e ha rieseguito il comando:
-
-<figure><img src="images/codex-10-sandbox.png" alt="sandbox di Codex" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Il primo rendering fallisce per i limiti della sandbox; Codex chiede l'autorizzazione necessaria e il secondo tentativo riesce</figcaption></figure>
+Codex lavora dentro una ***sandbox***: di default può scrivere solo nella cartella del progetto. Se un comando ha bisogno di scrivere altrove (ad esempio Quarto che aggiorna una propria cache fuori dalla cartella di lavoro), il primo tentativo fallisce; di solito Codex riconosce il problema, chiede l'autorizzazione (approvata automaticamente in modalità *Approve for me*) e riesegue il comando.
 
 
 ## Plan mode
 
 Con `Shift+Tab`, oppure con il comando `/plan`, si attiva la **Plan mode** (l'indicazione compare in basso a destra). In questa modalità Codex esplora e progetta, ma non modifica nulla. Ho chiesto:
 
-> *Vorrei trasformare questa analisi in un breve report Quarto in HTML, con un grafico e una tabella dei coefficienti. Proponimi un piano.*
+> *Vorrei trasformare questa analisi in un breve report Quarto in HTML, con un grafico e una tabella. Proponimi un piano.*
 
 Prima di proporre il piano, Codex ha fatto una cosa interessante: ha letto da solo la mia skill sullo stile dei report scientifici (`reporting-style-enrico`, vedi la <a href="index.html">parte generale</a>) e poi mi ha posto alcune domande:
 
-<figure><img src="images/codex-08-plan-domande.png" alt="domande in plan mode" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>In plan mode Codex fa domande prima di decidere: qui quale grafico includere, con un'opzione consigliata</figcaption></figure>
+<figure><img src="images/codex-08-plan-domande.png" alt="domande in plan mode" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>In plan mode Codex fa domande prima di decidere: qui quale tabella includere, con un'opzione consigliata</figcaption></figure>
 
 Risposte le domande, presenta il piano: file che verranno creati, verifiche che farà, assunzioni adottate. A quel punto si sceglie se implementarlo:
 
 <figure><img src="images/codex-09-plan.png" alt="piano di Codex" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>La parte finale del piano e la richiesta di conferma: implementare, implementare ripartendo con un contesto pulito, oppure continuare a pianificare</figcaption></figure>
 
-Il report risultante è mostrato nella <a href="index.html#un-esempio-concreto-stesso-compito-due-agenti">parte generale</a>, accanto a quello di Claude Code.
+Approvato il piano, Codex ha scritto `report.qmd`, lo ha renderizzato e ha controllato che i numeri del report corrispondessero ai dati. Non è riuscito invece ad aprire il report nel browser per il controllo visivo, e lo ha detto chiaramente:
+
+<figure><img src="images/codex-10-verifica.png" alt="Codex dichiara la verifica incompleta" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Rendering riuscito e valori verificati, ma il controllo visivo resta incompleto perché il browser non era disponibile: Codex lo scrive nel riepilogo finale</figcaption></figure>
+
+È una dichiarazione da prendere sul serio. Nel report, infatti, è rimasto un errore che un'occhiata avrebbe colto: nella didascalia della tabella compare `et<U+00E0>` al posto di *età*. Il report è mostrato nella <a href="index.html#un-esempio-concreto-stesso-compito-due-agenti">parte generale</a>, accanto a quello di Claude Code.
 
 
 ## Riprendere una conversazione

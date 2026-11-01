@@ -41,7 +41,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-e71ca2b041b6f709ac7ebd42d75695e6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-cb4651696220d193d2aea2869e04a3a9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -174,7 +174,7 @@ ul.task-list li input[type="checkbox"] {
 
 <p>← <a href="index.html">Torna alla parte generale</a> · Guide da terminale: <a href="claude-code.html">Claude Code</a> · <a href="codex.html">Codex</a></p>
 <p>Le guide a <a href="claude-code.html">Claude Code</a> e a <a href="codex.html">Codex</a> usano il terminale. Non è l’unica strada. Entrambi gli agenti esistono anche come <strong>app desktop</strong>, che fanno lo stesso lavoro <strong>in locale</strong>: si sceglie una cartella del computer, e l’agente legge i file, scrive ed esegue codice (R, Python, Quarto, Git…), usa le vostre skill e i file di istruzioni del progetto (<code>CLAUDE.md</code>, <code>AGENTS.md</code>), si collega ai connettori. La superpotenza è la stessa; cambia l’interfaccia.</p>
-<p>Questa guida mostra le due app su <strong>Windows</strong>, a ottobre 2026: l’app <strong>Claude</strong> (versione 2.42304, scheda <em>Code</em>) e l’app <strong>ChatGPT</strong> nella sezione <strong>Codex</strong> (versione 26.1007, con account ChatGPT Edu). La cartella di prova e le richieste sono le stesse delle guide da terminale, così il confronto è diretto. Il dataset e la regressione sono un esempio giocattolo <strong>inventato da Claude</strong>, di sua iniziativa: dati simulati, senza alcun legame con ricerche o dati reali, miei o di altri (vedi la <a href="index.html#un-esempio-concreto-stesso-compito-due-agenti">nota nella parte generale</a>).</p>
+<p>Questa guida mostra le due app su <strong>Windows</strong>, a ottobre 2026: l’app <strong>Claude</strong> (versione 2.42304, scheda <em>Code</em>) e l’app <strong>ChatGPT</strong> nella sezione <strong>Codex</strong> (versione 26.1007, con account ChatGPT Edu). La cartella di prova e le richieste sono le stesse delle guide da terminale, così il confronto è diretto. I dati vengono dalla <strong>BII</strong>, una batteria d’intelligenza inventata a scopo didattico: tutto simulato, senza alcun legame con persone reali o con ricerche e dati miei o di altri (vedi la <a href="index.html#un-esempio-concreto-stesso-compito-due-agenti">nota nella parte generale</a>).</p>
 <section id="obiettivi-della-guida" class="level3">
 <h3 class="anchored" data-anchor-id="obiettivi-della-guida">Obiettivi della guida</h3>
 <ul>
@@ -273,7 +273,7 @@ La prima cosa da fare in ogni nuova sessione: scegliere la cartella di lavoro
 <h4 class="anchored" data-anchor-id="la-prima-richiesta">La prima richiesta</h4>
 <p>Stessa richiesta delle guide da terminale:</p>
 <blockquote class="blockquote">
-<p><em>In questa cartella c’è dati_esame.csv. Dai un’occhiata ai dati, poi scrivi uno script R chiamato analisi.R che stima una regressione del voto su ore_studio, ansia e gruppo, eseguilo e spiegami i risultati in poche righe.</em></p>
+<p><em>In questa cartella c’è bii_campione.csv, il campione simulato di una batteria d’intelligenza inventata. Dai un’occhiata ai dati, poi scrivi uno script R chiamato analisi.R che descrive come crescono con l’età i punteggi grezzi dei quattro subtest, eseguilo e spiegami i risultati in poche righe.</em></p>
 </blockquote>
 <figure class="figure">
 <img src="images/app-claude-02-richiesta.png" alt="richiesta nell'app Claude" style="width: 100%; max-width: 750px; height: auto; border: 2px solid #444444;" class="figure-img">
@@ -288,7 +288,7 @@ La richiesta pronta: sotto la casella, cartella (<code>demo-app-desktop</code>),
 Claude al lavoro: a destra la lista dei passi, a sinistra le sessioni raggruppate per cartella (i titoli delle altre sessioni sono sfocati)
 </figcaption>
 </figure>
-<p>Il risultato è quello che si ottiene da terminale: <code>analisi.R</code> creato ed eseguito, risultati spiegati in poche righe. Stavolta Claude ha notato da solo un’altra particolarità dei dati simulati, il <strong>pavimento a 18</strong> (molti voti esattamente al minimo), e ha aggiunto allo script un modello tobit come controllo. È un buon esempio del fatto che lo stesso agente, sulla stessa richiesta, non fa sempre le stesse scelte: ragione in più per leggere quello che produce.</p>
+<p>Il risultato è quello che si ottiene da terminale: <code>analisi.R</code> creato ed eseguito, risultati spiegati in poche righe. Non per forza identico, però: lo stesso agente, sulla stessa richiesta, non fa sempre le stesse scelte (un grafico diverso, un controllo in più, un’altra tabella). Ragione in più per leggere quello che produce.</p>
 </section>
 <section id="modalità-modello-effort" class="level4">
 <h4 class="anchored" data-anchor-id="modalità-modello-effort">Modalità, modello, effort</h4>
@@ -314,7 +314,7 @@ Opus (predefinito), Sonnet, Fable e Haiku; sotto, l’<em>Impegno</em> (effort) 
 <figure class="figure">
 <img src="images/app-claude-06-sessione.png" alt="pannello della sessione" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
 <figcaption>
-Il pannello della sessione: ambiente, contesto, connettori, modifiche (<em>+30 −0</em>) e <em>Conferma modifiche</em>
+Il pannello della sessione: ambiente, contesto, connettori, righe modificate e <em>Conferma modifiche</em>
 </figcaption>
 </figure>
 <p>Il pannello delle <strong>modifiche</strong> mostra riga per riga cosa è cambiato nei file. È la cosa che da terminale si legge peggio, e che qui si legge meglio:</p>
@@ -342,7 +342,7 @@ Conversazione, modifiche, file e terminale nella stessa finestra
 Il piano proposto, a destra, e le scelte per procedere, a sinistra
 </figcaption>
 </figure>
-<p>Approvato il piano, Claude ha scritto il report, lo ha renderizzato e lo ha <strong>controllato nel browser integrato</strong>, anche a larghezza da cellulare, correggendo un paio di dettagli di impaginazione. Alla fine chiede se fare il commit, con dei pulsanti al posto di un “sì” da scrivere:</p>
+<p>Approvato il piano, Claude ha scritto il report, lo ha renderizzato e lo ha <strong>controllato nel browser integrato</strong>. Alla fine chiede se fare il commit, con dei pulsanti al posto di un “sì” da scrivere:</p>
 <figure class="figure">
 <img src="images/app-claude-10-fine.png" alt="fine del lavoro nell'app Claude" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
 <figcaption>
@@ -366,7 +366,7 @@ Il menu dei progetti: quelli esistenti, <em>New project</em> o <em>Don’t work 
 </section>
 <section id="la-prima-richiesta-1" class="level4">
 <h4 class="anchored" data-anchor-id="la-prima-richiesta-1">La prima richiesta</h4>
-<p>Stessa richiesta (con lo script chiamato <code>analisi_codex.R</code>, perché nella cartella c’era già quello di Claude). Codex ha esplorato i dati, scritto ed eseguito lo script, e riassunto i risultati, uguali a quelli ottenuti da terminale. In fondo, un riquadro riassume le modifiche ai file, con <em>Undo</em> per annullarle in blocco e <em>View changes</em> per vederle:</p>
+<p>Stessa richiesta (con lo script chiamato <code>analisi_codex.R</code>, per tenerlo distinto da quello di Claude nella stessa cartella). In circa sette minuti Codex ha esplorato i dati, scelto di nuovo le curve GAM, scritto ed eseguito lo script, salvato anche un grafico e un file con i risultati completi, e riassunto i risultati, coerenti con quelli ottenuti da terminale. Ha ripetuto anche la precisazione sui dati trasversali. In fondo, un riquadro riassume le modifiche ai file, con <em>Undo</em> per annullarle in blocco e <em>View changes</em> per vederle:</p>
 <figure class="figure">
 <img src="images/app-codex-02-risultato.png" alt="risultato nell'app Codex" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
 <figcaption>
@@ -416,20 +416,20 @@ Il menu <strong>+</strong>: allegati, <em>Goal</em>, <em>Plan mode</em>, <em>Ske
 </section>
 <section id="plan-mode" class="level4">
 <h4 class="anchored" data-anchor-id="plan-mode">Plan mode</h4>
-<p>Dal <strong>+</strong> → <em>Plan mode</em>, la stessa richiesta del report Quarto. Come da terminale, Codex ha letto da solo la mia skill sui report (<code>reporting-style-enrico</code>, vedi il <a href="../skills/index.html">post sulle skill</a>) e poi mi ha fatto una domanda, a cui si risponde con un clic:</p>
+<p>Dal <strong>+</strong> → <em>Plan mode</em>, la stessa richiesta del report Quarto. Come da terminale, Codex ha letto da solo la mia skill sui report (<code>reporting-style-enrico</code>, vedi il <a href="../skills/index.html">post sulle skill</a>). Questa volta però non mi ha fatto domande: è passato direttamente al piano, dichiarando in fondo l’ipotesi che aveva adottato (un lettore interessato ai risultati, senza conoscenze di R). Lo stesso agente, sulla stessa richiesta, a volte chiede e a volte decide da solo: per questo conviene leggere le assunzioni scritte nel piano.</p>
 <figure class="figure">
-<img src="images/app-codex-08-domanda.png" alt="domanda in plan mode" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
+<img src="images/app-codex-08-domanda.png" alt="skill e piano in plan mode" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
 <figcaption>
-Prima la skill (riga <em>Ran Get-Content … SKILL.md</em>), poi la domanda sul grafico, con l’opzione consigliata
+Prima la skill (riga <em>Ran Get-Content … SKILL.md</em>), poi direttamente il piano, senza domande
 </figcaption>
 </figure>
 <figure class="figure">
 <img src="images/app-codex-09-piano.png" alt="piano nell'app Codex" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
 <figcaption>
-Il piano e la richiesta di conferma: <em>Yes, implement this plan</em>, oppure indicare cosa cambiare
+Il piano, aperto nel pannello laterale, e la richiesta di conferma: <em>Yes, implement this plan</em>, oppure indicare cosa cambiare
 </figcaption>
 </figure>
-<p>Approvato il piano, in un minuto e mezzo Codex ha creato e renderizzato <code>report_codex.qmd</code>. Ha segnalato di non essere riuscito ad aprire il file locale nel browser integrato per controllarlo; aprirlo a mano funziona, scrivendone il percorso nella barra degli indirizzi. Il report si legge così accanto alla conversazione:</p>
+<p>Approvato il piano, in circa quattro minuti Codex ha creato e renderizzato <code>report_codex.qmd</code> e ha confrontato le stime con quelle dell’analisi originale. Ha però segnalato che la verifica visiva della pagina intera era rimasta bloccata, perché il suo browser non apre i file locali; e infatti un piccolo difetto gli è sfuggito: nel grafico l’asse dice “Eta” senza accento. Il file si apre comunque nel browser integrato scrivendo nella barra degli indirizzi <code>file:///</code> seguito dal percorso, e il report si legge così accanto alla conversazione:</p>
 <figure class="figure">
 <img src="images/app-codex-10-browser.png" alt="report nel browser integrato di Codex" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
 <figcaption>

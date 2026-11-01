@@ -1,8 +1,13 @@
 ---
-title: 'Filosofia del Continuous Norming: Un esempio in R con Mini-Deco (mini batteria inventata di lettura)'
+title: 'Filosofia del Continuous Norming'
+subtitle: "Un esempio in R con Mini-Deco, una mini batteria di lettura inventata"
 author: "Enrico Toffalini"
 date: "2025-01-19"
-format: html
+format:
+  html:
+    toc: true
+    toc-title: "In questo post"
+    toc-depth: 2
 execute:
   echo: true
   warning: false
@@ -14,26 +19,56 @@ twitter-card:
   description: "Perché passare al continuous norming: punteggi standardizzati anche con distribuzioni non gaussiane, età trattata in modo continuo, punteggi aggregati. Un esempio in R con una mini batteria di lettura inventata."
 ---
 
-## Perché questa pipeline
+Punteggi non gaussiani, fasce d'età, percentili instabili sulle code, cutoff contati uno per uno: sono abitudini diffuse nella standardizzazione dei test, e quasi sempre evitabili. In questo post mostro un'alternativa con un esempio completo in R, dai dati grezzi fino allo scoring di un singolo bambino.
 
-Nella prassi psicometrica si sente spesso: “i punteggi non sono gaussiani”, vero, e allora si ripiega su percentili e punteggi non parametrici come se non ci fosse alternativa. Il problema è che i percentili sono scomodi da aggregare, e spingono verso interpretazioni a checklist di cutoff.
+::: {.callout-note appearance="simple" icon="false"}
+**In breve**
 
-All’opposto, a volte si usano z-score calcolati standardizzando i grezzi anche quando la distribuzione è lontana dalla normalità. Così lo z perde l’interpretazione di posizione in una distribuzione normale, e gli aggregati diventano fragili.
+- **Non gaussiano non vuol dire niente z.** Si modella la distribuzione condizionata dei grezzi (lognormale, beta-binomiale...) e da lì si ricavano percentili, z e punti standard interpretabili.
+- **L'età è continua.** Il *continuous norming* stima come cambia la distribuzione con l'età, senza fasce, ed è più stabile proprio sulle code, dove servono i cutoff clinici.
+- **Si distribuiscono tabelle, non il modello.** Il modello sta "a monte"; chi usa il test fa solo lookup su tabelle CSV, deterministiche e verificabili.
+- **Gli z si aggregano.** Un composito ben costruito usa tutta l'informazione continua, invece di contare quanti task superano un cutoff.
+:::
 
-Poi c’è il tema dell’età: si continua a dividere in fasce. Sulle code, proprio dove servono cutoff clinici, i percentili sono instabili, e discretizzare l’età peggiora. Il continuous norming esiste, serve, ed è una prassi compatibile con l’idea di tratto latente continuo.
+## Il problema: quattro abitudini da superare
 
-Infine, si sottovaluta l’utilità di aggregare punteggi standardizzati, si finisce a contare quanti task superano cutoff distinti. È un modo povero di trattare informazione continua, mentre l’aggregazione su standard score è prassi consolidata nella misura dell’intelligenza.
+**1. "I punteggi non sono gaussiani, quindi uso i percentili."** Vero che spesso non lo sono, ma la conclusione non segue. I percentili sono scomodi da aggregare e spingono verso un'interpretazione a checklist di cutoff.
 
-Qui mostriamo una pipeline *table-driven*: upstream (modello + guardrail + tabelle), downstream (scoring deterministico da tabelle). Il dataset è `Mini-Deco_Sample.csv`. La colonna `lessdecTRIALS` è ridondante, la ignoriamo, ma assumiamo che la decisione lessicale sia su **k = 60** trial.
+**2. Standardizzare i grezzi comunque.** All'opposto, a volte si calcola uno z come (grezzo − media)/DS anche quando la distribuzione è lontana dalla normalità. Così lo z perde il suo significato di posizione in una distribuzione normale (z = −2 non corrisponde più al 2° percentile circa), e gli aggregati diventano fragili.
+
+**3. Dividere l'età in fasce.** Ogni fascia ha pochi casi, e sulle code i percentili empirici sono instabili proprio dove servono i cutoff clinici. Inoltre, a cavallo tra due fasce, lo stesso grezzo può dare punteggi molto diversi a un giorno di distanza. Il continuous norming esiste, serve, ed è coerente con l'idea di un tratto che si sviluppa in modo continuo.
+
+**4. Contare i cutoff superati.** Si sottovaluta l'utilità di aggregare punteggi standardizzati e si finisce a contare quanti task stanno sotto soglia. È un modo povero di trattare informazione continua, mentre l'aggregazione di punti standard è prassi consolidata nella misura dell'intelligenza.
+
+## La pipeline in sintesi
+
+L'idea è separare nettamente due fasi:
+
+| Fase | Chi la fa | Cosa contiene | Output |
+|:--|:--|:--|:--|
+| **Upstream** | chi costruisce le norme | modello statistico, diagnostica, guardrail numerici | tabelle di conversione (CSV) |
+| **Downstream** | chi usa il test | solo lookup e interpolazione su tabelle | percentile, z, punto standard, composito |
+
+: {tbl-colwidths="[14,20,36,30]"}
+
+Il dataset di esempio è `Mini-Deco_Sample.csv`, una mini batteria di lettura **inventata**, con due prove:
+
+- `syllsec`: velocità di lettura in **sillabe al secondo** (continua, positiva; più alto = meglio);
+- `lessdec`: risposte corrette in una prova di **decisione lessicale** su **k = 60** trial (conteggio discreto e limitato tra 0 e 60; più alto = meglio).
+
+La colonna `lessdecTRIALS` è ridondante (vale sempre 60) e la ignoriamo.
+
+Nei blocchi di codice, quelli più lunghi o meccanici sono chiusi (*folded*): si aprono cliccando sul titolo.
 
 ---
 
-## 1) Setup, lettura dati, check e “realtà” dei punteggi
+## 1. Setup e dati
 
 ```{r}
 library(gamlss)
 library(gamlss.dist)
 library(ggplot2)
+library(knitr)
 
 dat <- read.csv("Mini-Deco_Sample.csv")
 
@@ -48,65 +83,80 @@ stopifnot(all(dat$syllsec > 0))
 stopifnot(all(dat$lessdec >= 0 & dat$lessdec <= 60))
 
 k <- 60
-age_grid <- seq(6, 13, by = 0.25)
+age_grid <- seq(6, 13, by = 0.25)  # tabelle ogni 3 mesi
 
 # guardrail numerici
 eps <- 1e-6
 clamp_prob <- function(p) pmin(1 - eps, pmax(eps, p))
 ss19 <- function(z) pmin(19, pmax(1, round(10 + 3*z)))
 
-# output sintetico: range e medie grezze per mezzi anni
-age_bin <- floor(dat$age * 2) / 2
+cat("N:", nrow(dat), "\n")
 cat("Range età:", range(dat$age), "\n")
 cat("Range syllsec:", range(dat$syllsec), "\n")
-cat("Range lessdec:", range(dat$lessdec), "\n\n")
-
-print(aggregate(dat$syllsec, list(age_bin = age_bin), mean))
-print(aggregate(dat$lessdec, list(age_bin = age_bin), mean))
+cat("Range lessdec:", range(dat$lessdec), "\n")
 ```
 
----
+::: {.callout-tip appearance="simple" icon="false"}
+**Due guardrail, definiti una volta per tutte**
 
-## 2) Guardiamo i grezzi: non normalità e dipendenza da età
+- `clamp_prob()`: un percentile non è mai esattamente 0 o 1, altrimenti lo z sarebbe infinito. Lo teniamo in [10⁻⁶, 1 − 10⁻⁶].
+- `ss19()`: punto standard con media 10 e DS 3 (come nei subtest delle scale Wechsler), arrotondato e limitato tra 1 e 19.
+:::
 
-Questa sezione serve solo a ricordare perché “standardizzare i grezzi” non è una soluzione.
+## 2. I grezzi: non normali e dipendenti dall'età
+
+Basta un'occhiata per capire perché "standardizzare i grezzi" non è una soluzione: le distribuzioni marginali sono asimmetriche, e soprattutto media e dispersione cambiano con l'età.
 
 ```{r}
 #| code-fold: true
-#| code-summary: "Grafici: distribuzioni grezze e trend con l’età (folded)"
-# Distribuzioni marginali
+#| code-summary: "Codice: medie grezze per mezzo anno d'età"
+age_bin <- floor(dat$age * 2) / 2
+means <- data.frame(
+  eta = aggregate(dat$syllsec, list(age_bin), mean)[, 1],
+  n = as.vector(table(age_bin)),
+  syllsec = aggregate(dat$syllsec, list(age_bin), mean)[, 2],
+  lessdec = aggregate(dat$lessdec, list(age_bin), mean)[, 2]
+)
+kable(means, digits = 2, col.names = c("Età (da)", "n", "syllsec medio", "lessdec medio"))
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Codice: grafici dei grezzi"
+#| layout-ncol: 2
 p1 <- ggplot(dat, aes(x = syllsec)) +
   geom_histogram(bins = 30) +
-  labs(title = "syllsec (grezzo): distribuzione marginale", x = "sillabe/sec", y = "conteggi")
+  labs(title = "syllsec: distribuzione marginale", x = "sillabe/sec", y = "conteggi")
 
 p2 <- ggplot(dat, aes(x = lessdec)) +
   geom_histogram(binwidth = 1) +
-  labs(title = "lessdec (grezzo): distribuzione marginale", x = "corrette su 60", y = "conteggi")
+  labs(title = "lessdec: distribuzione marginale", x = "corrette su 60", y = "conteggi")
 
-print(p1)
-print(p2)
-
-# Grezzi vs età (jitter leggero per il discreto)
 p3 <- ggplot(dat, aes(x = age, y = syllsec)) +
   geom_point(alpha = 0.4) +
   labs(title = "syllsec vs età", x = "età", y = "sillabe/sec")
 
+# jitter leggero per il discreto
 p4 <- ggplot(dat, aes(x = age, y = lessdec)) +
   geom_point(alpha = 0.35, position = position_jitter(height = 0.15, width = 0)) +
   labs(title = "lessdec vs età", x = "età", y = "corrette su 60")
 
+print(p1)
+print(p2)
 print(p3)
 print(p4)
 ```
 
 ---
 
-## 3) Upstream: continuous norming via modelli semplici (GAMLSS)
+## 3. Upstream: il modello (GAMLSS)
 
-Scelte minimali ma coerenti:
+Usiamo GAMLSS, che permette di modellare in funzione dell'età non solo la media ma anche la dispersione (e, se serve, la forma) della distribuzione. Scelte minimali ma coerenti con la natura dei punteggi:
 
-- `syllsec` è continuo e positivo, usiamo una **lognormale** (`LOGNO`) con media monotona in età e dispersione smooth.
-- `lessdec` è un conteggio 0..60 con overdispersion, usiamo una **Beta-Binomiale** (`BB`) con probabilità monotona in età e dispersione smooth.
+| Prova | Tipo di punteggio | Distribuzione | Media in funzione dell'età | Dispersione |
+|:--|:--|:--|:--|:--|
+| `syllsec` | continuo, positivo, asimmetrico | lognormale (`LOGNO`) | smooth, monotona crescente | smooth |
+| `lessdec` | conteggio 0–60, sovradisperso | beta-binomiale (`BB`) | smooth, monotona crescente | smooth |
 
 ```{r}
 fit_syll <- gamlss(
@@ -124,35 +174,85 @@ fit_less <- gamlss(
   data = dat,
   trace = FALSE
 )
-
-cat("AIC syllsec:", AIC(fit_syll), "\n")
-cat("AIC lessdec:", AIC(fit_less), "\n")
 ```
 
-Diagnostica minima: non vogliamo fare un tutorial su GAMLSS, ma almeno guardiamo residui e un worm plot.
+Il risultato più importante del modello sono le **curve di quantili condizionati**: la distribuzione attesa dei grezzi a ogni età, senza spezzarla in fasce. Le linee indicano il 10°, il 50° e il 90° percentile.
 
 ```{r}
 #| code-fold: true
-#| code-summary: "Diagnostica minima GAMLSS (folded)"
+#| code-summary: "Codice: curve di quantili per età"
+#| layout-ncol: 2
+probs <- c(0.10, 0.50, 0.90)
+
+# syllsec: quantili lognormali
+Q_syll <- NULL
+for (a in age_grid) {
+  pA <- predictAll(fit_syll, newdata = data.frame(age = a))
+  mu <- as.numeric(pA$mu); sg <- as.numeric(pA$sigma)
+  q  <- qLOGNO(probs, mu = mu, sigma = sg)
+  Q_syll <- rbind(Q_syll, data.frame(age = a, prob = probs, q = q))
+}
+p1 <- ggplot() +
+  geom_point(data = dat, aes(x = age, y = syllsec), alpha = 0.2) +
+  geom_line(data = Q_syll, aes(x = age, y = q, linetype = factor(prob, labels = c("p10","p50","p90"))),
+            linewidth = 1, colour = "darkred") +
+  scale_x_continuous(breaks = seq(6, 13, 1)) +
+  labs(title = "syllsec: quantili condizionati", x = "età", y = "sillabe/sec", linetype = NULL) +
+  theme(legend.position = "bottom")
+print(p1)
+
+# lessdec: quantili beta-binomiale
+Q_less <- NULL
+for (a in age_grid) {
+  pA <- predictAll(fit_less, newdata = data.frame(age = a))
+  mu <- as.numeric(pA$mu); sg <- as.numeric(pA$sigma)
+  q  <- qBB(probs, mu = mu, sigma = sg, bd = k)
+  Q_less <- rbind(Q_less, data.frame(age = a, prob = probs, q = q))
+}
+p2 <- ggplot() +
+  geom_point(data = dat, aes(x = age, y = lessdec), alpha = 0.2,
+             position = position_jitter(height = 0.15, width = 0)) +
+  geom_step(data = Q_less, aes(x = age, y = q, linetype = factor(prob, labels = c("p10","p50","p90"))),
+            linewidth = 1, colour = "darkred") +
+  scale_x_continuous(breaks = seq(6, 13, 1)) +
+  labs(title = "lessdec: quantili condizionati", x = "età", y = "corrette su 60", linetype = NULL) +
+  theme(legend.position = "bottom")
+print(p2)
+```
+
+Non è un tutorial su GAMLSS, ma una diagnostica minima va guardata: residui e *worm plot* (utile per vedere distorsioni sulle code).
+
+```{r}
+#| code-fold: true
+#| code-summary: "Codice e output: diagnostica minima GAMLSS"
+cat("AIC syllsec:", AIC(fit_syll), "\n")
+cat("AIC lessdec:", AIC(fit_less), "\n")
+
 par(mfrow = c(2,2))
 plot(fit_syll)
 plot(fit_less)
 par(mfrow = c(1,1))
 
-# worm plot (se disponibile), utile per vedere bias in coda
-# (non sempre essenziale in un post didattico, ma è un buon promemoria)
 try(wp(fit_syll), silent = TRUE)
 try(wp(fit_less), silent = TRUE)
 ```
 
 ---
 
-## 4) Upstream: costruire una riga di tabella, per capire cosa stiamo facendo
+## 4. Upstream: dal modello a una tabella di conversione
 
-Prima di generare “tutto”, facciamo vedere l’operazione su **una età** (9 anni).
-Qui si vede l’idea: dal modello otteniamo la CDF condizionata, da lì percentili, z, SS.
+Prima di generare tutto, vediamo l'operazione su **una sola età** (9 anni). La logica è sempre la stessa:
 
-### 4a) `syllsec` a 9 anni: raw -> percentile -> z -> SS(1..19)
+::: {.callout-note appearance="simple" icon="false"}
+**grezzo → percentile → z → punto standard**
+
+1. dal modello si ottiene la distribuzione dei grezzi a quell'età;
+2. la sua funzione di ripartizione (CDF) dà il **percentile** di ogni possibile grezzo;
+3. il percentile si trasforma in **z** con la normale inversa (`qnorm`): ora lo z ha davvero il significato di posizione in una normale, anche se i grezzi non erano gaussiani;
+4. lo z si converte in **punto standard** 1–19 (o in qualsiasi altra metrica).
+:::
+
+### `syllsec` a 9 anni
 
 ```{r}
 age_show <- 9.00
@@ -162,8 +262,9 @@ pA <- predictAll(fit_syll, newdata = data.frame(age = age_show))
 mu <- as.numeric(pA$mu)
 sg <- as.numeric(pA$sigma)
 
-# griglia raw fine per syllsec
-raw_grid_syll <- seq(floor(min(dat$syllsec)*100)/100, ceiling(max(dat$syllsec)*100)/100, by = 0.01)
+# griglia raw fine per syllsec, più ampia dei dati osservati (0.6–5.0)
+# per non troncare le code: oltre il massimo in tabella lo z resterebbe bloccato
+raw_grid_syll <- seq(0.10, 7.00, by = 0.01)
 
 # percentile condizionato (CDF)
 p <- pLOGNO(raw_grid_syll, mu = mu, sigma = sg)
@@ -175,25 +276,23 @@ p <- clamp_prob(cummax(p))
 z  <- qnorm(p)
 ss <- ss19(z)
 
-tab_syll_9 <- data.frame(
-  measure = "syllsec",
-  age_grid = age_show,
-  raw = raw_grid_syll,
-  p = p,
-  z = z,
-  ss_1_19 = ss
-)
-
-# mostro un estratto leggibile (non 400 righe)
-print(tab_syll_9[seq(1, nrow(tab_syll_9), by = 20), ], row.names = FALSE)
+tab_syll_9 <- data.frame(measure = "syllsec", age_grid = age_show,
+                         raw = raw_grid_syll, p = p, z = z, ss_1_19 = ss)
 ```
 
-### 4b) `lessdec` a 9 anni: mid-P per discreto
-
-Per un conteggio discreto, usiamo una correzione tipo **mid-P**: invece di prendere P(X ≤ x), prendiamo P(X < x) + 0.5·P(X = x). È una scelta pragmatica per rendere i percentili meno “a scalini”, senza fingere che il punteggio sia continuo.
+La tabella ha `r nrow(tab_syll_9)` righe (una ogni 0.01 sillabe/sec); qui ne mostriamo una ogni 0.25, tra 0.5 e 6.
 
 ```{r}
-# mid-P Beta-Binomial, operazione esplicita
+#| code-fold: true
+#| code-summary: "Codice: estratto della tabella"
+kable(tab_syll_9[round(tab_syll_9$raw, 2) %in% round(seq(0.5, 6, by = 0.25), 2), ], digits = c(0,2,2,4,2,0), row.names = FALSE)
+```
+
+### `lessdec` a 9 anni: la correzione mid-P
+
+Per un punteggio discreto, P(X ≤ x) assegna a chi ottiene esattamente x il percentile di chi sta "in cima" al gradino. Usiamo invece la correzione **mid-P**: P(X < x) + ½·P(X = x), cioè il punto medio del gradino. È una scelta pragmatica, che rende i percentili meno sbilanciati senza fingere che il punteggio sia continuo.
+
+```{r}
 pA <- predictAll(fit_less, newdata = data.frame(age = age_show))
 mu <- as.numeric(pA$mu)
 sg <- as.numeric(pA$sigma)
@@ -210,32 +309,48 @@ p <- clamp_prob(cummax(p))
 z  <- qnorm(p)
 ss <- ss19(z)
 
-tab_less_9 <- data.frame(
-  measure = "lessdec",
-  age_grid = age_show,
-  raw = raw_grid_less,
-  p = p,
-  z = z,
-  ss_1_19 = ss
-)
+tab_less_9 <- data.frame(measure = "lessdec", age_grid = age_show,
+                         raw = raw_grid_less, p = p, z = z, ss_1_19 = ss)
+```
 
-print(tab_less_9, row.names = FALSE)
+```{r}
+#| code-fold: true
+#| code-summary: "Codice e output: tabella completa a 9 anni (61 righe)"
+kable(tab_less_9, digits = c(0,2,0,4,2,0), row.names = FALSE)
+```
+
+Il grafico grezzo → punto standard mostra subito la monotonicità e la "granularità" del punteggio discreto: per `lessdec` più grezzi consecutivi danno lo stesso punto standard.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Codice: grafici grezzo -> punto standard a 9 anni"
+#| layout-ncol: 2
+p1 <- ggplot(tab_syll_9, aes(x = raw, y = ss_1_19)) +
+  geom_line(linewidth = 1) +
+  labs(title = "syllsec: grezzo -> SS (età 9)", x = "sillabe/sec", y = "SS 1–19")
+
+p2 <- ggplot(tab_less_9, aes(x = raw, y = ss_1_19)) +
+  geom_step(linewidth = 1) +
+  labs(title = "lessdec: grezzo -> SS (età 9)", x = "corrette su 60", y = "SS 1–19")
+
+print(p1)
+print(p2)
 ```
 
 ---
 
-## 5) Upstream: generare le tabelle complete (auditabili) su griglia d’età
+## 5. Upstream: le tabelle complete
 
-Qui facciamo la parte “meccanica”: generiamo `raw_to_norm` per ogni età in griglia.
-Questo chunk è lungo, quindi lo teniamo folded, ma l’output lo useremo sotto.
+Ora ripetiamo la stessa operazione per ogni età della griglia (da 6 a 13 anni, ogni 3 mesi). È la parte meccanica, e produce i due oggetti che verrebbero distribuiti come CSV.
+
+### Tabella primaria: grezzo → norme
+
+Colonne: `measure`, `age_grid`, `raw`, `p`, `z`, `ss_1_19`.
 
 ```{r}
 #| code-fold: true
-#| code-summary: "Generazione tabelle complete raw_to_norm (folded)"
+#| code-summary: "Codice: generazione di raw_to_norm"
 raw_to_norm <- NULL
-
-raw_grid_syll <- seq(floor(min(dat$syllsec)*100)/100, ceiling(max(dat$syllsec)*100)/100, by = 0.01)
-raw_grid_less <- 0:k
 
 for (a in age_grid) {
 
@@ -268,59 +383,24 @@ for (a in age_grid) {
 }
 
 # write.csv(raw_to_norm, "raw_to_norm.csv", row.names = FALSE)
+
+# controllo: a 9 anni il ciclo riproduce le tabelle costruite a mano sopra
+stopifnot(isTRUE(all.equal(raw_to_norm$z[raw_to_norm$measure=="lessdec" & raw_to_norm$age_grid==9], tab_less_9$z)))
+stopifnot(isTRUE(all.equal(raw_to_norm$z[raw_to_norm$measure=="syllsec" & raw_to_norm$age_grid==9], tab_syll_9$z)))
 ```
 
----
+La tabella ha `r format(nrow(raw_to_norm), big.mark = ".", decimal.mark = ",")` righe in tutto (`r length(age_grid)` età × tutti i grezzi possibili per le due prove).
 
-## 6) Visualizzare davvero la tabella di conversione (raw -> standardizzato)
+### Tabella inversa: punto standard → intervallo di grezzi
 
-Qui estraiamo un’età e mostriamo la conversione in modo leggibile.
+È la tabella "ideale" da mettere in appendice a un manuale: per ogni età e ogni punto standard, l'intervallo di grezzi corrispondente.
 
-```{r}
-age_show <- 9.00
-
-tab9_syll <- raw_to_norm[raw_to_norm$measure=="syllsec" & raw_to_norm$age_grid==age_show, ]
-tab9_less <- raw_to_norm[raw_to_norm$measure=="lessdec" & raw_to_norm$age_grid==age_show, ]
-
-# per syllsec mostro una sottogriglia per non stampare troppo
-tab9_syll_small <- tab9_syll[seq(1, nrow(tab9_syll), by = 20), ]
-print(tab9_syll_small, row.names = FALSE)
-
-# per lessdec ha senso vedere tutto (0..60)
-print(tab9_less, row.names = FALSE)
-```
-
-Un grafico didattico utile è raw -> SS per un’età (si vede subito monotonicità e “granularità” del discreto).
+- Per `syllsec` (continuo) gli estremi si ottengono invertendo SS = round(10 + 3z): ogni SS corrisponde a un intervallo di z ampio 1/3, che si riporta sui grezzi con i quantili lognormali.
+- Per `lessdec` (discreto) si inverte direttamente la tabella grezzo → SS, prendendo minimo e massimo; `NA` indica un punto standard non raggiungibile.
 
 ```{r}
 #| code-fold: true
-#| code-summary: "Grafici: raw -> SS a età fissa (folded)"
-p1 <- ggplot(tab9_syll, aes(x = raw, y = ss_1_19)) +
-  geom_line(linewidth = 1) +
-  labs(title = paste0("syllsec: raw -> SS (età ", age_show, ")"),
-       x = "syllsec (grezzo)", y = "SS 1..19")
-
-p2 <- ggplot(tab9_less, aes(x = raw, y = ss_1_19)) +
-  geom_step(linewidth = 1) +
-  labs(title = paste0("lessdec: raw -> SS (età ", age_show, ")"),
-       x = "lessdec (grezzo, 0..60)", y = "SS 1..19")
-
-print(p1)
-print(p2)
-```
-
----
-
-## 7) Tabella inversa “ideale”: SS -> intervallo di grezzo
-
-Per `syllsec` (continuo) usiamo gli intervalli indotti da SS = round(10 + 3z).
-Per `lessdec` (discreto) invertiamo la tabella raw -> SS e prendiamo min/max.
-
-Chunk lungo, quindi folded.
-
-```{r}
-#| code-fold: true
-#| code-summary: "Generazione ss_to_raw_intervals (folded)"
+#| code-summary: "Codice: generazione di ss_to_raw_intervals"
 SS <- 1:19
 ss_to_raw_intervals <- NULL
 
@@ -362,80 +442,52 @@ for (a in age_grid) {
 # write.csv(ss_to_raw_intervals, "ss_to_raw_intervals.csv", row.names = FALSE)
 ```
 
-Mostriamo un estratto per età 9, che è quello che tipicamente si mette in appendice o si distribuisce come CSV.
-
-```{r}
-age_show <- 9.00
-sub <- ss_to_raw_intervals[ss_to_raw_intervals$age_grid==age_show, ]
-sub <- sub[order(sub$measure, sub$ss_1_19), ]
-print(sub, row.names = FALSE)
-```
-
----
-
-## 8) Quantili per età: l’oggetto “continuous norming” (p10, p50, p90)
-
-Questi grafici rendono esplicita l’idea: la distribuzione condizionata cambia con l’età, senza spezzare in fasce.
+Ecco come appare a 9 anni, con le due prove affiancate:
 
 ```{r}
 #| code-fold: true
-#| code-summary: "Grafici: curve di quantili per età (folded)"
-probs <- c(0.10, 0.50, 0.90)
-
-# syllsec: quantili lognormali
-Q_syll <- NULL
-for (a in age_grid) {
-  pA <- predictAll(fit_syll, newdata = data.frame(age = a))
-  mu <- as.numeric(pA$mu); sg <- as.numeric(pA$sigma)
-  q  <- qLOGNO(probs, mu = mu, sigma = sg)
-  Q_syll <- rbind(Q_syll, data.frame(age = a, prob = probs, q = q))
-}
-p1 <- ggplot(Q_syll, aes(x = age, y = q, group = prob)) +
-  geom_line(linewidth = 1) +
-  scale_x_continuous(breaks = seq(6, 13, 1)) +
-  labs(title = "syllsec: quantili condizionati (p10, p50, p90)",
-       x = "età", y = "syllsec")
-print(p1)
-
-# lessdec: quantili beta-binomiale
-Q_less <- NULL
-for (a in age_grid) {
-  pA <- predictAll(fit_less, newdata = data.frame(age = a))
-  mu <- as.numeric(pA$mu); sg <- as.numeric(pA$sigma)
-  q  <- qBB(probs, mu = mu, sigma = sg, bd = k)
-  Q_less <- rbind(Q_less, data.frame(age = a, prob = probs, q = q))
-}
-p2 <- ggplot(Q_less, aes(x = age, y = q, group = prob)) +
-  geom_line(linewidth = 1) +
-  scale_x_continuous(breaks = seq(6, 13, 1)) +
-  labs(title = "lessdec: quantili condizionati (p10, p50, p90)",
-       x = "età", y = "lessdec (0..60)")
-print(p2)
+#| code-summary: "Codice: tabella inversa a 9 anni"
+s9 <- ss_to_raw_intervals[ss_to_raw_intervals$measure=="syllsec" & ss_to_raw_intervals$age_grid==9, ]
+l9 <- ss_to_raw_intervals[ss_to_raw_intervals$measure=="lessdec" & ss_to_raw_intervals$age_grid==9, ]
+inv9 <- data.frame(
+  SS = SS,
+  syllsec = ifelse(SS == 1, paste0("< ", sprintf("%.2f", s9$raw_max)),
+            ifelse(SS == 19, paste0("≥ ", sprintf("%.2f", s9$raw_min)),
+                   paste0(sprintf("%.2f", s9$raw_min), " – ", sprintf("%.2f", s9$raw_max)))),
+  lessdec = ifelse(is.na(l9$raw_min), "–",
+            ifelse(l9$raw_min == l9$raw_max, l9$raw_min, paste0(l9$raw_min, " – ", l9$raw_max)))
+)
+kable(inv9, col.names = c("Punto standard", "syllsec (sillabe/sec)", "lessdec (corrette su 60)"), align = "ccc")
 ```
 
 ---
 
-## 9) Downstream: scoring di un caso individuale, passo per passo (senza funzioni)
+## 6. Downstream: lo scoring di un caso individuale
 
-Scoring da tabella significa: dato (età, raw), ottenere z e SS.  
-Se l’età non è in griglia, interpoliamo in z tra le due età adiacenti.
+Da qui in poi il modello non serve più: lo scoring è un'operazione deterministica sulle tabelle. Dato un bambino con una certa età e certi grezzi:
+
+1. si individuano le due età della griglia che lo circondano (es. 9.25 e 9.50);
+2. in ciascuna si legge lo z corrispondente al grezzo (per `syllsec` interpolando tra i valori di grezzo in tabella);
+3. si interpola linearmente lo z tra le due età;
+4. dallo z si ricavano percentile e punto standard.
+
+Lo facciamo passo per passo, senza funzioni, per un caso del campione con età vicina a 9.30 anni.
 
 ```{r}
-# scelgo un caso vicino a 9.30 anni (riproducibile, nessun seed necessario)
 i0 <- which.min(abs(dat$age - 9.30))
 id0 <- dat$id[i0]
 age0 <- dat$age[i0]
 raw_syll <- dat$syllsec[i0]
 raw_less <- dat$lessdec[i0]
 
-cat("Caso:", id0, "età:", age0, "syllsec:", raw_syll, "lessdec:", raw_less, "\n\n")
+cat("Caso:", id0, "| età:", age0, "| syllsec:", raw_syll, "| lessdec:", raw_less, "\n")
 
-# età adiacenti in griglia
+# età adiacenti in griglia e peso per l'interpolazione
 a0 <- max(age_grid[age_grid <= age0])
 a1 <- min(age_grid[age_grid >= age0])
 w  <- if (a0 == a1) 0 else (age0 - a0)/(a1 - a0)
 
-# --- syllsec: z da tabella via interpolazione sul raw, poi interpolazione sull’età ---
+# --- syllsec: z da tabella via interpolazione sul raw, poi interpolazione sull'età ---
 tab0 <- raw_to_norm[raw_to_norm$measure=="syllsec" & raw_to_norm$age_grid==a0, ]
 tab1 <- raw_to_norm[raw_to_norm$measure=="syllsec" & raw_to_norm$age_grid==a1, ]
 
@@ -446,7 +498,7 @@ z_syll <- z0 + (z1 - z0) * w
 p_syll <- clamp_prob(pnorm(z_syll))
 ss_syll <- ss19(z_syll)
 
-# --- lessdec: z da tabella via lookup sul raw discreto, poi interpolazione sull’età ---
+# --- lessdec: z da tabella via lookup sul raw discreto, poi interpolazione sull'età ---
 tab0 <- raw_to_norm[raw_to_norm$measure=="lessdec" & raw_to_norm$age_grid==a0, ]
 tab1 <- raw_to_norm[raw_to_norm$measure=="lessdec" & raw_to_norm$age_grid==a1, ]
 
@@ -457,32 +509,59 @@ z_less <- z0 + (z1 - z0) * w
 p_less <- clamp_prob(pnorm(z_less))
 ss_less <- ss19(z_less)
 
-# tabella risultato individuo
 out <- data.frame(
-  id = id0,
-  age = age0,
   measure = c("syllsec","lessdec"),
   raw = c(raw_syll, raw_less),
   percentile = c(100*p_syll, 100*p_less),
   z = c(z_syll, z_less),
   ss_1_19 = c(ss_syll, ss_less)
 )
-print(out, row.names = FALSE)
-
-# composito: media degli z, poi standard score 100/15 (tipo QI)
-z_comp <- mean(out$z)
-SS_100_15 <- round(100 + 15*z_comp)
-cat("\nComposite:\n")
-print(data.frame(id=id0, age=age0, z_comp=z_comp, SS_100_15=SS_100_15), row.names = FALSE)
+kable(out, digits = c(0,2,1,2,0), col.names = c("Prova", "Grezzo", "Percentile", "z", "SS 1–19"))
 ```
+
+## 7. Downstream: il punteggio composito
+
+Una volta che gli z sono coerenti, aggregarli è naturale. Ma attenzione a un errore frequente: **la media di più z non è uno z**. Se le prove non sono perfettamente correlate, la media ha una deviazione standard minore di 1, e trasformarla direttamente in un punteggio 100/15 schiaccia i casi estremi verso la media, proprio quelli che interessano clinicamente.
+
+Con due prove correlate *r*, la media dei due z ha DS = √((1 + *r*)/2), e va divisa per questo valore prima di convertirla. La correlazione *r* si stima nel campione normativo sugli z (cioè al netto dell'età), ed è un parametro che va distribuito insieme alle tabelle.
+
+```{r}
+# z di tutto il campione normativo, dal modello (stessa logica delle tabelle)
+pA <- predictAll(fit_syll, newdata = data.frame(age = dat$age))
+z_syll_all <- qnorm(clamp_prob(pLOGNO(dat$syllsec, mu = pA$mu, sigma = pA$sigma)))
+
+pA <- predictAll(fit_less, newdata = data.frame(age = dat$age))
+p_le <- pBB(dat$lessdec,   mu = pA$mu, sigma = pA$sigma, bd = k)
+p_lt <- pBB(dat$lessdec-1, mu = pA$mu, sigma = pA$sigma, bd = k)
+z_less_all <- qnorm(clamp_prob(p_lt + 0.5 * pmax(0, p_le - p_lt)))
+
+r <- cor(z_syll_all, z_less_all)
+sd_mean <- sqrt((1 + r) / 2)
+cat("Correlazione tra gli z (al netto dell'età): r =", round(r, 2), "\n")
+cat("DS della media dei due z:", round(sd_mean, 2), "\n")
+
+# composito: media degli z, ristandardizzata, poi standard score 100/15 (tipo QI)
+z_comp <- mean(out$z) / sd_mean
+comp <- data.frame(
+  id = id0, age = age0,
+  media_z = mean(out$z),
+  z_comp = z_comp,
+  SS_100_15 = round(100 + 15*z_comp),
+  SS_ingenuo = round(100 + 15*mean(out$z))
+)
+kable(comp, digits = 2,
+      col.names = c("id", "Età", "Media degli z", "z composito", "Composito 100/15", "(senza correzione)"))
+```
+
+::: {.callout-tip appearance="simple" icon="false"}
+**Quanto conta la correzione?** Con *r* = `r round(r, 2)`, un bambino con z = −2 in entrambe le prove ha media degli z −2, ma uno z composito di `r round(-2/sd_mean, 2)`: un composito 100/15 di `r round(100 + 15*(-2/sd_mean))` invece di 70. Ha senso: essere molto in basso in *due* prove solo parzialmente correlate è più raro che esserlo in una sola. In alternativa, si può applicare il continuous norming direttamente al composito, con la stessa pipeline vista sopra.
+:::
 
 ---
 
-## Take-home (operativo)
+## Take-home
 
-- I grezzi possono essere non gaussiani, e va bene, il punto è modellare una distribuzione condizionata plausibile e poi standardizzare in modo interpretabile.
-- Il continuous norming evita “fasce di età” e riduce instabilità sulle code.
-- Distribuire tabelle (CSV) invece del modello rende lo scoring auditabile e stabile.
-- Una volta ottenuti z e SS coerenti, l’aggregazione diventa naturale, invece di contare cutoff indipendenti.
-
-
+- **Non gaussiano va bene**: il punto è modellare una distribuzione condizionata plausibile e poi standardizzare in modo interpretabile (grezzo → percentile → z).
+- **Niente fasce d'età**: il continuous norming usa tutto il campione per ogni età e riduce l'instabilità sulle code.
+- **Tabelle, non modelli**: distribuire CSV invece del modello rende lo scoring deterministico, verificabile e stabile nel tempo.
+- **Aggregare, non contare**: con z coerenti il composito viene naturale, purché sia ristandardizzato.

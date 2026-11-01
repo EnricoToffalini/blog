@@ -41,7 +41,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-e71ca2b041b6f709ac7ebd42d75695e6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-cb4651696220d193d2aea2869e04a3a9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -79,14 +79,14 @@ ul.task-list li input[type="checkbox"] {
 <meta property="og:image" content="https://enricotoffalini.github.io/blog/posts/agenti-cli/images/claude-02-analisi.png">
 <meta property="og:site_name" content="toffeeblog">
 <meta property="og:locale" content="it_IT">
-<meta property="og:image:height" content="1038">
-<meta property="og:image:width" content="1872">
+<meta property="og:image:height" content="1039">
+<meta property="og:image:width" content="1860">
 <meta name="twitter:title" content="Agenti AI in locale (da terminale o app): Primi passi con Codex e Claude Code e come vi cambiano il lavoro – toffeeblog">
 <meta name="twitter:description" content="Gli agenti AI in locale, come Claude Code e Codex, lavorano direttamente sui file del vostro computer: leggono un progetto, scrivono ed eseguono script, correggono. Primi passi e come cambiano il lavoro.">
 <meta name="twitter:image" content="https://enricotoffalini.github.io/blog/posts/agenti-cli/images/claude-02-analisi.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image-height" content="1038">
-<meta name="twitter:image-width" content="1872">
+<meta name="twitter:image-height" content="1039">
+<meta name="twitter:image-width" content="1860">
 </head>
 
 <body class="nav-fixed fullcontent quarto-light">
@@ -181,7 +181,7 @@ ul.task-list li input[type="checkbox"] {
 <figure class="figure">
 <img src="images/claude-02-analisi.png" alt="Claude Code al lavoro su un'analisi in R" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
 <figcaption>
-Claude Code ha letto un dataset, scritto ed eseguito uno script R e riassunto i risultati, in 23 secondi, da una sola richiesta in italiano
+Claude Code ha letto un dataset, scritto ed eseguito uno script R e riassunto i risultati, in meno di un minuto, da una sola richiesta in italiano
 </figcaption>
 </figure>
 <section id="cosa-cambia-rispetto-alla-chat-nel-browser" class="level1">
@@ -254,22 +254,22 @@ Claude Code ha letto un dataset, scritto ed eseguito uno script R e riassunto i 
 </section>
 <section id="un-esempio-concreto-stesso-compito-due-agenti" class="level1">
 <h1>Un esempio concreto: stesso compito, due agenti</h1>
-<p>Per le guide ho dato a entrambi gli agenti lo stesso compito, nella stessa cartella con lo stesso dataset simulato (240 studenti, ore di studio, ansia, gruppo triennale/magistrale, voto d’esame).</p>
+<p>Per le guide ho dato a entrambi gli agenti lo stesso compito, in una cartella con lo stesso dataset simulato: il campione di standardizzazione della <strong>BII</strong>, una <em>Batteria d’Intelligenza Inventata</em> che uso per la didattica (1.600 casi tra 6 e 22 anni, punteggi grezzi di quattro subtest), più un breve file <code>LEGGIMI.md</code> con il significato delle variabili.</p>
 <div class="callout callout-style-simple callout-note no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-body-container">
-<p><strong>Nota sui dati.</strong> Il dataset e l’analisi di regressione sono un esempio giocattolo <strong>inventato da Claude</strong>, di sua iniziativa, solo per mostrare come lavorano gli agenti. I dati sono simulati, e numeri, variabili e risultati non hanno nulla a che vedere con ricerche, dati o analisi mie, né di nessun altro.</p>
+<p><strong>Nota sui dati.</strong> La BII è una batteria <strong>inventata</strong> a scopo didattico: subtest, item, dati e norme sono tutti simulati. Numeri e risultati non hanno nulla a che vedere con persone reali, né con ricerche o dati miei o di altri.</p>
 </div>
 </div>
 </div>
 <p>La richiesta era questa:</p>
 <blockquote class="blockquote">
-<p><em>In questa cartella c’è dati_esame.csv. Dai un’occhiata ai dati, poi scrivi uno script R chiamato analisi.R che stima una regressione del voto su ore_studio, ansia e gruppo, eseguilo e spiegami i risultati in poche righe.</em></p>
+<p><em>In questa cartella c’è bii_campione.csv, il campione simulato di una batteria d’intelligenza inventata. Dai un’occhiata ai dati, poi scrivi uno script R chiamato analisi.R che descrive come crescono con l’età i punteggi grezzi dei quattro subtest, eseguilo e spiegami i risultati in poche righe.</em></p>
 </blockquote>
-<p>Entrambi hanno impiegato circa 25 secondi e ottenuto gli stessi coefficienti. Poi ho chiesto, in modalità <em>plan</em>, di trasformare l’analisi in un breve report Quarto con un grafico e una tabella. Questi sono i due report prodotti, senza alcun ritocco:</p>
+<p>Claude Code ha impiegato meno di un minuto, Codex poco più di due. Entrambi hanno scelto da soli lo stesso metodo (curve di crescita non lineari con un GAM) e ottenuto le stesse stime: per esempio, il subtest SP passa in media da circa 7 punti a 6 anni a 27 punti a 22 anni. Poi ho chiesto, in modalità <em>plan</em>, di trasformare l’analisi in un breve report Quarto con un grafico e una tabella. Questi sono i due report prodotti, senza alcun ritocco:</p>
 <div class="columns">
 <div class="column" style="width:50%;">
 <figure class="figure">
@@ -287,7 +287,7 @@ Report prodotto da Codex
 </figure>
 </div>
 </div>
-<p>Due dettagli istruttivi. Primo: i due agenti hanno fatto <strong>scelte diverse ma entrambe legittime</strong> (gruppo di riferimento opposto, grafico diverso, tabella con o senza coefficienti standardizzati). Claude ha anche segnalato spontaneamente un limite reale dei dati: il voto ha un tetto a 30, quindi la regressione lineare può sottostimare gli effetti. Secondo: nessuno dei due vi esonera dal <strong>leggere quello che hanno fatto</strong>. Sono strumenti molto capaci, non arbitri della correttezza.</p>
+<p>Due dettagli istruttivi. Primo: i due agenti hanno fatto <strong>scelte diverse ma entrambe legittime</strong> (tabella con indici di crescita oppure con medie a età prefissate, ordine e stile dei grafici). Codex ha anche aggiunto spontaneamente una precisazione importante: sono dati trasversali, quindi descrivono differenze tra persone di età diversa, non la crescita degli stessi individui. Secondo: nessuno dei due vi esonera dal <strong>leggere quello che hanno fatto</strong>. Claude ha guardato il proprio report e corretto da solo due dettagli; Codex non ha potuto aprirlo nel browser, lo ha dichiarato, e infatti nella didascalia della tabella è rimasto un errore di codifica (<code>et&lt;U+00E0&gt;</code> al posto di <em>età</em>). Sono strumenti molto capaci, non arbitri della correttezza.</p>
 </section>
 <section id="cose-da-sapere-prima-di-cominciare" class="level1">
 <h1>Cose da sapere prima di cominciare</h1>

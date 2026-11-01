@@ -67,13 +67,13 @@ In alto trovate le informazioni principali: **modello** (qui Opus 5.5), **effort
 
 ## La prima richiesta
 
-Si scrive in linguaggio naturale, in italiano, come in chat. La cartella di prova contiene solo un file `dati_esame.csv`. La richiesta:
+Si scrive in linguaggio naturale, in italiano, come in chat. La cartella di prova contiene solo due file: `bii_campione.csv`, con i dati simulati di una batteria d'intelligenza inventata (vedi la <a href="index.html#un-esempio-concreto-stesso-compito-due-agenti">parte generale</a>), e un breve `LEGGIMI.md` che spiega le variabili. La richiesta:
 
-> *In questa cartella c'è dati_esame.csv. Dai un'occhiata ai dati, poi scrivi uno script R chiamato analisi.R che stima una regressione del voto su ore_studio, ansia e gruppo, eseguilo e spiegami i risultati in poche righe.*
+> *In questa cartella c'è bii_campione.csv, il campione simulato di una batteria d'intelligenza inventata. Dai un'occhiata ai dati, poi scrivi uno script R chiamato analisi.R che descrive come crescono con l'età i punteggi grezzi dei quattro subtest, eseguilo e spiegami i risultati in poche righe.*
 
 <figure><img src="images/claude-02-analisi.png" alt="Claude Code esegue l'analisi" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Claude Code ha esplorato i dati, scritto `analisi.R`, lo ha eseguito con Rscript e ha riassunto i risultati</figcaption></figure>
 
-In 23 secondi Claude Code ha letto il CSV, controllato i valori mancanti e un caso estremo, scritto lo script, lo ha eseguito e ha riassunto i risultati. Ha anche segnalato un limite non richiesto: con voti compresi tra 18 e 30, vicino al tetto la regressione lineare può sottostimare gli effetti. Lo script `analisi.R` ora esiste nella cartella e potete aprirlo in RStudio come qualsiasi altro script.
+In 52 secondi Claude Code ha letto i dati, scelto da solo un metodo adatto (curve di crescita non lineari con un GAM), scritto lo script, lo ha eseguito, ha salvato due grafici e ha riassunto i risultati. Ha anche controllato gli effetti pavimento e soffitto e aggiunto osservazioni non richieste ma pertinenti: il subtest di ragionamento (RR) smette di crescere prima di quelli verbali, e per costruire norme per età servirebbero fasce più strette nell'infanzia. Lo script `analisi.R` ora esiste nella cartella e potete aprirlo in RStudio come qualsiasi altro script.
 
 Si può continuare la conversazione: ogni nuova richiesta parte da tutto quello che è già successo nella sessione. Per **interrompere** l'agente mentre lavora si preme `Esc`.
 
@@ -126,13 +126,13 @@ Con `Shift+Tab` si passa da una modalità di lavoro all'altra. La modalità atti
 
 La modalità *plan* è la più sottovalutata. Per qualsiasi compito non banale conviene chiedere prima un piano. Nell'esempio ho chiesto, in modalità *plan*:
 
-> *Vorrei trasformare questa analisi in un breve report Quarto in HTML, con un grafico e una tabella dei coefficienti. Prima di toccare qualsiasi file, proponimi un piano.*
+> *Vorrei trasformare questa analisi in un breve report Quarto in HTML, con un grafico e una tabella. Prima di toccare qualsiasi file, proponimi un piano.*
 
 <figure><img src="images/claude-06-plan.png" alt="piano proposto" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Il piano proposto: contesto, approccio, file da creare. In fondo si sceglie se procedere (in modalità auto o con approvazione manuale) o chiedere modifiche</figcaption></figure>
 
-Il piano dice esattamente cosa verrà creato e cosa resterà invariato. Prima di approvarlo, potete correggerlo (opzione 3) o modificarlo a mano (`Ctrl+G`). Approvato il piano, Claude Code ha creato `report.qmd`, lo ha renderizzato con Quarto e ha controllato il grafico prodotto:
+Il piano dice esattamente cosa verrà creato e cosa resterà invariato. Prima di approvarlo, potete correggerlo (opzione 3) o modificarlo a mano (`Ctrl+G`). Approvato il piano, Claude Code ha creato `report_crescita.qmd`, lo ha renderizzato con Quarto e ha controllato il risultato guardandone uno screenshot. Così ha trovato da solo due difetti (un intervallo d'età scritto male e un'intestazione di tabella che andava a capo in modo ambiguo) e li ha corretti:
 
-<figure><img src="images/claude-07-report.png" alt="report completato" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Fine del lavoro: riepilogo di cosa contiene il report e di come rigenerarlo</figcaption></figure>
+<figure><img src="images/claude-07-report.png" alt="report completato" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Fine del lavoro: cosa contiene il report, le due correzioni fatte dopo il primo rendering e come rigenerarlo</figcaption></figure>
 
 Il report finale è mostrato nella <a href="index.html#un-esempio-concreto-stesso-compito-due-agenti">parte generale</a>.
 

@@ -41,7 +41,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-e71ca2b041b6f709ac7ebd42d75695e6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-cb4651696220d193d2aea2869e04a3a9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -218,7 +218,7 @@ Alla prima apertura di una cartella Codex chiede se fidarsi: la decisione viene 
 <figure class="figure">
 <img src="images/codex-02-avvio.png" alt="avvio di Codex" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
 <figcaption>
-Codex pronto: in basso il modello attivo (GPT-5.6-Terra), il livello di ragionamento (<em>medium</em>) e la cartella di lavoro
+Codex pronto: in basso il modello attivo (GPT-6.1-Sol), il livello di ragionamento (<em>medium</em>) e la cartella di lavoro
 </figcaption>
 </figure>
 </section>
@@ -226,15 +226,15 @@ Codex pronto: in basso il modello attivo (GPT-5.6-Terra), il livello di ragionam
 <h2 class="anchored" data-anchor-id="la-prima-richiesta">La prima richiesta</h2>
 <p>Stessa richiesta data a Claude Code:</p>
 <blockquote class="blockquote">
-<p><em>In questa cartella c’è dati_esame.csv. Dai un’occhiata ai dati, poi scrivi uno script R chiamato analisi.R che stima una regressione del voto su ore_studio, ansia e gruppo, eseguilo e spiegami i risultati in poche righe.</em></p>
+<p><em>In questa cartella c’è bii_campione.csv, il campione simulato di una batteria d’intelligenza inventata. Dai un’occhiata ai dati, poi scrivi uno script R chiamato analisi.R che descrive come crescono con l’età i punteggi grezzi dei quattro subtest, eseguilo e spiegami i risultati in poche righe.</em></p>
 </blockquote>
 <figure class="figure">
 <img src="images/codex-03-analisi.png" alt="Codex esegue l'analisi" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
 <figcaption>
-Codex ha creato <code>analisi.R</code> (si vedono le righe aggiunte), lo ha eseguito con Rscript e ha riassunto i risultati
+Codex ha scritto ed eseguito <code>analisi.R</code>, ha guardato il grafico prodotto e ha riassunto i risultati
 </figcaption>
 </figure>
-<p>In 25 secondi Codex ha esplorato i dati, scritto lo script, lo ha eseguito e ha riassunto i risultati, identici a quelli ottenuti da Claude Code. Ogni passaggio è visibile: il file aggiunto (<code>Added analisi.R (+15 -0)</code>), il comando eseguito (<code>Ran Rscript --vanilla analisi.R</code>) e il suo output. Con <code>Ctrl+T</code> si espande il dettaglio completo. Per interrompere l’agente mentre lavora si preme <code>Esc</code>.</p>
+<p>In poco più di due minuti Codex ha esplorato i dati, scelto lo stesso metodo di Claude Code (curve di crescita con un GAM), scritto ed eseguito lo script, controllato il grafico prodotto e riassunto i risultati, praticamente identici a quelli di Claude Code. Ha aggiunto una precisazione importante: sono dati trasversali, quindi descrivono differenze tra persone di età diversa, non la crescita degli stessi individui. Ogni passaggio è visibile: il comando eseguito (<code>Ran Rscript analisi.R</code>) con il suo output, l’immagine controllata (<code>Viewed image punteggi_eta.png</code>). Con <code>Ctrl+T</code> si espande il dettaglio completo. Per interrompere l’agente mentre lavora si preme <code>Esc</code>.</p>
 </section>
 <section id="scegliere-modello-e-livello-di-ragionamento" class="level2">
 <h2 class="anchored" data-anchor-id="scegliere-modello-e-livello-di-ragionamento">Scegliere modello e livello di ragionamento</h2>
@@ -260,7 +260,7 @@ Il livello di ragionamento: da <em>Low</em> a <em>Extra high</em>, più i livell
 <figure class="figure">
 <img src="images/codex-06-status.png" alt="comando /status" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
 <figcaption>
-<code>/status</code>: modello, permessi, tipo di account (qui Edu), contesto usato e, in fondo, i limiti sulla finestra di 5 ore e settimanale
+<code>/status</code>: modello, permessi, tipo di account (qui Edu; indirizzo e identificativo oscurati), contesto usato e, in fondo, i limiti sulla finestra di 5 ore e settimanale
 </figcaption>
 </figure>
 <p>Le ultime tre righe sono le più utili. <strong>Context window</strong> indica quanto della “memoria di lavoro” della conversazione è occupato. <strong>5h limit</strong> e <strong>Weekly limit</strong> indicano quanto resta dei limiti del vostro piano e quando si azzerano. Il dettaglio aggiornato, inclusi eventuali crediti, è sulla pagina <a href="https://chatgpt.com/codex/settings/usage" target="_blank">chatgpt.com/codex/settings/usage</a>. I limiti valgono per tutte le interfacce di Codex, non solo per il terminale. Raggiunto un limite, Codex si ferma fino all’azzeramento, salvo che il piano preveda crediti aggiuntivi (vedi la <a href="index.html">parte generale</a>; con un account Edu dipende dall’ateneo).</p>
@@ -280,25 +280,19 @@ I quattro livelli di permesso di Codex
 <li><strong>Approve for me</strong>: chiede solo per le azioni giudicate potenzialmente pericolose; le altre vengono valutate e approvate automaticamente.</li>
 <li><strong>Full Access</strong>: nessuna richiesta, anche fuori dalla cartella e su internet. Da usare con molta cautela.</li>
 </ul>
-<p>Codex lavora dentro una <strong><em>sandbox</em></strong>: di default può scrivere solo nella cartella del progetto. Nell’esempio si vede bene. Il rendering del report Quarto è fallito perché Quarto doveva aggiornare una propria cache fuori dalla cartella di lavoro. Codex ha riconosciuto il problema, ha richiesto l’autorizzazione (approvata automaticamente in modalità <em>Approve for me</em>) e ha rieseguito il comando:</p>
-<figure class="figure">
-<img src="images/codex-10-sandbox.png" alt="sandbox di Codex" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
-<figcaption>
-Il primo rendering fallisce per i limiti della sandbox; Codex chiede l’autorizzazione necessaria e il secondo tentativo riesce
-</figcaption>
-</figure>
+<p>Codex lavora dentro una <strong><em>sandbox</em></strong>: di default può scrivere solo nella cartella del progetto. Se un comando ha bisogno di scrivere altrove (ad esempio Quarto che aggiorna una propria cache fuori dalla cartella di lavoro), il primo tentativo fallisce; di solito Codex riconosce il problema, chiede l’autorizzazione (approvata automaticamente in modalità <em>Approve for me</em>) e riesegue il comando.</p>
 </section>
 <section id="plan-mode" class="level2">
 <h2 class="anchored" data-anchor-id="plan-mode">Plan mode</h2>
 <p>Con <code>Shift+Tab</code>, oppure con il comando <code>/plan</code>, si attiva la <strong>Plan mode</strong> (l’indicazione compare in basso a destra). In questa modalità Codex esplora e progetta, ma non modifica nulla. Ho chiesto:</p>
 <blockquote class="blockquote">
-<p><em>Vorrei trasformare questa analisi in un breve report Quarto in HTML, con un grafico e una tabella dei coefficienti. Proponimi un piano.</em></p>
+<p><em>Vorrei trasformare questa analisi in un breve report Quarto in HTML, con un grafico e una tabella. Proponimi un piano.</em></p>
 </blockquote>
 <p>Prima di proporre il piano, Codex ha fatto una cosa interessante: ha letto da solo la mia skill sullo stile dei report scientifici (<code>reporting-style-enrico</code>, vedi la <a href="index.html">parte generale</a>) e poi mi ha posto alcune domande:</p>
 <figure class="figure">
 <img src="images/codex-08-plan-domande.png" alt="domande in plan mode" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
 <figcaption>
-In plan mode Codex fa domande prima di decidere: qui quale grafico includere, con un’opzione consigliata
+In plan mode Codex fa domande prima di decidere: qui quale tabella includere, con un’opzione consigliata
 </figcaption>
 </figure>
 <p>Risposte le domande, presenta il piano: file che verranno creati, verifiche che farà, assunzioni adottate. A quel punto si sceglie se implementarlo:</p>
@@ -308,7 +302,14 @@ In plan mode Codex fa domande prima di decidere: qui quale grafico includere, co
 La parte finale del piano e la richiesta di conferma: implementare, implementare ripartendo con un contesto pulito, oppure continuare a pianificare
 </figcaption>
 </figure>
-<p>Il report risultante è mostrato nella <a href="index.html#un-esempio-concreto-stesso-compito-due-agenti">parte generale</a>, accanto a quello di Claude Code.</p>
+<p>Approvato il piano, Codex ha scritto <code>report.qmd</code>, lo ha renderizzato e ha controllato che i numeri del report corrispondessero ai dati. Non è riuscito invece ad aprire il report nel browser per il controllo visivo, e lo ha detto chiaramente:</p>
+<figure class="figure">
+<img src="images/codex-10-verifica.png" alt="Codex dichiara la verifica incompleta" style="width: 100%; height: auto; border: 2px solid #444444;" class="figure-img">
+<figcaption>
+Rendering riuscito e valori verificati, ma il controllo visivo resta incompleto perché il browser non era disponibile: Codex lo scrive nel riepilogo finale
+</figcaption>
+</figure>
+<p>È una dichiarazione da prendere sul serio. Nel report, infatti, è rimasto un errore che un’occhiata avrebbe colto: nella didascalia della tabella compare <code>et&lt;U+00E0&gt;</code> al posto di <em>età</em>. Il report è mostrato nella <a href="index.html#un-esempio-concreto-stesso-compito-due-agenti">parte generale</a>, accanto a quello di Claude Code.</p>
 </section>
 <section id="riprendere-una-conversazione" class="level2">
 <h2 class="anchored" data-anchor-id="riprendere-una-conversazione">Riprendere una conversazione</h2>

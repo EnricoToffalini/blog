@@ -24,7 +24,7 @@ Questo post ha quattro parti:
 
 Le guide mostrano installazione, primo utilizzo, scelta del modello e dello sforzo di ragionamento (*effort*), controllo dei limiti di utilizzo e modalità di lavoro (automatica, con approvazione, *plan*). Non sono guide esaustive. Coprono le cose che servono per partire.
 
-<figure><img src="images/claude-02-analisi.png" alt="Claude Code al lavoro su un'analisi in R" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Claude Code ha letto un dataset, scritto ed eseguito uno script R e riassunto i risultati, in 23 secondi, da una sola richiesta in italiano</figcaption></figure>
+<figure><img src="images/claude-02-analisi.png" alt="Claude Code al lavoro su un'analisi in R" style="width: 100%; height: auto; border: 2px solid #444444;"><figcaption>Claude Code ha letto un dataset, scritto ed eseguito uno script R e riassunto i risultati, in meno di un minuto, da una sola richiesta in italiano</figcaption></figure>
 
 
 # Cosa cambia rispetto alla chat nel browser
@@ -89,17 +89,17 @@ Detto questo, se si deve restare su Word (ad esempio per un documento condiviso 
 
 # Un esempio concreto: stesso compito, due agenti
 
-Per le guide ho dato a entrambi gli agenti lo stesso compito, nella stessa cartella con lo stesso dataset simulato (240 studenti, ore di studio, ansia, gruppo triennale/magistrale, voto d'esame).
+Per le guide ho dato a entrambi gli agenti lo stesso compito, in una cartella con lo stesso dataset simulato: il campione di standardizzazione della **BII**, una *Batteria d'Intelligenza Inventata* che uso per la didattica (1.600 casi tra 6 e 22 anni, punteggi grezzi di quattro subtest), più un breve file `LEGGIMI.md` con il significato delle variabili.
 
 ::: {.callout-note appearance="simple" icon="false"}
-**Nota sui dati.** Il dataset e l'analisi di regressione sono un esempio giocattolo **inventato da Claude**, di sua iniziativa, solo per mostrare come lavorano gli agenti. I dati sono simulati, e numeri, variabili e risultati non hanno nulla a che vedere con ricerche, dati o analisi mie, né di nessun altro.
+**Nota sui dati.** La BII è una batteria **inventata** a scopo didattico: subtest, item, dati e norme sono tutti simulati. Numeri e risultati non hanno nulla a che vedere con persone reali, né con ricerche o dati miei o di altri.
 :::
 
 La richiesta era questa:
 
-> *In questa cartella c'è dati_esame.csv. Dai un'occhiata ai dati, poi scrivi uno script R chiamato analisi.R che stima una regressione del voto su ore_studio, ansia e gruppo, eseguilo e spiegami i risultati in poche righe.*
+> *In questa cartella c'è bii_campione.csv, il campione simulato di una batteria d'intelligenza inventata. Dai un'occhiata ai dati, poi scrivi uno script R chiamato analisi.R che descrive come crescono con l'età i punteggi grezzi dei quattro subtest, eseguilo e spiegami i risultati in poche righe.*
 
-Entrambi hanno impiegato circa 25 secondi e ottenuto gli stessi coefficienti. Poi ho chiesto, in modalità *plan*, di trasformare l'analisi in un breve report Quarto con un grafico e una tabella. Questi sono i due report prodotti, senza alcun ritocco:
+Claude Code ha impiegato meno di un minuto, Codex poco più di due. Entrambi hanno scelto da soli lo stesso metodo (curve di crescita non lineari con un GAM) e ottenuto le stesse stime: per esempio, il subtest SP passa in media da circa 7 punti a 6 anni a 27 punti a 22 anni. Poi ho chiesto, in modalità *plan*, di trasformare l'analisi in un breve report Quarto con un grafico e una tabella. Questi sono i due report prodotti, senza alcun ritocco:
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -110,7 +110,7 @@ Entrambi hanno impiegato circa 25 secondi e ottenuto gli stessi coefficienti. Po
 :::
 :::
 
-Due dettagli istruttivi. Primo: i due agenti hanno fatto **scelte diverse ma entrambe legittime** (gruppo di riferimento opposto, grafico diverso, tabella con o senza coefficienti standardizzati). Claude ha anche segnalato spontaneamente un limite reale dei dati: il voto ha un tetto a 30, quindi la regressione lineare può sottostimare gli effetti. Secondo: nessuno dei due vi esonera dal **leggere quello che hanno fatto**. Sono strumenti molto capaci, non arbitri della correttezza.
+Due dettagli istruttivi. Primo: i due agenti hanno fatto **scelte diverse ma entrambe legittime** (tabella con indici di crescita oppure con medie a età prefissate, ordine e stile dei grafici). Codex ha anche aggiunto spontaneamente una precisazione importante: sono dati trasversali, quindi descrivono differenze tra persone di età diversa, non la crescita degli stessi individui. Secondo: nessuno dei due vi esonera dal **leggere quello che hanno fatto**. Claude ha guardato il proprio report e corretto da solo due dettagli; Codex non ha potuto aprirlo nel browser, lo ha dichiarato, e infatti nella didascalia della tabella è rimasto un errore di codifica (`et<U+00E0>` al posto di *età*). Sono strumenti molto capaci, non arbitri della correttezza.
 
 
 # Cose da sapere prima di cominciare
