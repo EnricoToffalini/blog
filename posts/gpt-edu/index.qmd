@@ -29,6 +29,8 @@ In alto nella pagina c'è un selettore **Chat / Work**.
 
 **Raccomandazione:** usate **sempre Chat** per le richieste ordinarie, anche impegnative. Il credito Work conviene tenerlo per **Codex** in locale, che per il lavoro su progetti veri è molto più comodo e potente perché lavora direttamente sui vostri file (vedi il punto 7). **NON conviene sprecare crediti Work/Codex** per lavori anche complessi e ad alto ragionamento che possono concludersi in una **Chat** (eventualmente con qualche documento caricato in input e qualche documento scaricato come output). 
 
+> ⚠️ **Aggiornamento (novembre 2026).** OpenAI ha <a href="https://help.openai.com/en/articles/20001625-understanding-chatgpt-and-codex-usage-limits" target="_blank">annunciato</a> che **da dicembre**, nei piani **Plus, Pro e Business**, anche la **Chat** consumerà la stessa quota di Codex e Work, misurata in token; resta esclusa solo la Chat *Instant* (vedi anche <a href="https://www.dday.it/redazione/59296/finita-la-pacchia-da-dicembre-la-chat-di-chatgpt-consumera-i-limiti-del-piano-come-work-e-codex" target="_blank">DDay.it</a>). Per **Edu** non c'è ancora nessuna comunicazione: non sappiamo se e quando la novità arriverà anche qui. Se arriverà, la distinzione su cui si basa questa raccomandazione (Chat senza limiti pratici, Work/Codex da risparmiare) non varrà più: tutto attingerà a un unico budget, come già succede con Claude. Resterà sensato scegliere lo strumento più adatto al compito, e usare *Instant* per le cose semplici.
+
 <figure><img src="images/01-work.png" alt="modalità Work di ChatGPT" style="width: 100%; max-width: 800px; height: auto; border: 2px solid #444444;"><figcaption>La modalità Work: modello e livello di ragionamento in basso a destra, e sotto la scelta di progetto, file e plugin</figcaption></figure>
 
 
@@ -70,6 +72,8 @@ In **Work** valgono gli stessi modelli e gli stessi livelli di ragionamento di C
 Una rassicurazione, che spero incoraggi a osare di più: nella mia esperienza con ChatGPT Edu, la **Chat** anche con moltissimi prompt ripetuti a ragionamento **High** **non ha mai raggiunto limiti di utilizzo**. Usate High senza troppi scrupoli.
 
 Diverso è il caso di **Work**, che attinge ai limiti di Codex (finestra di 5 ore e settimanale), e soprattutto di **Pro**: lì i limiti ci sono e si sentono (in un certo periodo erano appena **16 richieste al mese**; non so se con Edu sia ancora così). Pro ha senso per sviluppare progetti molto articolati dall'inizio alla fine, ma per quello, francamente, è preferibile **Codex**.
+
+> ⚠️ **Da rivedere a breve.** Questo vale finché la Chat ha limiti separati da Work/Codex. Da dicembre, nei piani Plus, Pro e Business, la Chat (tranne *Instant*) attingerà alla stessa quota di Codex; per Edu non si sa ancora (vedi l'<a href="#chat-o-work-di-default-chat">aggiornamento al punto 1</a>).
 
 
 ## 4. Strumenti: ricerca web e Deep research
@@ -126,6 +130,8 @@ Anche qui, però: per cose davvero complesse, con molti file che dipendono l'uno
 
 ChatGPT Edu include **Codex**, l'agente che lavora direttamente sui file del vostro computer: legge una cartella di progetto, scrive ed esegue codice, controlla gli errori, corregge, e vi dice cosa ha fatto. Per sviluppare **progetti, analisi, software, siti web**, praticamente qualsiasi cosa, è un salto di livello rispetto alla chat. Ed è il motivo principale per cui conviene non sprecare il credito Work.
 
+> ⚠️ **Da rivedere a breve.** Il "credito Work da non sprecare" ha senso finché la Chat ha limiti separati. Da dicembre, nei piani Plus, Pro e Business, Chat (tranne *Instant*), Work e Codex attingeranno alla stessa quota; per Edu non si sa ancora (vedi l'<a href="#chat-o-work-di-default-chat">aggiornamento al punto 1</a>).
+
 Ne ho parlato estesamente qui:
 
 - → <a href="../agenti-cli/index.html">**Agenti AI in locale**</a>: cosa cambia rispetto alla chat, con esempi di progetti reali;
@@ -137,6 +143,7 @@ Ne ho parlato estesamente qui:
 
 - **Chat** per tutto l'ordinario; **Work** e soprattutto **Codex** per i progetti.
 - **Alzate il ragionamento**: *High* è quasi sempre una buona scelta, e in Chat i limiti non si raggiungono (nella mia esperienza). *Pro* solo quando serve davvero.
+- ⚠️ Le indicazioni su Chat e Work/Codex potrebbero cambiare presto: da dicembre, su Plus, Pro e Business, la Chat condividerà i limiti con Codex; per Edu ancora nessuna notizia (vedi l'<a href="#chat-o-work-di-default-chat">aggiornamento al punto 1</a>).
 - Provate **Deep research**, i **connettori** con **@** e i **progetti** (con fonti e istruzioni).
 - Tutto quello che viene prodotto va **letto e verificato**: resta vostra responsabilità.
 

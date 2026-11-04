@@ -99,6 +99,8 @@ Il comando `/status` mostra la configurazione della sessione e i limiti residui:
 
 Le ultime tre righe sono le più utili. **Context window** indica quanto della "memoria di lavoro" della conversazione è occupato. **5h limit** e **Weekly limit** indicano quanto resta dei limiti del vostro piano e quando si azzerano. Il dettaglio aggiornato, inclusi eventuali crediti, è sulla pagina <a href="https://chatgpt.com/codex/settings/usage" target="_blank">chatgpt.com/codex/settings/usage</a>. I limiti valgono per tutte le interfacce di Codex, non solo per il terminale. Raggiunto un limite, Codex si ferma fino all'azzeramento, salvo che il piano preveda crediti aggiuntivi (vedi la <a href="index.html">parte generale</a>; con un account Edu dipende dall'ateneo).
 
+> ⚠️ **Aggiornamento (novembre 2026).** OpenAI ha <a href="https://help.openai.com/en/articles/20001625-understanding-chatgpt-and-codex-usage-limits" target="_blank">annunciato</a> che da dicembre, nei piani Plus, Pro e Business, anche la Chat di ChatGPT (tranne *Instant*) consumerà questi stessi limiti, misurati in token. Per Edu non c'è ancora nessuna comunicazione (vedi il <a href="../gpt-edu/index.html#chat-o-work-di-default-chat">post su ChatGPT Edu</a>).
+
 
 ## Permessi
 
