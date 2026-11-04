@@ -130,6 +130,8 @@ Anche qui, però: per cose davvero complesse, con molti file che dipendono l'uno
 
 ChatGPT Edu include **Codex**, l'agente che lavora direttamente sui file del vostro computer: legge una cartella di progetto, scrive ed esegue codice, controlla gli errori, corregge, e vi dice cosa ha fatto. Per sviluppare **progetti, analisi, software, siti web**, praticamente qualsiasi cosa, è un salto di livello rispetto alla chat. Ed è il motivo principale per cui conviene non sprecare il credito Work.
 
+> ⚠️ **Da rivedere a breve.** Il "credito Work da non sprecare" ha senso finché la Chat ha limiti separati. Da dicembre, nei piani Plus, Pro e Business, Chat (tranne *Instant*), Work e Codex attingeranno alla stessa quota; per Edu non si sa ancora (vedi l'<a href="#chat-o-work-di-default-chat">aggiornamento al punto 1</a>).
+
 Ne ho parlato estesamente qui:
 
 - → <a href="../agenti-cli/index.html">**Agenti AI in locale**</a>: cosa cambia rispetto alla chat, con esempi di progetti reali;
